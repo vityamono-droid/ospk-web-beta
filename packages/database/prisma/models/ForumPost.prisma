@@ -1,0 +1,40 @@
+/// Статус вопроса.
+enum ForumPostStatus {
+  PENDING
+  FULFILLED
+  REJECTED
+}
+
+/// Категория вопроса.
+model ForumPostCategory {
+  id       String      @id @default(uuid()) @db.Uuid
+  label    String      @unique @db.VarChar(128)
+  disabled Boolean
+  posts    ForumPost[] @relation("forum_post_category_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}
+
+/// Вопрос на форуме.
+model ForumPost {
+  id         String          @id @default(uuid()) @db.Uuid
+  label      String          @db.VarChar(128)
+  content    String          @db.VarChar(1000)
+  status     ForumPostStatus @default(PENDING)
+  comments   Comment[]       @relation("comment_forum_post_fkey")
+  statistics Statistics[]    @relation("statistics_forum_post_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  profileId  String            @db.Uuid
+  profile    Profile           @relation(fields: [profileId], references: [id], name: "forum_post_profile_fkey")
+  categoryId String            @db.Uuid
+  category   ForumPostCategory @relation(fields: [categoryId], references: [id], name: "forum_post_category_fkey")
+
+  @@index([profileId])
+  @@index([categoryId])
+}

@@ -1,0 +1,110 @@
+/// Каталог услуг отображаемый в навигации приложения.
+model ServiceCatalog {
+  id          String            @id @default(uuid()) @db.Uuid
+  label       String            @unique @db.VarChar(128)
+  banner      String?
+  description String?           @db.VarChar(512)
+  disabled    Boolean
+  services    Service[]         @relation("service_catalog_fkey")
+  categories  ServiceCategory[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}
+
+/// Категория услуги внутри одного каталога.
+model ServiceCategory {
+  id          String    @id @default(uuid()) @db.Uuid
+  label       String    @db.VarChar(128)
+  description String?   @db.VarChar(512)
+  disabled    Boolean
+  services    Service[] @relation("service_category_fkey")
+
+  catalogId String         @db.Uuid
+  catalog   ServiceCatalog @relation(fields: [catalogId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}
+
+/// Категория услуги внутри каталога.
+model Unit {
+  id       String    @id @default(uuid()) @db.Uuid
+  label    String    @unique
+  services Service[] @relation("service_unit_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}
+
+/// Тип подсчета остатков услуги.
+enum ServiceAmountType {
+  FINITE
+  INFINITE
+}
+
+/// Услуга предоставляемая организацией.
+model Service {
+  id           String                @id @default(uuid()) @db.Uuid
+  label        String                @db.VarChar(128)
+  banner       String?
+  content      String?
+  vat          Float
+  price        Float
+  forLegals    Boolean
+  disabled     Boolean
+  amountType   ServiceAmountType     @default(FINITE)
+  priceHistory ServicePriceHistory[] @relation("service_price_history_service_fkey")
+  departments  ServiceDepartment[]   @relation("service_department_service_fkey")
+  orders       OrderService[]        @relation("order_service_service_fkey")
+  comments     Comment[]             @relation("comment_service_fkey")
+  statistics   Statistics[]          @relation("statistics_service_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  unitId     String?          @db.Uuid
+  unit       Unit?            @relation(fields: [unitId], references: [id], name: "service_unit_fkey")
+  catalogId  String           @db.Uuid
+  catalog    ServiceCatalog   @relation(fields: [catalogId], references: [id], name: "service_catalog_fkey")
+  categoryId String?          @db.Uuid
+  category   ServiceCategory? @relation(fields: [categoryId], references: [id], name: "service_category_fkey")
+
+  @@unique([label, categoryId])
+  @@index([catalogId])
+  @@index([categoryId])
+}
+
+/// История цен услуги.
+model ServicePriceHistory {
+  id    String @id @default(uuid()) @db.Uuid
+  price Float
+  vat   Float
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  serviceId String  @db.Uuid
+  service   Service @relation(fields: [serviceId], references: [id], name: "service_price_history_service_fkey")
+
+  @@index([serviceId])
+}
+
+/// Отделения, в которых предоставляется услуга.
+model ServiceDepartment {
+  available Int?
+
+  serviceId    String     @db.Uuid
+  service      Service    @relation(fields: [serviceId], references: [id], name: "service_department_service_fkey")
+  departmentId String     @db.Uuid
+  department   Department @relation(fields: [departmentId], references: [id], name: "service_department_department_fkey")
+
+  @@id([serviceId, departmentId])
+  @@index([serviceId])
+  @@index([departmentId])
+}

@@ -1,0 +1,18 @@
+model Scope {
+  id      String   @id @default(uuid()) @db.Uuid
+  name    String   @db.VarChar(512)
+  label   String?  @db.VarChar(128)
+  clients Client[] @relation("m_scope_client")
+  codes   Code[]
+  tokens  Token[]  @relation("m_scope_token")
+  roles   Role[]
+
+  clientId String @db.Uuid
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@unique([name, clientId])
+  @@index([name])
+}

@@ -1,0 +1,40 @@
+/// Статус отправки уведомления.
+enum NotificationStatus {
+  PENDING
+  FULFILLED
+  REJECTED
+}
+
+/// Метод уведомления.
+enum NotificationMethod {
+  EMAIL
+  PUSH
+
+  @@map("notification_method")
+}
+
+/// Тип уведомления.
+enum NotificationType {
+  ORDER
+  REPLY
+  SYSTEM
+}
+
+/// Уведомления пользователя.
+model Notification {
+  id      String               @id @default(uuid()) @db.Uuid
+  status  NotificationStatus   @default(PENDING)
+  methods NotificationMethod[] @default([PUSH])
+  type    NotificationType     @default(SYSTEM)
+  label   String               @db.VarChar(128)
+  content String
+  seen    Boolean
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  profileId String  @db.Uuid
+  profile   Profile @relation(fields: [profileId], references: [id], name: "notification_profile_fkey")
+
+  @@index([profileId])
+}

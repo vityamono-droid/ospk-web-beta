@@ -1,0 +1,44 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "[DEV] Run project",
+        "problemMatcher": "$tsc-watch",
+        "dependsOn": ["backend:dev", "frontend:dev"]
+      },
+      {
+        "hide": true,
+        "label": "backend:dev",
+        "type": "shell",
+        "command": "npm run dev -w @ospk/web-backend",
+        "problemMatcher": "$tsc-watch",
+        "presentation": {
+					"reveal": "always",
+          "panel": "shared",
+          "group": "longrun"
+        }
+      },
+      {
+        "hide": true,
+        "label": "frontend:dev",
+        "type": "shell",
+        "command": "npm run dev -w @ospk/web-frontend",
+        "problemMatcher": "$tsc-watch",
+        "presentation": {
+          "reveal": "always",
+          "panel": "shared",
+          "group": "longrun"
+        }
+      }
+    ]
+  }
+}

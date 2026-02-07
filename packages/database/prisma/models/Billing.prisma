@@ -1,0 +1,40 @@
+// Статус заказа.
+enum OrderStatus {
+  PENDING
+  FULFILLED
+  REJECTED
+}
+
+// Заказ клиента в одном из отделений.
+model Order {
+  id       String         @id @default(uuid()) @db.Uuid
+  status   OrderStatus
+  services OrderService[] @relation("order_service_order_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  profileId    String     @db.Uuid
+  profile      Profile    @relation(fields: [profileId], references: [id], name: "order_profile_fkey")
+  departmentId String     @db.Uuid
+  department   Department @relation(fields: [departmentId], references: [id], name: "order_department_fkey")
+
+  @@index([profileId])
+  @@index([departmentId])
+}
+
+// Услуги заказа.
+model OrderService {
+  amount   Int
+  price    Float
+  discount Float
+
+  orderId   String  @db.Uuid
+  order     Order   @relation(fields: [orderId], references: [id], name: "order_service_order_fkey")
+  serviceId String  @db.Uuid
+  service   Service @relation(fields: [serviceId], references: [id], name: "order_service_service_fkey")
+
+  @@id([orderId, serviceId])
+  @@index([orderId])
+}

@@ -1,0 +1,44 @@
+/// Комментарии оставленные пользователем.
+model Comment {
+  id      String        @id @default(uuid()) @db.Uuid
+  content String        @db.VarChar(1000)
+  replies Comment[]     @relation("comment_parentId_fkey")
+  votes   CommentVote[] @relation("comment_vote_comment_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  profileId   String     @db.Uuid
+  profile     Profile    @relation(fields: [profileId], references: [id], name: "comment_profile_fkey")
+  parentId    String?    @db.Uuid
+  parent      Comment?   @relation(fields: [parentId], references: [id], name: "comment_parentId_fkey")
+  newsId      String     @db.Uuid
+  news        News?      @relation(fields: [newsId], references: [id], name: "comment_news_fkey")
+  serviceId   String     @db.Uuid
+  service     Service?   @relation(fields: [serviceId], references: [id], name: "comment_service_fkey")
+  forumPostId String     @db.Uuid
+  forumPost   ForumPost? @relation(fields: [forumPostId], references: [id], name: "comment_forum_post_fkey")
+
+  @@index([parentId])
+}
+
+/// Тип рейтинга комментария.
+enum CommentVoteType {
+  UP_VOTE
+  DOWN_VOTE
+}
+
+/// Рейтинг комментария.
+model CommentVote {
+  direction CommentVoteType
+
+  commentId String  @db.Uuid
+  comment   Comment @relation(fields: [commentId], references: [id], name: "comment_vote_comment_fkey")
+  profileId String  @db.Uuid
+  profile   Profile @relation(fields: [profileId], references: [id], name: "comment_vote_profile_fkey")
+
+  @@id([commentId, profileId])
+  @@unique([commentId, profileId])
+  @@index([commentId])
+}

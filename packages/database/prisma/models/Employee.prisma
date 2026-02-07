@@ -1,0 +1,117 @@
+/// Уровень образования.
+enum EducationLevel {
+  HIGHER
+  SECONDARY
+  PRIMARY
+}
+
+/// Сотрудник одного из отделений организации.
+model Employee {
+  id            String                 @id @default(uuid()) @db.Uuid
+  firstName     String                 @db.VarChar(64)
+  lastName      String                 @db.VarChar(64)
+  patronymic    String?                @db.VarChar(64)
+  photo         String?
+  disabled      Boolean
+  level         EducationLevel         @default(SECONDARY)
+  contact       Contact?               @relation("contact_employee_fkey")
+  diplomas      EmployeeDiploma[]      @relation("employee_diploma_employee_fkey")
+  positions     EmployeeJobTitle[]     @relation("employee_job_title_employee_fkey")
+  certificates  EmployeeCertificate[]  @relation("employee_certificate_employee_fkey")
+  qualification EmployeeQualification? @relation("employee_qualification_employee_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  departmentId String     @db.Uuid
+  department   Department @relation(fields: [departmentId], references: [id], name: "employee_department_fkey")
+
+  @@index([departmentId])
+}
+
+/// Должность занимаемая сотрудником.
+model JobTitle {
+  id        String             @id @default(uuid()) @db.Uuid
+  label     String             @unique @db.VarChar(128)
+  employees EmployeeJobTitle[] @relation("employee_job_title_position_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}
+
+/// Должность сотрудника.
+model EmployeeJobTitle {
+  description String[]
+
+  employeeId String   @db.Uuid
+  employee   Employee @relation(fields: [employeeId], references: [id], name: "employee_job_title_employee_fkey")
+  titleId    String   @db.Uuid
+  title      JobTitle @relation(fields: [titleId], references: [id], name: "employee_job_title_position_fkey")
+
+  @@id([employeeId, titleId])
+  @@index([employeeId])
+}
+
+/// Квалификация.
+model EducationalQualification {
+  id        String                  @id @default(uuid()) @db.Uuid
+  label     String                  @unique @db.VarChar(128)
+  employees EmployeeQualification[] @relation("employee_qualification_qualification_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}
+
+/// Квалификация сотрудника с перечнем под-квалификаций
+model EmployeeQualification {
+  description String[]
+
+  employeeId      String                   @unique @db.Uuid
+  employee        Employee                 @relation(fields: [employeeId], references: [id], name: "employee_qualification_employee_fkey")
+  qualificationId String                   @db.Uuid
+  qualification   EducationalQualification @relation(fields: [qualificationId], references: [id], name: "employee_qualification_qualification_fkey")
+
+  @@id([employeeId, qualificationId])
+  @@index([employeeId])
+}
+
+/// Образовательное учреждение.
+model EducationalInstitution {
+  id           String                @id @default(uuid()) @db.Uuid
+  institution  String                @unique
+  certificates EmployeeCertificate[] @relation("employee_certificate_institution_fkey")
+  diplomas     EmployeeDiploma[]     @relation("employee_diploma_institution_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}
+
+/// Сертификаты сотрудника.
+model EmployeeCertificate {
+  graduationYear Int
+
+  employeeId    String                 @default(uuid()) @db.Uuid
+  employee      Employee               @relation(fields: [employeeId], references: [id], name: "employee_certificate_employee_fkey")
+  institutionId String                 @db.Uuid
+  institution   EducationalInstitution @relation(fields: [institutionId], references: [id], name: "employee_certificate_institution_fkey")
+
+  @@id([employeeId, institutionId])
+  @@index([employeeId])
+}
+
+/// Диплом сотрудника.
+model EmployeeDiploma {
+  graduationYear Int
+
+  employeeId    String                 @default(uuid()) @db.Uuid
+  employee      Employee               @relation(fields: [employeeId], references: [id], name: "employee_diploma_employee_fkey")
+  institutionId String                 @db.Uuid
+  institution   EducationalInstitution @relation(fields: [institutionId], references: [id], name: "employee_diploma_institution_fkey")
+
+  @@id([employeeId, institutionId])
+  @@index([employeeId])
+}

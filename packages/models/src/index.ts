@@ -1,0 +1,14 @@
+export interface ApiResponse<T = any> {
+  error: boolean
+  message?: string
+  data?: T
+}
+
+export interface PaginationRequest {
+  limit: number
+  offset: number
+}
+
+export interface IdParams {
+  id: string
+}

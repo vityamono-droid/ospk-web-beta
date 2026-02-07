@@ -1,0 +1,55 @@
+/// Каталог новостей, отображаемый в навигации приложения.
+model NewsCatalog {
+  id          String  @id @default(uuid()) @db.Uuid
+  label       String  @unique @db.VarChar(128)
+  banner      String?
+  description String? @db.VarChar(512)
+  disabled    Boolean
+  news        News[]  @relation("news_catalog_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}
+
+/// Категория новостей.
+model NewsCategory {
+  id         String         @id @default(uuid()) @db.Uuid
+  label      String         @unique @db.VarChar(128)
+  disabled   Boolean
+  news       News[]         @relation("news_category_fkey")
+  categories NewsCategory[] @relation("news_category_parent_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  parentId String?       @db.Uuid
+  parent   NewsCategory? @relation(fields: [parentId], references: [id], name: "news_category_parent_fkey")
+
+  @@unique([parentId, label])
+  @@index([parentId])
+}
+
+/// Новостные статьи.
+model News {
+  id         String       @id @default(uuid()) @db.Uuid
+  label      String       @db.VarChar(128)
+  content    String
+  banner     String?
+  disabled   Boolean
+  comments   Comment[]    @relation("comment_news_fkey")
+  statistics Statistics[] @relation("statistics_news_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  catalogId  String       @db.Uuid
+  catalog    NewsCatalog  @relation(fields: [catalogId], references: [id], name: "news_catalog_fkey")
+  categoryId String       @db.Uuid
+  category   NewsCategory @relation(fields: [categoryId], references: [id], name: "news_category_fkey")
+
+  @@index([catalogId])
+  @@index([categoryId])
+}

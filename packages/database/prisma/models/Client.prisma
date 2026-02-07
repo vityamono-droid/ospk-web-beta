@@ -1,0 +1,23 @@
+enum GrantType {
+  authorization_code
+  refresh_token
+  client_credentials
+}
+
+model Client {
+  id              String      @id @default(uuid()) @db.Uuid
+  name            String      @unique @db.VarChar(64)
+  label           String      @db.VarChar(128)
+  secret          String?     @db.VarChar(255)
+  redirectUris    String[]
+  firstParty      Boolean     @default(false)
+  allowedGrants   GrantType[] @default([authorization_code, refresh_token, client_credentials])
+  connectedScopes Scope[]     @relation("m_scope_client")
+  ownScopes       Scope[]
+  codes           Code[]
+  tokens          Token[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}

@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "target": "ESNext",
+    "moduleResolution": "nodenext",
+    "lib": ["ESNext"],
+    "skipLibCheck": true,
+
+    "esModuleInterop": true,
+    "rewriteRelativeImportExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+
+    "declaration": true,
+
+    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "dest",
+
+    "paths": {
+      "@common": ["src/index.ts"],
+      "@auth/*": ["src/auth/*"],
+      "@notify/*": ["src/notify/*"],
+      "@vpn/*": ["src/vpn/*"],
+      "@wallet/*": ["src/wallet/*"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

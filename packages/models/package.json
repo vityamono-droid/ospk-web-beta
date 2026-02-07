@@ -1,0 +1,26 @@
+{
+  "name": "@ospk/web-models",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./dest/index.js",
+    "./announces": "./dest/announces/index.js",
+    "./auth": "./dest/auth/index.js",
+    "./carousel": "./dest/carousel/index.js",
+    "./clients": "./dest/clients/index.js",
+    "./contacts": "./dest/contacts/index.js",
+    "./departments": "./dest/departments/index.js",
+    "./employees": "./dest/employees/index.js",
+    "./news": "./dest/news/index.js",
+    "./order": "./dest/order/index.js",
+    "./requests": "./dest/requests/index.js",
+    "./services": "./dest/services/index.js",
+    "./users": "./dest/users/index.js"
+  },
+  "scripts": {
+    "prepare": "tsc -b && tsc-alias"
+  },
+  "devDependencies": {
+    "ts-alias": "^0.0.7",
+    "typescript": "^5.9.3"
+  }
+}

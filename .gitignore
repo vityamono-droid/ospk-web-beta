@@ -1,0 +1,15 @@
+logs/
+dest/
+generated/
+node_modules/
+
+package-lock.json
+
+config.json
+config.*.json
+!config.example.json
+!config.schema.json
+
+.env
+.env.*
+!.env.example

@@ -1,0 +1,31 @@
+/// Тип статистики.
+enum StatisticsType {
+  CLICK
+  VIEW
+
+  @@map("statistics_type")
+}
+
+/// Статистика.
+model Statistics {
+  id   String         @id @default(uuid()) @db.Uuid
+  type StatisticsType
+
+  newsId     String?    @db.Uuid
+  news       News?      @relation(fields: [newsId], references: [id], name: "statistics_news_fkey")
+  postId     String?    @db.Uuid
+  post       ForumPost? @relation(fields: [postId], references: [id], name: "statistics_forum_post_fkey")
+  mediaId    String?    @db.Uuid
+  media      Media?     @relation(fields: [mediaId], references: [id], name: "statistics_media_fkey")
+  serviceId  String?    @db.Uuid
+  service    Service?   @relation(fields: [serviceId], references: [id], name: "statistics_service_fkey")
+  carouselId String?    @db.Uuid
+  carousel   Carousel?  @relation(fields: [carouselId], references: [id], name: "statistics_carousel_fkey")
+
+  @@index([type])
+  @@index([newsId])
+  @@index([postId])
+  @@index([mediaId])
+  @@index([serviceId])
+  @@index([carouselId])
+}

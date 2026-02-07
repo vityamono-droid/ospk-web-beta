@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "target": "ESNext",
+    "lib": ["ESNext", "ESNext.Array", "ESNext.Iterator", "ESNext.Decorators"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+
+    "esModuleInterop": true,
+    "rewriteRelativeImportExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+
+    "allowJs": true,
+    "checkJs": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+
+    "removeComments": true,
+
+    "baseUrl": "./",
+    "rootDir": "src/",
+    "outDir": "dest/",
+
+    "paths": {
+      "@config": ["src/config/index.ts"],
+      "@middleware/*": ["src/middleware/*"],
+      "@models/*": ["src/models/*"],
+      "@plugins/*": ["src/plugins/*"],
+      "@repositories/*": ["src/repositories/*"],
+      "@routes": ["src/routes/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["dest/"]
+}

@@ -1,0 +1,28 @@
+/// Расположение карусели.
+enum CarouselPlacement {
+  HOME
+  SERVICES
+  NEWS
+  PROFILE
+}
+
+/// Карусель банеров.
+model Carousel {
+  id           String            @id @default(uuid()) @db.Uuid
+  banner       String
+  link         String?
+  label        String            @db.VarChar(128)
+  description  String?
+  durationFrom DateTime?
+  durationTo   DateTime?
+  disabled     Boolean
+  placement    CarouselPlacement @default(HOME)
+  departments  Department[]      @relation("carousel_department_m")
+  statistics   Statistics[]      @relation("statistics_carousel_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  @@index([placement])
+}

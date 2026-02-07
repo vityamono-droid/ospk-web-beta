@@ -1,0 +1,13 @@
+{
+  "$schema": "./config.schema.json",
+  "auth": {
+    "issuer": "auth.example.com"
+  },
+  "app": {
+    "host": "localhost",
+    "port": 1111
+  },
+  "secrets": {
+    "cookie_secret": "secret"
+  }
+}

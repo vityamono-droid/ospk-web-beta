@@ -1,0 +1,24 @@
+{
+  "name": "@ospk/web-database",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./dest/index.js"
+  },
+  "scripts": {
+    "pull": "npx prisma db pull",
+    "push": "npx prisma db push",
+    "seed": "npx prisma db seed",
+    "generate": "npx prisma generate",
+    "prepare": "tsc -b"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "prisma": "^7.2.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.2.0"
+  }
+}

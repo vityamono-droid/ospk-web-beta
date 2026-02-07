@@ -1,0 +1,18 @@
+{
+  "name": "@ospk/web",
+  "version": "1.0.0",
+  "scripts": {
+    "backend": "npm run build -w @ospk/web-backend",
+    "frontend": "npm run build -w @ospk/web-frontend",
+    "run": "npm-run-all --parallel backend frontend"
+  },
+  "workspaces": [
+    "./packages/database",
+    "./packages/models",
+    "./packages/backend",
+    "./packages/frontend"
+  ],
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}

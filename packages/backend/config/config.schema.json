@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "auth": {
+      "type": "object",
+      "properties": {
+        "issuer": {
+          "type": "string"
+        }
+      },
+      "required": ["issuer"]
+    },
+    "app": {
+      "properties": {
+        "host": {
+          "type": "string",
+          "enum": ["localhost", "0.0.0.0"]
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        }
+      },
+      "additionalProperties": false,
+      "required": ["host", "port"]
+    },
+    "secrets": {
+      "type": "object",
+      "properties": {
+        "cookie_secret": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": ["cookie_secret"]
+    }
+  },
+  "required": ["auth", "app", "secrets"]
+}

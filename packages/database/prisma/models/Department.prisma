@@ -1,0 +1,84 @@
+/// Информация об отделении.
+model Department {
+  id        String               @id @default(uuid()) @db.Uuid
+  address   String               @unique
+  phone     String?              @db.VarChar(10)
+  email     String?
+  disabled  Boolean
+  schedules DepartmentSchedule[] @relation("department_schedule_department_fkey")
+  contacts  Contact[]            @relation("contact_department_fkey")
+  orders    Order[]              @relation("order_department_fkey")
+  services  ServiceDepartment[]  @relation("service_department_department_fkey")
+  carousels Carousel[]           @relation("carousel_department_m")
+  employees Employee[]           @relation("employee_department_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  @@index([address])
+}
+
+/// Дни недели.
+enum WeekDay {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+  CUSTOM
+}
+
+/// Элемент расписания.
+model ScheduleItem {
+  id            String              @id @default(uuid()) @db.Uuid
+  weekDays      WeekDay[]
+  customWeekDay String[]
+  timeStart     DateTime            @db.Time()
+  timeEnd       DateTime            @db.Time()
+  departments   DepartmentSchedule? @relation("department_schedule_schedule_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}
+
+/// Секция расписания отделения.
+model DepartmentSchedule {
+  label String @db.VarChar(128)
+
+  departmentId String       @db.Uuid
+  department   Department   @relation(fields: [departmentId], references: [id], name: "department_schedule_department_fkey")
+  scheduleId   String       @unique @db.Uuid
+  schedule     ScheduleItem @relation(fields: [scheduleId], references: [id], name: "department_schedule_schedule_fkey")
+
+  @@id([departmentId, scheduleId])
+  @@index([departmentId])
+}
+
+/// Тип контакта.
+enum ContactType {
+  PHONE
+  FAX
+}
+
+/// Контакт сотрудника.
+model Contact {
+  id       String      @id @default(uuid()) @db.Uuid
+  type     ContactType @default(PHONE)
+  phone    String      @db.VarChar(10)
+  disabled Boolean
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  departmentId String     @db.Uuid
+  department   Department @relation(fields: [departmentId], references: [id], name: "contact_department_fkey")
+  employeeId   String     @unique @db.Uuid
+  employee     Employee   @relation(fields: [employeeId], references: [id], name: "contact_employee_fkey")
+
+  @@index([departmentId])
+}

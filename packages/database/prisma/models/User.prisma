@@ -1,0 +1,48 @@
+model Role {
+  id     String  @id @default(uuid()) @db.Uuid
+  name   String  @unique @db.VarChar(256)
+  label  String? @unique @db.VarChar(128)
+  scopes Scope[]
+  users  User[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+}
+
+model IpAddress {
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.Uuid
+
+  ipAddress String  @db.Inet
+  userAgent String?
+  confirmed Boolean @default(false)
+  blocked   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@id([userId, ipAddress])
+}
+
+model User {
+  id         String      @id @default(uuid()) @db.Uuid
+  email      String      @unique @db.VarChar(254)
+  username   String      @unique @db.VarChar(32)
+  password   String      @db.VarChar(254)
+  avatar     String?
+  roles      Role[]
+  ips        IpAddress[]
+  authCodes  Code[]
+  authTokens Token[]
+
+  lastLoginAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  removedAt   DateTime?
+
+  profileId String?   @db.Uuid
+  profile   Profile?
+
+  @@index([email])
+  @@index([username])
+}

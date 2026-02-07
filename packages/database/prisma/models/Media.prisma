@@ -1,0 +1,21 @@
+/// Тип медиа.
+enum MediaType {
+  VIDEO
+  IMAGE
+}
+
+/// Медиа-ресурс.
+model Media {
+  id          String       @id @default(uuid()) @db.Uuid
+  type        MediaType
+  link        String
+  label       String       @db.VarChar(128)
+  description String?
+  statistics  Statistics[] @relation("statistics_media_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  @@index([type])
+}

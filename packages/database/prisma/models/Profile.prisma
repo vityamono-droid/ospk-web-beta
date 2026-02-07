@@ -1,0 +1,17 @@
+/// Профиль пользователя системы.
+model Profile {
+  id            String         @id @default(uuid()) @db.Uuid
+  disabled      Boolean
+  orders        Order[]        @relation("order_profile_fkey")
+  comments      Comment[]      @relation("comment_profile_fkey")
+  posts         ForumPost[]    @relation("forum_post_profile_fkey")
+  votes         CommentVote[]  @relation("comment_vote_profile_fkey")
+  notifications Notification[] @relation("notification_profile_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  removedAt DateTime?
+
+  userId String @unique @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
