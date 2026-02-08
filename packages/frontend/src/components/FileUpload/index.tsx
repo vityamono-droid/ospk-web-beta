@@ -6,8 +6,12 @@ import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
 import RemoveIcon from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 
 interface FileUploadProps {
+  label?: string
+  subLabel?: string
   value?: File[]
   multiple?: boolean
   maxLength?: number
@@ -15,12 +19,11 @@ interface FileUploadProps {
   onChange?: (value: File | File[]) => void
 }
 
-const FileUpload = ({ value, multiple, maxLength, fileTypes, onChange }: FileUploadProps) => {
+const FileUpload = ({ label, subLabel, value, multiple, maxLength, fileTypes, onChange }: FileUploadProps) => {
   const ref = useRef<HTMLInputElement | null>(null)
   const [files, setFiles] = useState<File[]>(value ?? [])
 
-  useEffect(() => {
-  }, [files])
+  useEffect(() => {}, [files])
 
   const handleAdd = ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (!target.files) {
@@ -47,10 +50,12 @@ const FileUpload = ({ value, multiple, maxLength, fileTypes, onChange }: FileUpl
       file && setFiles([file])
       file && !!onChange && onChange(file)
     }
+
+    target.value = ''
   }
 
   const handleRemove = (index: number) => {
-    setFiles(state => {
+    setFiles((state) => {
       const newItems = state.slice()
       newItems.splice(index, 1)
       return newItems
@@ -58,46 +63,53 @@ const FileUpload = ({ value, multiple, maxLength, fileTypes, onChange }: FileUpl
   }
 
   return (
-    <Box sx={{ p: 1, border: '3px dashed gray', borderRadius: 2, overflowX: 'hidden' }}>
-      <Box sx={{ gap: 1, display: 'flex', overflowX: 'auto', flexDirection: 'row-reverse' }}>
-        <input ref={ref} type={'file'} accept={fileTypes?.join()} multiple={multiple} hidden onChange={handleAdd} />
-        {files.length != 0 && multiple && (
-          <Box sx={{ bgcolor: '#D9D9D9', borderRadius: 1 }} onClick={() => ref.current?.click()}>
-            <Box sx={{ width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <AddIcon color={'action'} />
-            </Box>
-          </Box>
-        )}
-        {files.map((item, index) => (
-          <Tooltip title={item.name}>
-            <Box sx={{ bgcolor: '#D9D9D9', borderRadius: 1 }}>
-              <Box
-                sx={{
-                  width: 64,
-                  height: 64,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'relative',
-                }}>
-                <IconButton
-                  size={'small'}
-                  sx={{ p: 0.2, position: 'absolute', top: 2, right: 2 }}
-                  onClick={() => handleRemove(index)}>
-                  <RemoveIcon sx={{ fontSize: 18 }} />
-                </IconButton>
-                <FileIcon color={'action'} />
+    <Stack>
+      {!!label && (
+        <Typography color={'textDisabled'} variant={'caption'}>
+          {label}
+        </Typography>
+      )}
+      <Box sx={{ p: 1, border: '3px dashed gray', borderRadius: 2, overflowX: 'hidden' }}>
+        <Box sx={{ gap: 1, display: 'flex', overflowX: 'auto', flexDirection: 'row-reverse' }}>
+          <input ref={ref} type={'file'} accept={fileTypes?.join()} multiple={multiple} hidden onChange={handleAdd} />
+          {files.length != 0 && multiple && (
+            <Box sx={{ bgcolor: '#D9D9D9', borderRadius: 1 }} onClick={() => ref.current?.click()}>
+              <Box sx={{ width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <AddIcon color={'action'} />
               </Box>
             </Box>
-          </Tooltip>
-        ))}
-        {files.length == 0 && (
-          <Button fullWidth endIcon={<AddIcon />} sx={{ height: 64, color: 'gray' }} onClick={() => ref.current?.click()}>
-            Добавить изображение
-          </Button>
-        )}
+          )}
+          {files.map((item, index) => (
+            <Tooltip title={item.name}>
+              <Box sx={{ bgcolor: '#D9D9D9', borderRadius: 1 }}>
+                <Box
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                  }}>
+                  <IconButton
+                    size={'small'}
+                    sx={{ p: 0.2, position: 'absolute', top: 2, right: 2 }}
+                    onClick={() => handleRemove(index)}>
+                    <RemoveIcon sx={{ fontSize: 18 }} />
+                  </IconButton>
+                  <FileIcon color={'action'} />
+                </Box>
+              </Box>
+            </Tooltip>
+          ))}
+          {files.length == 0 && (
+            <Button fullWidth endIcon={<AddIcon />} sx={{ height: 64, color: 'gray' }} onClick={() => ref.current?.click()}>
+              Добавить {!!subLabel ? subLabel : 'файлы'}
+            </Button>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </Stack>
   )
 }
 

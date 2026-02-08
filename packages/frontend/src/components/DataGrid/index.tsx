@@ -58,7 +58,7 @@ const DataGrid = ({ head, body, selected, onSelect, onRowClick }: DataGridProps)
                 </TableCell>
               )}
               {head.map((cell) => (
-                <TableCell key={cell.key} align={cell.align} sx={{ p: 0.5 }}>
+                <TableCell key={cell.key ?? cell.value} align={cell.align} sx={{ p: 0.5 }}>
                   {item[cell.value]}
                 </TableCell>
               ))}

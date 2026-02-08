@@ -18,6 +18,8 @@ class Client implements ClientModel, OAuthClient {
   redirectUris: string[]
   allowedGrants: GrantType[]
 
+  loginUrl: string | null
+
   createdAt: Date
   updatedAt: Date | null
   removedAt: Date | null
@@ -34,6 +36,8 @@ class Client implements ClientModel, OAuthClient {
     this.firstParty = entity.firstParty
     this.redirectUris = entity.redirectUris
     this.allowedGrants = entity.allowedGrants
+
+    this.loginUrl = entity.loginUrl
 
     this.createdAt = entity.createdAt
     this.updatedAt = entity.updatedAt

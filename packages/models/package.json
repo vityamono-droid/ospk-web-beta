@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "exports": {
     ".": "./dest/index.js",
+    "./articles": "./dest/articles/index.js",
     "./announces": "./dest/announces/index.js",
     "./auth": "./dest/auth/index.js",
     "./carousel": "./dest/carousel/index.js",

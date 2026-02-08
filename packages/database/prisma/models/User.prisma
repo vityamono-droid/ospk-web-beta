@@ -27,7 +27,7 @@ model IpAddress {
 model User {
   id         String      @id @default(uuid()) @db.Uuid
   email      String      @unique @db.VarChar(254)
-  username   String      @unique @db.VarChar(32)
+  phone      String      @unique @db.VarChar(10)
   password   String      @db.VarChar(254)
   avatar     String?
   roles      Role[]
@@ -44,5 +44,5 @@ model User {
   profile   Profile?
 
   @@index([email])
-  @@index([username])
+  @@index([phone])
 }

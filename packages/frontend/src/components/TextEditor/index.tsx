@@ -6,15 +6,30 @@ import InvisibleCharacters from '@tiptap/extension-invisible-characters'
 import Image from '@tiptap/extension-image'
 import { TableKit } from '@tiptap/extension-table/kit'
 import { LinkBubbleMenu, LinkBubbleMenuHandler, RichTextEditor, TableBubbleMenu, type RichTextEditorRef } from 'mui-tiptap'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import TextEditorControls from './TextEditorControls'
 
-const TextEditor = ({ content = '', editable }: { content?: string; editable?: boolean }) => {
+interface TextEditorProps {
+  content?: string
+  editable?: boolean
+  onChange?: ValueCallback<string>
+}
+
+const TextEditor = ({ content = '', editable, onChange }: TextEditorProps) => {
   const ref = useRef<RichTextEditorRef>(null)
+
+  useEffect(() => {
+    ref.current?.editor?.commands.setContent(content)
+  }, [content])
+
+  const handleChange = (value: string) => {
+    !!onChange && onChange(value)
+  }
 
   return (
     <RichTextEditor
       ref={ref}
+      onUpdate={({ editor }) => handleChange(editor.getHTML())}
       content={content}
       editable={editable}
       extensions={[

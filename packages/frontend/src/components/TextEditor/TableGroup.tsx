@@ -9,9 +9,6 @@ const TableGroup = () => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <MenuButtonAddTable />
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          asd
-        </Box>
       </>
     </ControlsGroup>
   )

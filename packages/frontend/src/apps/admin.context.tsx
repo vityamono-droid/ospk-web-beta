@@ -1,12 +1,12 @@
-import { createContext, useContext, useEffect, useState, type JSX } from 'react';
-import { useLocation } from 'react-router';
+import { createContext, useContext, useEffect, useState, type JSX } from 'react'
+import { useLocation } from 'react-router'
 
 interface AdminContextProps {
   section: string
 }
 
 const AdminContext = createContext<AdminContextProps>({
-  section: '/'
+  section: '/',
 })
 
 const AdminProvider = ({ children }: { children: JSX.Element }) => {
@@ -24,11 +24,7 @@ const AdminProvider = ({ children }: { children: JSX.Element }) => {
     setSection(location.pathname.split('/')[2])
   }, [location.key])
 
-  return (
-    <AdminContext value={{ section }}>
-      {children}
-    </AdminContext>
-  )
+  return <AdminContext value={{ section }}>{children}</AdminContext>
 }
 
 export const useAdminContext = () => useContext(AdminContext)

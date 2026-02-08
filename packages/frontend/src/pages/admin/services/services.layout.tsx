@@ -1,6 +1,5 @@
-import NavTabs from '@components/NavTabs'
-import Box from '@mui/material/Box'
 import { Outlet } from 'react-router'
+import NavTabs from '@components/NavTabs'
 
 const tabs = [
   {
@@ -19,10 +18,10 @@ const tabs = [
 
 const ServicesLayout = () => {
   return (
-    <Box sx={{ gap: 0.5, flex: 1, display: 'flex', flexDirection: 'column' }}>
+    <>
       <NavTabs items={tabs} />
       <Outlet />
-    </Box>
+    </>
   )
 }
 

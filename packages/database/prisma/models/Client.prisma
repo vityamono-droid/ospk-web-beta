@@ -9,6 +9,7 @@ model Client {
   name            String      @unique @db.VarChar(64)
   label           String      @db.VarChar(128)
   secret          String?     @db.VarChar(255)
+  loginUrl        String?     @db.VarChar(128)
   redirectUris    String[]
   firstParty      Boolean     @default(false)
   allowedGrants   GrantType[] @default([authorization_code, refresh_token, client_credentials])

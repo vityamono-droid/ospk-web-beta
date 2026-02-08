@@ -7,11 +7,11 @@ import type {
 } from '@ospk/web-models/services'
 import type { ApiResponse } from '@ospk/web-models'
 
-import { transformErrorResponse, transformResponse } from '@api/transformators'
+import { transformErrorResponse, transformResponse } from '@api/transformers'
 
 const serviceCatalogsApi = createApi({
   reducerPath: 'serviceCatalogs',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/serviceCatalogs' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/serviceCatalogs' }),
   tagTypes: ['catalogList'],
   endpoints: (builder) => ({
     listCatalogs: builder.query<ServiceCatalog[], any, ApiResponse<ServiceCatalog[]>>({

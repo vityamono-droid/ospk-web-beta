@@ -2,26 +2,22 @@ import { lazy } from 'react'
 import { Outlet, Route, Routes } from 'react-router'
 import NewsLayout from './news.layout'
 
-// News
-const NewsPage = lazy(() => import('./articles/news.page'))
-const AddEditPage = lazy(() => import('./articles/addEdit.page'))
-// Catalogs
-const CatalogsPage = lazy(() => import('./catalogs/catalogs.page'))
-
-// Categories
-const CategoriesPage = lazy(() => import('./categories/categories.page'))
+const ArticleListPage = lazy(() => import('./articleList'))
+const ArticlePage = lazy(() => import('./articlePage'))
+const CatalogListPage = lazy(() => import('./catalogList'))
+const CategoryListPage = lazy(() => import('./categoryList'))
 
 const NewsRouter = () => {
   return (
     <>
       <Routes>
         <Route element={<NewsLayout />}>
-          <Route index element={<NewsPage />} />
-          <Route path={'/catalogs'} element={<CatalogsPage />} />
-          <Route path={'/categories'} element={<CategoriesPage />} />
+          <Route index element={<ArticleListPage />} />
+          <Route path={'/catalogs'} element={<CatalogListPage />} />
+          <Route path={'/categories'} element={<CategoryListPage />} />
         </Route>
-        <Route path='/add' element={<AddEditPage />} />
-        <Route path='/:id/edit' element={<AddEditPage />} />
+        <Route path='/add' element={<ArticlePage />} />
+        <Route path='/:id' element={<ArticlePage />} />
       </Routes>
       <Outlet />
     </>

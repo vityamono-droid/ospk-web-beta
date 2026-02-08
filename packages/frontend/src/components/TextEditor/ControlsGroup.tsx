@@ -5,7 +5,7 @@ import type { JSX } from 'react'
 
 const ControlsGroup = ({ title, children }: { title: string; children: JSX.Element }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
       {children}
       <Typography variant={'caption'} textAlign={'center'} sx={{ mt: 1 }}>
         {title}

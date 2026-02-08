@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router'
 const ServiceList = () => {
   const navigate = useNavigate()
   const [offset, setOffset] = useState(0)
-  const [services, setService] = useState<Service[]>([])
+  const [services, setServices] = useState<Service[]>([])
 
   const listResponse = useListServicesQuery(
     {
@@ -28,7 +28,7 @@ const ServiceList = () => {
       return
     }
 
-    setService(listResponse.data)
+    setServices(listResponse.data)
   }, [listResponse.status])
 
   return (

@@ -2,14 +2,14 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { AddUnitRequest, UpdateUnitRequest, UnitDetails } from '@ospk/web-models/services'
 import type { ApiResponse } from '@ospk/web-models'
 
-import { transformErrorResponse, transformResponse } from '@api/transformators'
+import { transformErrorResponse, transformResponse } from '@api/transformers'
 
 const serviceUnitsApi = createApi({
   reducerPath: 'serviceUnits',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/serviceUnits' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/serviceUnits' }),
   tagTypes: ['unitList'],
   endpoints: (builder) => ({
-    listUnits: builder.query<UnitDetails, any, ApiResponse<UnitDetails>>({
+    listUnits: builder.query<UnitDetails[], any, ApiResponse<UnitDetails[]>>({
       providesTags: ['unitList'],
       query: () => ({
         url: `/`,

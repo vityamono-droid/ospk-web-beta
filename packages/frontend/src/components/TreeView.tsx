@@ -1,70 +1,43 @@
-import IconButton from '@mui/material/IconButton'
 import { SimpleTreeView as MuiTreeView } from '@mui/x-tree-view/SimpleTreeView'
 import { TreeItem } from '@mui/x-tree-view/TreeItem'
-import EditIcon from '@mui/icons-material/Edit'
-import AddIcon from '@mui/icons-material/Add'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import Switch from '@mui/material/Switch'
 
-const unflatten = (array: any[]) => {
-  const map: any = {}
-  const tree: any[] = []
+import type { JSX, ReactNode } from 'react'
 
-  array.forEach((item) => {
-    map[item['id']] = { ...item, children: [] }
-  })
+import unFlatten from '@utils/unFlatten'
 
-  array.forEach((item) => {
-    if (item['parentId'] && map[item['parentId']]) {
-      map[item['parentId']].children.push(map[item['id']])
-    } else {
-      tree.push(map[item['id']])
-    }
-  })
+type TreeViewLabel<TItem extends TreeViewLikeItem> = (item: TItem) => ReactNode
 
-  return tree
+interface TreeViewProps<TItem extends TreeViewLikeItem> {
+  label?: TreeViewLabel<TItem>
+  data?: TItem[]
+  onRowClick?: ValueCallback<string>
 }
 
-const getTreeItemsFromData = (treeItems: any[]) => {
-  return treeItems.map((treeItemData) => {
-    let children = undefined
-    if (treeItemData.children && treeItemData.children.length > 0) {
-      children = getTreeItemsFromData(treeItemData.children)
-    };
-    return (
-      <TreeItem
-        key={treeItemData.id}
-        itemId={treeItemData.id}
-        disabled={treeItemData.disabled}
-        children={children}
-        label={
-          <Stack spacing={2} flexGrow={1} direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-            <Typography>{treeItemData.label}</Typography>
-            <Stack spacing={1} direction={'row'} alignItems={'center'}>
-              <Switch size={'small'} checked={!treeItemData.disabled} />
-              <IconButton size={'small'}>
-                <EditIcon />
-              </IconButton>
-              <IconButton size={'small'}>
-                <AddIcon />
-              </IconButton>
-            </Stack>
-          </Stack>
-        }
-      />
-    )
-  })
+type ElementType = <TItem extends TreeViewLikeItem>(props: TreeViewProps<TItem>) => JSX.Element
+type ItemType = <TItem extends TreeViewLikeItem>(
+  data: TreeViewItem<TItem>[],
+  label?: TreeViewLabel<TItem>,
+  onRowClick?: ValueCallback<string>,
+) => JSX.Element[]
+
+const buildTreeView: ItemType = (data, label, onRowClick) => {
+  return data.map((item) => (
+    <TreeItem
+      key={item.id}
+      itemId={item.id}
+      label={!!label ? label(item) : item.label}
+      children={item.children && item.children.length > 0 ? buildTreeView(item.children, label, onRowClick) : undefined}
+      slotProps={{
+        label: {
+          onClick: () => !!onRowClick && onRowClick(item.id),
+        },
+      }}
+    />
+  ))
 }
 
-const TreeView = ({ data }: { data: { id: string; label: string }[] }) => {
-  const tree = unflatten(data)
-
-  return (
-    <MuiTreeView>
-      {getTreeItemsFromData(tree)}
-    </MuiTreeView>
-  )
+const TreeView: ElementType = ({ label, data, onRowClick }) => {
+  return <MuiTreeView expansionTrigger={'iconContainer'}>{buildTreeView(unFlatten(data), label, onRowClick)}</MuiTreeView>
 }
 
 export default TreeView

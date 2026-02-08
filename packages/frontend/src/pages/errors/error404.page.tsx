@@ -11,9 +11,11 @@ const Error404Page = () => {
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Box sx={{ gap: 1, display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-        <Typography variant={'h2'} fontWeight={'bold'}>404</Typography>
+        <Typography variant={'h2'} fontWeight={'bold'}>
+          404
+        </Typography>
         <Typography variant={'h6'}>Ничего не найдено</Typography>
-        <Button onClick={() => navigate(`/`, { relative: 'route' })}>На главную</Button>
+        <Button onClick={() => navigate(`/`, { relative: 'path' })}>На главную</Button>
       </Box>
     </Box>
   )

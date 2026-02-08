@@ -1,15 +1,16 @@
-import { lazy } from 'react'
+import { Outlet } from 'react-router'
 import { Provider as ApiProvider } from 'react-redux'
+import ClientProvider from './client.context'
 
-import clientStore from '@api/clientStore'
-
-const ClientRouter = lazy(() => import('@pages/client/client.router'))
+import clientStore from '@api/client'
 
 /** Клиентское приложение. */
 const ClientApp = () => {
   return (
     <ApiProvider store={clientStore}>
-      <ClientRouter />
+      <ClientProvider>
+        <Outlet />
+      </ClientProvider>
     </ApiProvider>
   )
 }

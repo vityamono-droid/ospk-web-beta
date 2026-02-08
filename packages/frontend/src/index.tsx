@@ -8,7 +8,7 @@ import Loading from '@components/Loading'
 
 import { createRoot } from 'react-dom/client'
 
-import commonStore from '@api/common/commonStore'
+import commonStore from '@api/common'
 import appTheme from '@themes'
 import AppRouter from '@pages/app.router'
 

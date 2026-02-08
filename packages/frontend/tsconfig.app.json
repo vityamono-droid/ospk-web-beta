@@ -26,7 +26,7 @@
 
     "baseUrl": ".",
     "paths": {
-      "@api": ["src/api/common/commonStore.ts"],
+      "@api": ["src/api/common/index.ts"],
       "@api/*": ["./src/api/*"],
       "@apps/*": ["./src/apps/*"],
       "@assets/*": ["./src/assets/*"],

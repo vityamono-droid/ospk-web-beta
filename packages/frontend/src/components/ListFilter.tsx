@@ -1,12 +1,20 @@
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import FilterIcon from '@mui/icons-material/FilterList'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Badge from '@mui/material/Badge'
 
-const ListFilter = ({ children, additional }: { children?: any, additional?: any }) => {
+interface ListFilterProps {
+  changed?: boolean
+  children?: ReactNode
+  additional?: ReactNode
+  onReset?: Callback
+  onSubmit?: Callback
+}
+
+const ListFilter = ({ changed, children, additional, onReset, onSubmit }: ListFilterProps) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -16,7 +24,8 @@ const ListFilter = ({ children, additional }: { children?: any, additional?: any
           <IconButton onClick={() => setOpen((state) => !state)}>
             <Badge
               color={'secondary'}
-              badgeContent={' '}
+              badgeContent={0}
+              showZero={changed}
               variant={'dot'}
               sx={{
                 '& .MuiBadge-badge': { right: 2, top: 5, width: 14, height: 14, border: '3px solid white' },
@@ -27,11 +36,13 @@ const ListFilter = ({ children, additional }: { children?: any, additional?: any
           {!!additional && additional}
         </Box>
         <Collapse in={open} unmountOnExit>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ mt: 1, gap: 1, display: 'flex', flexDirection: 'column' }}>
             {!!children && children}
-            <Box sx={{ height: 48, display: 'flex', alignItems: 'center' }}>
-              <Button>Сбросить</Button>
-              <Button variant={'outlined'}>Применить</Button>
+            <Box sx={{ gap: 2, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+              <Button onClick={onReset}>Сбросить</Button>
+              <Button variant={'outlined'} onClick={onSubmit}>
+                Применить
+              </Button>
             </Box>
           </Box>
         </Collapse>

@@ -17,10 +17,10 @@ const authorizeQuery: ClientQueryType = async (_args, api, options) => {
       method: 'GET',
       params: {
         response_type: 'code',
-        redirect_uri: `${location.origin}/auth/callback`,
+        redirect_uri: `${location.origin}/admin/auth/callback`,
         code_challenge: code_challenge,
         code_challenge_method: 'S256',
-        client_name: 'webapp',
+        client_name: localStorage.getItem('client') ?? undefined,
         state: state,
       } satisfies AuthorizeRequest,
     } satisfies FetchArgs

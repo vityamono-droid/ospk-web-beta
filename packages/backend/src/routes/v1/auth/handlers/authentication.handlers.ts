@@ -58,8 +58,8 @@ export const registerHandler: RequestHandler<any, any, RegisterRequest, Authoriz
       throw ApiError.missingCredentials()
     }
 
-    const { email, username, password } = req.body
-    if (!email || !username || !password) {
+    const { email, phone, password } = req.body
+    if (!email || !phone || !password) {
       throw ApiError.missingCredentials()
     }
 
@@ -67,7 +67,7 @@ export const registerHandler: RequestHandler<any, any, RegisterRequest, Authoriz
     const exists = await prisma.user.count({
       where: {
         OR: [
-          { username: username },
+          { phone: phone },
           {
             email: {
               equals: email,
@@ -86,7 +86,7 @@ export const registerHandler: RequestHandler<any, any, RegisterRequest, Authoriz
     const user = await prisma.user.create({
       data: {
         email: email,
-        username: username,
+        phone: phone,
         password: res.locals.hasher.generate(password),
         ips: {
           create: {

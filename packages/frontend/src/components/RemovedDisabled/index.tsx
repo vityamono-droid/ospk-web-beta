@@ -5,10 +5,10 @@ import Tooltip from '@mui/material/Tooltip'
 interface RemovedDisabledProps {
   disabled?: boolean
   removed?: boolean
-  removedAt?: Date
+  removedAt?: Date | null
 }
 
-const RemovedDisabled = ({ disabled, removed, removedAt }: RemovedDisabledProps) => {
+const RemovedDisabled = ({ disabled, removedAt }: RemovedDisabledProps) => {
   let planned
   if (removedAt) {
     const currDate = new Date(removedAt)
@@ -17,8 +17,9 @@ const RemovedDisabled = ({ disabled, removed, removedAt }: RemovedDisabledProps)
 
   return (
     <>
-      {removed ? (
-        <Tooltip title={`Автоматическое удаление запланировано ${planned ? `на ${new Date(planned)?.toLocaleDateString()}` : 'через месяц'}`}>
+      {!!removedAt ? (
+        <Tooltip
+          title={`Автоматическое удаление запланировано ${planned ? `на ${new Date(planned)?.toLocaleDateString()}` : 'через месяц'}`}>
           <RemovedIcon color={'error'} />
         </Tooltip>
       ) : (

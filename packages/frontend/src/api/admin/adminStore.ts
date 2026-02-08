@@ -1,8 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit/react'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
-// Auth
-import newsApi from './news.api'
+//Clients
 import clientsApi from './client.api'
+// Articles
+import articleApi from './article.api'
+import articleCatalogsApi from './articleCatalogs.api'
+import articleCategoriesApi from './articleCategories.api'
 // Services
 import servicesApi from './services.api'
 import serviceCatalogsApi from './serviceCatalogs.api'
@@ -11,8 +14,13 @@ import serviceUnitsApi from './serviceUnits.api'
 
 const adminStore = configureStore({
   reducer: {
+    // Clients
     [clientsApi.reducerPath]: clientsApi.reducer,
-    [newsApi.reducerPath]: newsApi.reducer,
+    // Articles
+    [articleApi.reducerPath]: articleApi.reducer,
+    [articleCatalogsApi.reducerPath]: articleCatalogsApi.reducer,
+    [articleCategoriesApi.reducerPath]: articleCategoriesApi.reducer,
+    // Services
     [servicesApi.reducerPath]: servicesApi.reducer,
     [serviceCatalogsApi.reducerPath]: serviceCatalogsApi.reducer,
     [serviceCategoriesApi.reducerPath]: serviceCategoriesApi.reducer,
@@ -20,8 +28,13 @@ const adminStore = configureStore({
   },
   middleware: (getDefault) =>
     getDefault()
+      // Clients
       .concat(clientsApi.middleware)
-      .concat(newsApi.middleware)
+      // Articles
+      .concat(articleApi.middleware)
+      .concat(articleCatalogsApi.middleware)
+      .concat(articleCategoriesApi.middleware)
+      // Services
       .concat(servicesApi.middleware)
       .concat(serviceCatalogsApi.middleware)
       .concat(serviceCategoriesApi.middleware)

@@ -7,12 +7,13 @@ interface IconCountProps {
   icon: any
   count?: number
   tooltip?: ReactNode
+  autoHide?: boolean
 }
 
-const IconCount = ({ count, tooltip, ...props }: IconCountProps) => {
+const IconCount = ({ count, tooltip, autoHide, ...props }: IconCountProps) => {
   return (
     <>
-      {!!count && count > 0 && (
+      {((!!count && count > 0) || autoHide) && (
         <Tooltip title={tooltip}>
           <Stack direction={'row'} spacing={1} alignItems={'center'}>
             <props.icon sx={{ color: 'slategray' }} />

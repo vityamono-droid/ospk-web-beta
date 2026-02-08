@@ -23,7 +23,7 @@ const revokeQuery: ClientQueryType = async (_args, api, options) => {
       method: 'POST',
       body: {
         token: token,
-        client_name: 'webapp',
+        client_name: localStorage.getItem('client') ?? undefined,
       } satisfies RevokeTokenRequest,
     } satisfies FetchArgs
 

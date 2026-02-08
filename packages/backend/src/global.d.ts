@@ -23,13 +23,16 @@ declare global {
       logger: Logger
     }
   }
+
+  interface IdParams {
+    id: string
+  }
 }
 
 module 'express-session' {
   interface SessionData {
     userId: string
     user: User
-    scopeConsent: boolean
   }
 }
 

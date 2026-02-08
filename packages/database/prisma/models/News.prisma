@@ -6,6 +6,7 @@ model NewsCatalog {
   description String? @db.VarChar(512)
   disabled    Boolean
   news        News[]  @relation("news_catalog_fkey")
+  categories  NewsCategory[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
@@ -24,6 +25,8 @@ model NewsCategory {
   updatedAt DateTime? @updatedAt
   removedAt DateTime?
 
+  catalogId  String       @db.Uuid
+  catalog    NewsCatalog  @relation(fields: [catalogId], references: [id])
   parentId String?       @db.Uuid
   parent   NewsCategory? @relation(fields: [parentId], references: [id], name: "news_category_parent_fkey")
 

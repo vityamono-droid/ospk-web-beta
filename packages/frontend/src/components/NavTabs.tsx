@@ -19,7 +19,8 @@ const NavTabs = ({ items }: NavTabsProps) => {
   const [value, setValue] = useState(location.pathname)
 
   useEffect(() => {
-    setValue(location.pathname)
+    const path = location.pathname
+    setValue(path.endsWith('/') ? path.slice(0, path.length - 1) : path)
   }, [location.key])
 
   const handleChange = (value: string) => {

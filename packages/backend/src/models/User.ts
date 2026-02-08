@@ -5,7 +5,7 @@ class User implements UserModel, OAuthUser {
   readonly id: string
   email: string
   password: string
-  username: string
+  phone: string
   avatar: string | null
 
   lastLoginAt: Date | null
@@ -19,7 +19,7 @@ class User implements UserModel, OAuthUser {
     this.id = entity.id
     this.email = entity.email
     this.password = entity.password
-    this.username = entity.username
+    this.phone = entity.phone
     this.avatar = entity.avatar
 
     this.lastLoginAt = entity.lastLoginAt

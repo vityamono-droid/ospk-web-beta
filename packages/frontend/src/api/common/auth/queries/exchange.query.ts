@@ -16,7 +16,6 @@ const exchangeQuery: ClientQueryType = async (_args, api, options) => {
           status: 400,
           data: {
             message: 'Unable to verify authorization request',
-            translate: 'common.errors.auth_unable_verify',
           },
         },
       }
@@ -29,8 +28,8 @@ const exchangeQuery: ClientQueryType = async (_args, api, options) => {
         grant_type: 'authorization_code',
         code: code,
         code_verifier: verify,
-        client_name: 'webapp',
-        redirect_uri: `${location.origin}/auth/callback`,
+        client_name: localStorage.getItem('client') ?? undefined,
+        redirect_uri: `${location.origin}/admin/auth/callback`,
       } satisfies AuthorizationCodeRequest,
     } satisfies FetchArgs
 
