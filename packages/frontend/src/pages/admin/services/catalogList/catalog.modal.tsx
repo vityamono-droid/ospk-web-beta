@@ -1,4 +1,4 @@
-import { useAddCatalogMutation, useGetCatalogQuery, useUpdateCatalogMutation } from '@api/admin/serviceCatalogs.api'
+import { useAddCatalogMutation, useGetCatalogQuery, useUpdateCatalogMutation } from '@api/admin/services/catalogs.api'
 import FileUpload from '@components/FileUpload'
 import Modal from '@components/Modal'
 import TextBox from '@components/new/TextBox'

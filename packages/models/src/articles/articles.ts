@@ -1,6 +1,6 @@
-import { PaginationRequest } from '@common'
+import { DateStats, PaginationQuery, Removable } from '@common'
 
-export interface ListArticlesQuery extends PaginationRequest {
+export interface ListArticlesQuery extends PaginationQuery {
   label?: string
   catalogs?: string[]
   categories?: string[]
@@ -8,22 +8,17 @@ export interface ListArticlesQuery extends PaginationRequest {
   removed?: boolean
 }
 
-export interface Article {
+export interface ArticleDetails extends Removable, DateStats {
   id: string
   label: string
-  disabled: boolean
   comments: number
   statics: number
-  createdAt: Date
-  removedAt: Date | null
 }
 
-export interface UpsertArticle {
-  catalogId: string
-  categoryId: string
+export interface UpsertArticleDetails extends Removable {
   label: string
   content: string
   banner: string | null
-  disabled: boolean
-  removedAt: Date | null
+  catalogId: string
+  categoryId: string
 }

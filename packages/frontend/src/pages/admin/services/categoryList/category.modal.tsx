@@ -1,5 +1,5 @@
-import { useListCatalogsQuery } from '@api/admin/serviceCatalogs.api'
-import { useAddCategoryMutation, useGetCategoryQuery, useUpdateCategoryMutation } from '@api/admin/serviceCategories.api'
+import { useListCatalogsQuery } from '@api/admin/services/catalogs.api'
+import { useAddCategoryMutation, useGetCategoryQuery, useUpdateCategoryMutation } from '@api/admin/services/categories.api'
 import Modal from '@components/Modal'
 import TextBox from '@components/new/TextBox'
 import Autocomplete from '@components/Autocomplete'

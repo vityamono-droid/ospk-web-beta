@@ -3,9 +3,9 @@ import {
   useDeleteArticleMutation,
   useGetArticleQuery,
   useUpdateArticleMutation,
-} from '@api/admin/article.api'
-import { useListCatalogsQuery } from '@api/admin/articleCatalogs.api'
-import { useListCategoriesQuery } from '@api/admin/articleCategories.api'
+} from '@api/admin/articles/articles.api'
+import { useListCatalogsQuery } from '@api/admin/articles/catalogs.api'
+import { useListCategoriesQuery } from '@api/admin/articles/categories.api'
 import Autocomplete from '@components/Autocomplete'
 import FileUpload from '@components/FileUpload'
 import TextBox from '@components/new/TextBox'

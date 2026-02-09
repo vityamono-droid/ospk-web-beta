@@ -1,15 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { ArticleCategory, ListArticleCategory, UpsertArticleCategory } from '@ospk/web-models/articles'
-import type { ApiResponse } from '@ospk/web-models'
-
 import { transformErrorResponse, transformResponse } from '@api/transformers'
+
+import type { ApiResponse } from '@ospk/web-models'
+import type { CategoryDetails, ListCategoryDetailsQuery, UpsertCategoryDetails } from '@ospk/web-models/articles'
 
 const articleCategoriesApi = createApi({
   reducerPath: 'articleCategories',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/articleCategories' }),
+  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/articles/categories' }),
   tagTypes: ['categoryList'],
   endpoints: (builder) => ({
-    listCategories: builder.query<ArticleCategory[], ListArticleCategory, ApiResponse<ArticleCategory[]>>({
+    listCategories: builder.query<CategoryDetails[], ListCategoryDetailsQuery, ApiResponse<CategoryDetails[]>>({
       providesTags: (_result, _error, arg) =>
         typeof arg.activeOnly === 'undefined' && typeof arg.catalogId === 'undefined' ? ['categoryList'] : [],
       query: (search) => ({
@@ -20,7 +20,8 @@ const articleCategoriesApi = createApi({
       transformErrorResponse: transformErrorResponse([]),
       transformResponse: transformResponse({ defaultValue: [] }),
     }),
-    getCategory: builder.query<UpsertArticleCategory, string, ApiResponse<UpsertArticleCategory>>({
+
+    getCategory: builder.query<UpsertCategoryDetails, string, ApiResponse<UpsertCategoryDetails>>({
       query: (id) => ({
         url: `/${id}`,
         method: 'GET',
@@ -28,7 +29,8 @@ const articleCategoriesApi = createApi({
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({}),
     }),
-    addCategory: builder.mutation<undefined, UpsertArticleCategory, ApiResponse<undefined>>({
+
+    addCategory: builder.mutation<undefined, UpsertCategoryDetails, ApiResponse>({
       invalidatesTags: ['categoryList'],
       query: (data) => ({
         url: `/`,
@@ -38,7 +40,8 @@ const articleCategoriesApi = createApi({
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({ successMessage: 'Категория добавлена успешно' }),
     }),
-    updateCategory: builder.mutation<undefined, UpdateData<UpsertArticleCategory>, ApiResponse<undefined>>({
+
+    updateCategory: builder.mutation<undefined, UpdateData<UpsertCategoryDetails>, ApiResponse>({
       invalidatesTags: ['categoryList'],
       query: ({ id, data }) => ({
         url: `/${id}`,
@@ -48,7 +51,8 @@ const articleCategoriesApi = createApi({
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({ successMessage: 'Категория изменена успешно' }),
     }),
-    deleteCategory: builder.mutation<undefined, string, ApiResponse<undefined>>({
+
+    deleteCategory: builder.mutation<undefined, string, ApiResponse>({
       invalidatesTags: ['categoryList'],
       query: (id) => ({
         url: `/${id}`,

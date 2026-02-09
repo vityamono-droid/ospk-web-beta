@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack'
 import CategoryTable from './category.table'
 import { useState } from 'react'
 import CategoryModal from './category.modal'
-import { useListCategoriesQuery } from '@api/admin/serviceCategories.api'
+import { useListCategoriesQuery } from '@api/admin/services/categories.api'
 
 const CategoryList = () => {
   const listResponse = useListCategoriesQuery({})

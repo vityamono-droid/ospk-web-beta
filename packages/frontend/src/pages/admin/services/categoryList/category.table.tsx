@@ -1,9 +1,9 @@
 import DataGrid from '@components/DataGrid'
 import RemovedDisabled from '@components/RemovedDisabled'
-import type { ServiceCategory } from '@ospk/web-models/services'
+import type { CategoryDetails } from '@ospk/web-models/services'
 
 interface CategoryTableProps {
-  data: ServiceCategory[]
+  data: CategoryDetails[]
   onRowClick: (id: string) => void
 }
 
@@ -25,7 +25,7 @@ const CategoryTable = ({ data, onRowClick }: CategoryTableProps) => {
       ]}
       body={data.map((item) => ({
         ...item,
-        removedDisabled: <RemovedDisabled removed={item.removed} disabled={item.disabled} removedAt={item.removedAt} />,
+        removedDisabled: <RemovedDisabled disabled={item.disabled} removedAt={item.removedAt} />,
       }))}
       onRowClick={onRowClick}
     />

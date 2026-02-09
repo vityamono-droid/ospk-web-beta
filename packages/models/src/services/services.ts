@@ -1,6 +1,6 @@
-import { PaginationRequest } from '@common'
+import { DateStats, PaginationQuery, Removable } from '@common'
 
-export interface ListServicesRequest extends PaginationRequest {
+export interface ListServiceDetailsQuery extends PaginationQuery {
   label?: string
   catalogs?: string[]
   categories?: string[]
@@ -9,46 +9,35 @@ export interface ListServicesRequest extends PaginationRequest {
   disabled?: boolean
 }
 
-export interface Service {
+export interface ServiceDetails extends Removable, DateStats {
   id: string
   label: string
   vat: number
   price: number
   unit?: string
-  comments: number
-  forLegals: boolean
-  disabled: boolean
   amountType: 'FINITE' | 'INFINITE'
-  removed: boolean
-  removedAt?: Date
+  forLegals: boolean
+  comments: number
+  statistics: number
 }
 
 export interface DepartmentDetails {
-  available?: number
+  available: number | null
   departmentId: string
 }
 
-export interface PriceHistoryDetails {
-  price: number
+export interface UpsertServiceDetails extends Removable {
+  label: string
+  banner: string | null
+  content: string | null
   vat: number
-  createdAt: Date
-}
-
-export interface ServiceDetails extends Omit<Service, 'unit' | 'comments' | 'removed'> {
-  banner?: string
-  content?: string
-  unitId?: string
+  price: number
+  amountType: 'FINITE' | 'INFINITE'
+  forLegals: boolean
+  unitId: string | null
   catalogId: string
-  categoryId?: string
-  removedAt?: Date
+  categoryId: string | null
   departments: DepartmentDetails[]
-  priceHistory: PriceHistoryDetails[]
-}
-
-export interface AddServiceRequest extends Omit<ServiceDetails, 'id' | 'priceHistory' | 'removedAt'> {}
-
-export interface UpdateServiceRequest extends Partial<Omit<ServiceDetails, 'id' | 'priceHistory' | 'removedAt'>> {
-  removedAt?: Date | null
 }
 
 export enum BULK_ACTIONS {
@@ -56,7 +45,7 @@ export enum BULK_ACTIONS {
   DELETE,
 }
 
-export interface UpdateServiceListRequest {
+export interface ServiceDetailsAction {
   action: BULK_ACTIONS
   ids: string[]
   status?: boolean

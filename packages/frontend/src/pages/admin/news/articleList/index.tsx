@@ -1,4 +1,4 @@
-import { useListArticlesQuery } from '@api/admin/article.api'
+import { useListArticlesQuery } from '@api/admin/articles/articles.api'
 import AddButton from '@components/AddButton'
 import useObjectState from '@hooks/useObjectState'
 import type { Article, ListArticlesQuery } from '@ospk/web-models/articles'

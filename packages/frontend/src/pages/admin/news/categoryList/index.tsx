@@ -5,7 +5,7 @@ import RefreshButton from '@components/RefreshButton'
 import Stack from '@mui/material/Stack'
 
 import { useEffect, useState } from 'react'
-import { useListCategoriesQuery } from '@api/admin/articleCategories.api'
+import { useListCategoriesQuery } from '@api/admin/articles/categories.api'
 
 import type { ArticleCategory } from '@ospk/web-models/articles'
 

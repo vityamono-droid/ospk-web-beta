@@ -3,7 +3,7 @@ import ArticleTable from './article.table'
 import ArticleSidebar from './article.sidebar'
 import { useListCatalogsQuery } from '@api/client/articles.api'
 import { useEffect, useState } from 'react'
-import { ArticleCatalogNav } from '@ospk/web-models/articles'
+import type { ArticleCatalogNav } from '@ospk/web-models/articles'
 
 const ArticleListPage = () => {
   const [catalogs, setCatalogs] = useState<ArticleCatalogNav[]>([])

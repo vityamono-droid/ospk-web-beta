@@ -1,22 +1,16 @@
-import { PaginationRequest } from '@common'
+import { ActiveOnlyQuery, DateStats, PaginationQuery, Removable } from '@common'
 
-export interface ListArticlesCatalogQuery extends Partial<PaginationRequest> {
-  activeOnly?: boolean
-}
+export interface ListCatalogDetailsQuery extends Partial<PaginationQuery>, ActiveOnlyQuery {}
 
-export interface ArticleCatalog {
+export interface CatalogDetails extends Removable, DateStats {
   id: string
   label: string
-  disabled: boolean
   news: number
   categories: number
-  removedAt: Date | null
 }
 
-export interface UpsertArticleCatalog {
+export interface UpsertCatalogDetails extends Removable {
   label: string
   banner: string | null
   description: string | null
-  disabled: boolean
-  removedAt: Date | null
 }

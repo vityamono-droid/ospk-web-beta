@@ -26,3 +26,9 @@ export interface ServiceCatalogNavDetails {
   description: string | null
   categories: ServiceCategoryNav[]
 }
+
+export interface PriceHistoryDetails {
+  price: number
+  vat: number
+  createdAt: Date
+}

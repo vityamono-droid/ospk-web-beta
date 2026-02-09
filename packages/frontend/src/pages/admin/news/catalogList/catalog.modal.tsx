@@ -13,7 +13,7 @@ import {
   useDeleteCatalogMutation,
   useGetCatalogQuery,
   useUpdateCatalogMutation,
-} from '@api/admin/articleCatalogs.api'
+} from '@api/admin/articles/catalogs.api'
 
 import type { UpsertArticleCatalog } from '@ospk/web-models/articles'
 

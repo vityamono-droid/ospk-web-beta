@@ -1,9 +1,10 @@
-export interface UnitDetails {
+import { Removable } from '@common'
+
+export interface UnitDetails extends Omit<Removable, 'disabled'> {
   id: string
   label: string
-  removed: boolean
 }
 
-export interface AddUnitRequest extends Omit<UnitDetails, 'id' | 'removed'> {}
-
-export interface UpdateUnitRequest extends Partial<AddUnitRequest & { removedAt: Date }> {}
+export interface UpsertUnitDetails extends Omit<UnitDetails, 'id'> {
+  label: string
+}

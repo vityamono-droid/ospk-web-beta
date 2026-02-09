@@ -1,22 +1,19 @@
-export interface ListArticleCategory {
+import { ActiveOnlyQuery, DateStats, Removable } from '@common'
+
+export interface ListCategoryDetailsQuery extends ActiveOnlyQuery {
   catalogId?: string
-  activeOnly?: boolean
 }
 
-export interface ArticleCategory {
+export interface CategoryDetails extends Removable, DateStats {
   id: string
-  parentId: string | null
   label: string
-  disabled: boolean
   news: number
   categories: number
-  removedAt: Date | null
+  parentId: string | null
 }
 
-export interface UpsertArticleCategory {
+export interface UpsertCategoryDetails extends Removable {
+  label: string
   catalogId: string
   parentId: string | null
-  label: string
-  disabled: boolean
-  removedAt: Date | null
 }

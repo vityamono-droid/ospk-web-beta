@@ -1,20 +1,14 @@
-export interface ServiceCatalog {
+import { DateStats, Removable } from '@common'
+
+export interface CatalogDetails extends Removable, DateStats {
   id: string
   label: string
-  disabled: boolean
   services: number
   categories: number
-  removed: boolean
-  removedAt?: Date
 }
 
-export interface ServiceCatalogDetails extends Omit<ServiceCatalog, 'services' | 'categories' | 'removed'> {
-  banner?: string
-  description?: string
-}
-
-export interface AddServiceCatalogRequest extends Omit<ServiceCatalogDetails, 'id' | 'removedAt'> {}
-
-export interface UpdateServiceCatalogRequest extends Partial<Omit<ServiceCatalogDetails, 'id' | 'removedAt'>> {
-  removedAt?: Date | null
+export interface UpsertCatalogDetails extends Removable {
+  label: string
+  banner: string | null
+  description: string | null
 }

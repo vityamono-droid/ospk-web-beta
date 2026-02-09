@@ -1,7 +1,7 @@
 import AddButton from '@components/AddButton'
 import Stack from '@mui/material/Stack'
 import CatalogTable from './catalog.table'
-import { useListCatalogsQuery } from '@api/admin/serviceCatalogs.api'
+import { useListCatalogsQuery } from '@api/admin/services/catalogs.api'
 import CatalogModal from './catalog.modal'
 import { useState } from 'react'
 

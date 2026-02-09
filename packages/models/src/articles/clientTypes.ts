@@ -1,4 +1,4 @@
-import { PaginationRequest } from '@common'
+import { PaginationQuery } from '@common'
 
 export interface ArticleCatalogNav {
   id: string
@@ -12,7 +12,7 @@ export interface ArticleCatalogNavDetails {
   description: string | null
 }
 
-export interface ListArticleNavQuery extends PaginationRequest {
+export interface ListArticleNavQuery extends PaginationQuery {
   categoryId: string
 }
 

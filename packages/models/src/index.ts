@@ -4,7 +4,21 @@ export interface ApiResponse<T = any> {
   data?: T
 }
 
-export interface PaginationRequest {
+export interface PaginationQuery {
   limit: number
   offset: number
+}
+
+export interface ActiveOnlyQuery {
+  activeOnly?: boolean
+}
+
+export interface Removable {
+  disabled: boolean
+  removedAt: Date | null
+}
+
+export interface DateStats {
+  createdAt: Date
+  updatedAt: Date | null
 }

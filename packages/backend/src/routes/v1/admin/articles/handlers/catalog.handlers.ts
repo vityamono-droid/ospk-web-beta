@@ -1,12 +1,11 @@
 import { RequestHandler } from 'express'
-import { ApiResponse } from '@ospk/web-models'
-import { ArticleCatalog, ListArticlesCatalogQuery, UpsertArticleCatalog } from '@ospk/web-models/articles'
 
-export const listArticleCatalogs: RequestHandler<any, ApiResponse<ArticleCatalog[]>, any, ListArticlesCatalogQuery> = async (
-  req,
-  res,
-  next,
-) => {
+import { ApiResponse } from '@ospk/web-models'
+import { CatalogDetails, ListCatalogDetailsQuery, UpsertCatalogDetails } from '@ospk/web-models/articles'
+
+// GET /api/v1/admin/articles/catalogs
+type ListCatalogsRequest = RequestHandler<any, ApiResponse<CatalogDetails[]>, any, ListCatalogDetailsQuery>
+export const listCatalogs: ListCatalogsRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
@@ -19,17 +18,14 @@ export const listArticleCatalogs: RequestHandler<any, ApiResponse<ArticleCatalog
             removedAt: null,
           }
         : undefined,
-      select: {
-        id: true,
-        label: true,
-        disabled: true,
+      omit: {
+        banner: true,
+        description: true,
+      },
+      include: {
         _count: {
-          select: {
-            news: true,
-            categories: true,
-          },
+          select: { news: true, categories: true },
         },
-        removedAt: true,
       },
       take: typeof limit === 'undefined' ? undefined : +limit,
       skip: typeof offset === 'undefined' ? undefined : +offset,
@@ -49,18 +45,18 @@ export const listArticleCatalogs: RequestHandler<any, ApiResponse<ArticleCatalog
   }
 }
 
-export const getArticleCatalog: RequestHandler<IdParams, ApiResponse<UpsertArticleCatalog>> = async (req, res, next) => {
+// GET /api/v1/admin/articles/catalogs/:id
+type GetCatalogRequest = RequestHandler<IdParams, ApiResponse<UpsertCatalogDetails>>
+export const getCatalog: GetCatalogRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
     const catalog = await prisma.newsCatalog.findUniqueOrThrow({
       where: { id: req.params.id },
-      select: {
-        label: true,
-        banner: true,
-        description: true,
-        disabled: true,
-        removedAt: true,
+      omit: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
       },
     })
 
@@ -73,15 +69,16 @@ export const getArticleCatalog: RequestHandler<IdParams, ApiResponse<UpsertArtic
   }
 }
 
-export const upsertArticleCatalog: RequestHandler<IdParams, ApiResponse, UpsertArticleCatalog> = async (req, res, next) => {
+// POST:PUT /api/v1/admin/articles/catalogs/:id?
+type UpsertCatalogRequest = RequestHandler<IdParams, ApiResponse, UpsertCatalogDetails>
+export const upsertCatalog: UpsertCatalogRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
     if (!!req.params.id) {
-      await prisma.newsCatalog.upsert({
+      await prisma.newsCatalog.update({
         where: { id: req.params.id },
-        create: req.body,
-        update: req.body,
+        data: req.body,
       })
     } else {
       await prisma.newsCatalog.create({
@@ -97,11 +94,13 @@ export const upsertArticleCatalog: RequestHandler<IdParams, ApiResponse, UpsertA
   }
 }
 
-export const deleteArticleCatalog: RequestHandler<IdParams, ApiResponse> = async (req, res, next) => {
+// DELETE /api/v1/admin/articles/catalogs/:id
+type DeleteCatalogRequest = RequestHandler<IdParams, ApiResponse>
+export const deleteCatalog: DeleteCatalogRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
-    const oldValue = await prisma.newsCatalog.findUniqueOrThrow({
+    const catalog = await prisma.newsCatalog.findUniqueOrThrow({
       where: { id: req.params.id },
       select: { removedAt: true },
     })
@@ -109,7 +108,7 @@ export const deleteArticleCatalog: RequestHandler<IdParams, ApiResponse> = async
     await prisma.newsCatalog.update({
       where: { id: req.params.id },
       data: {
-        removedAt: !!oldValue.removedAt ? null : new Date(),
+        removedAt: !!catalog.removedAt ? null : new Date(),
       },
     })
 

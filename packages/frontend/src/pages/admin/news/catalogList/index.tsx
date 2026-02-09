@@ -5,7 +5,7 @@ import RefreshButton from '@components/RefreshButton'
 import CatalogModal from './catalog.modal'
 
 import { useEffect, useState } from 'react'
-import { useListCatalogsQuery } from '@api/admin/articleCatalogs.api'
+import { useListCatalogsQuery } from '@api/admin/articles/catalogs.api'
 
 import type { ArticleCatalog } from '@ospk/web-models/articles'
 import Paginator from '@components/Paginator'

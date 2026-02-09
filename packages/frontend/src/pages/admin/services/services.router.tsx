@@ -1,11 +1,11 @@
+import { lazy } from 'react'
 import { Outlet, Route, Routes } from 'react-router'
 import ServicesLayout from './services.layout'
-import { lazy } from 'react'
 
 const ServiceListPage = lazy(() => import('./serviceList'))
 const CatalogListPage = lazy(() => import('./catalogList'))
 const CategoryListPage = lazy(() => import('./categoryList'))
-const ServicePage = lazy(() => import('./servicePage/service.page'))
+const ServicePage = lazy(() => import('./servicePage'))
 
 const ServicesRouter = () => {
   return (

@@ -1,15 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { ApiResponse } from '@ospk/web-models'
-import type { Article, ListArticlesQuery, UpsertArticle } from '@ospk/web-models/articles'
-
 import { transformErrorResponse, transformResponse } from '@api/transformers'
 
-const articleApi = createApi({
+import type { ApiResponse } from '@ospk/web-models'
+import type { ArticleDetails, ListArticlesQuery, UpsertArticleDetails } from '@ospk/web-models/articles'
+
+const articlesApi = createApi({
   reducerPath: 'articles',
   baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/articles' }),
   tagTypes: ['articleList'],
   endpoints: (builder) => ({
-    listArticles: builder.query<Article[], ListArticlesQuery, ApiResponse<Article[]>>({
+    listArticles: builder.query<ArticleDetails[], ListArticlesQuery, ApiResponse<ArticleDetails[]>>({
       providesTags: ['articleList'],
       query: (search) => ({
         url: `/`,
@@ -19,15 +19,12 @@ const articleApi = createApi({
       transformErrorResponse: transformErrorResponse([]),
       transformResponse: transformResponse({ defaultValue: [] }),
     }),
-    getArticle: builder.query<UpsertArticle, string, ApiResponse<UpsertArticle>>({
-      query: (id) => ({
-        url: `/${id}`,
-        method: 'GET',
-      }),
+    getArticle: builder.query<UpsertArticleDetails, string, ApiResponse<UpsertArticleDetails>>({
+      query: (id) => `/${id}`,
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({}),
     }),
-    addArticle: builder.mutation<undefined, UpsertArticle, ApiResponse<undefined>>({
+    addArticle: builder.mutation<undefined, UpsertArticleDetails, ApiResponse>({
       invalidatesTags: ['articleList'],
       query: (data) => ({
         url: `/`,
@@ -37,7 +34,7 @@ const articleApi = createApi({
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({ successMessage: 'Статья добавлена успешно' }),
     }),
-    updateArticle: builder.mutation<undefined, UpdateData<UpsertArticle>, ApiResponse<undefined>>({
+    updateArticle: builder.mutation<undefined, UpdateData<UpsertArticleDetails>, ApiResponse>({
       invalidatesTags: ['articleList'],
       query: ({ id, data }) => ({
         url: `/${id}`,
@@ -47,7 +44,7 @@ const articleApi = createApi({
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({ successMessage: 'Статья изменена успешно' }),
     }),
-    deleteArticle: builder.mutation<undefined, string, ApiResponse<undefined>>({
+    deleteArticle: builder.mutation<undefined, string, ApiResponse>({
       invalidatesTags: ['articleList'],
       query: (id) => ({
         url: `/${id}`,
@@ -65,6 +62,6 @@ export const {
   useAddArticleMutation,
   useUpdateArticleMutation,
   useDeleteArticleMutation,
-} = articleApi
+} = articlesApi
 
-export default articleApi
+export default articlesApi

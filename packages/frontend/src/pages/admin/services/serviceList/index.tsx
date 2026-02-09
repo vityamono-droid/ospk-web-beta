@@ -1,8 +1,8 @@
-import { useListServicesQuery } from '@api/admin/services.api'
+import { useListServicesQuery } from '@api/admin/services/services.api'
 import AddButton from '@components/AddButton'
 import Paginator from '@components/Paginator'
 import Stack from '@mui/material/Stack'
-import type { Service } from '@ospk/web-models/services'
+import type { ServiceDetails } from '@ospk/web-models/services'
 import { useEffect, useState } from 'react'
 import ServiceFilter from './service.filter'
 import ServiceTable from './service.table'
@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router'
 const ServiceList = () => {
   const navigate = useNavigate()
   const [offset, setOffset] = useState(0)
-  const [services, setServices] = useState<Service[]>([])
+  const [services, setServices] = useState<ServiceDetails[]>([])
 
   const listResponse = useListServicesQuery(
     {

@@ -1,22 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type {
-  AddServiceRequest,
-  ListServicesRequest,
-  UpdateServiceListRequest,
-  UpdateServiceRequest,
-  Service,
-  ServiceDetails,
-} from '@ospk/web-models/services'
-import type { ApiResponse } from '@ospk/web-models'
-
 import { transformErrorResponse, transformResponse } from '@api/transformers'
+
+import type { ApiResponse } from '@ospk/web-models'
+import type { ListServiceDetailsQuery, ServiceDetails, ServiceDetailsAction, UpsertServiceDetails } from '@ospk/web-models/services'
 
 const servicesApi = createApi({
   reducerPath: 'services',
   baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/services' }),
   tagTypes: ['serviceList'],
   endpoints: (builder) => ({
-    listServices: builder.query<Service[], ListServicesRequest, ApiResponse<Service[]>>({
+    listServices: builder.query<ServiceDetails[], ListServiceDetailsQuery, ApiResponse<ServiceDetails[]>>({
       providesTags: ['serviceList'],
       query: (search) => ({
         url: `/`,
@@ -26,15 +19,14 @@ const servicesApi = createApi({
       transformErrorResponse: transformErrorResponse([]),
       transformResponse: transformResponse({ defaultValue: [] }),
     }),
-    getService: builder.query<ServiceDetails, string, ApiResponse<ServiceDetails>>({
-      query: (id) => ({
-        url: `/${id}`,
-        method: 'GET',
-      }),
+
+    getService: builder.query<UpsertServiceDetails, string, ApiResponse<UpsertServiceDetails>>({
+      query: (id) => `/${id}`,
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({}),
     }),
-    addService: builder.mutation<undefined, AddServiceRequest, ApiResponse<undefined>>({
+
+    addService: builder.mutation<undefined, UpsertServiceDetails, ApiResponse>({
       invalidatesTags: ['serviceList'],
       query: (data) => ({
         url: `/`,
@@ -44,17 +36,19 @@ const servicesApi = createApi({
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({ successMessage: 'Услуга добавлена успешно' }),
     }),
-    updateService: builder.mutation<undefined, { id: string; data: UpdateServiceRequest }, ApiResponse<undefined>>({
+
+    updateService: builder.mutation<undefined, UpdateData<UpsertServiceDetails>, ApiResponse>({
       invalidatesTags: ['serviceList'],
       query: ({ id, data }) => ({
         url: `/${id}`,
-        method: 'PATCH',
+        method: 'PUT',
         body: data,
       }),
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({ successMessage: 'Услуга изменена успешно' }),
     }),
-    updateServiceList: builder.mutation<undefined, UpdateServiceListRequest, ApiResponse<undefined>>({
+
+    updateServiceList: builder.mutation<undefined, ServiceDetailsAction, ApiResponse>({
       invalidatesTags: ['serviceList'],
       query: (data) => ({
         url: `/`,
@@ -64,7 +58,8 @@ const servicesApi = createApi({
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({ successMessage: 'Услуги изменены успешно' }),
     }),
-    deleteService: builder.mutation<undefined, string, ApiResponse<undefined>>({
+
+    deleteService: builder.mutation<undefined, string, ApiResponse>({
       invalidatesTags: ['serviceList'],
       query: (id) => ({
         url: `/${id}`,

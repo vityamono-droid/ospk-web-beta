@@ -1,13 +1,13 @@
 import DataGrid from '@components/DataGrid'
 import IconCount from '@components/IconCount'
 import RemovedDisabled from '@components/RemovedDisabled'
-import type { Service } from '@ospk/web-models/services'
+import type { ServiceDetails } from '@ospk/web-models/services'
 import { useNavigate } from 'react-router'
 import CommentIcon from '@mui/icons-material/Try'
 import Chip from '@mui/material/Chip'
 
 interface ServiceTable {
-  data: Service[]
+  data: ServiceDetails[]
 }
 
 const ServiceTable = ({data}: ServiceTable) => {
@@ -40,7 +40,7 @@ const ServiceTable = ({data}: ServiceTable) => {
       ]}
       body={data.map((item) => ({
         ...item,
-        removedDisabled: <RemovedDisabled removed={item.removed} disabled={item.disabled} />,
+        removedDisabled: <RemovedDisabled disabled={item.disabled} removedAt={item.removedAt} />,
         forLegals: <Chip size={'small'} label={item.forLegals ? 'Для юр. лиц' : 'Для физ. лиц'} sx={{ width: '100%' }} />,
         commentsCount: <IconCount icon={CommentIcon} count={item.comments} tooltip={'Кол-во комментариев'} />,
         vat: `${item.vat} %`,

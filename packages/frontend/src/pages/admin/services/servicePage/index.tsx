@@ -1,47 +1,61 @@
-import { useListCatalogsQuery } from '@api/admin/serviceCatalogs.api'
-import { useListCategoriesQuery } from '@api/admin/serviceCategories.api'
-import { useGetServiceQuery } from '@api/admin/services.api'
-import { useListUnitsQuery } from '@api/admin/serviceUnits.api'
 import Autocomplete from '@components/Autocomplete'
 import FileUpload from '@components/FileUpload'
 import TextBox from '@components/new/TextBox'
 import PageHeader from '@components/PageHeader'
 import Switch from '@components/Switch'
 import TextEditor from '@components/TextEditor'
-import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
-import type { UpdateServiceRequest, AddServiceRequest } from '@ospk/web-models/services'
+
+import {
+  useAddServiceMutation,
+  useDeleteServiceMutation,
+  useGetServiceQuery,
+  useUpdateServiceMutation,
+} from '@api/admin/services/services.api'
+import { useListCatalogsQuery } from '@api/admin/services/catalogs.api'
+import { useListCategoriesQuery } from '@api/admin/services/categories.api'
+import { useListUnitsQuery } from '@api/admin/services/units.api'
+import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
-const useAddService = () => {
-  const [error, analyze] = useAnalyzeRequired<AddServiceRequest>(['label', 'vat', 'price', 'amountType', 'catalogId'])
-  const [service, setService] = useState<AddServiceRequest>({
+import { type UpsertServiceDetails } from '@ospk/web-models/services'
+
+const ServicePage = () => {
+  const navigate = useNavigate()
+
+  const { id } = useParams()
+  const getResponse = useGetServiceQuery(id!, {
+    skip: !id,
+    refetchOnMountOrArgChange: true,
+  })
+
+  const [error, analyze] = useAnalyzeRequired<UpsertServiceDetails>(['label', 'vat', 'price', 'catalogId'])
+  const [service, setService] = useState<UpsertServiceDetails>({
     label: '',
-    vat: 15,
+    banner: null,
+    content: null,
+    vat: 0,
     price: 100,
-    amountType: 'FINITE',
     forLegals: false,
     disabled: false,
+    amountType: 'FINITE',
+    unitId: null,
     catalogId: '',
+    categoryId: null,
+    removedAt: null,
     departments: [],
   })
 
-  return {
-    service,
-    setService,
-    error,
-    analyze,
-  }
-}
+  const listCatalogResponse = useListCatalogsQuery({})
+  const listCategoryResponse = useListCategoriesQuery({}, { skip: !service.catalogId })
+  const listUnitResponse = useListUnitsQuery({}, { skip: service.amountType != 'FINITE' })
 
-const useUpdateService = (id: string) => {
-  const getResponse = useGetServiceQuery(id)
-
-  const [error, analyze] = useAnalyzeRequired<UpdateServiceRequest>(['label', 'vat', 'price', 'amountType', 'catalogId'])
-  const [service, setService] = useState<UpdateServiceRequest>({})
+  const [addService, addResponse] = useAddServiceMutation()
+  const [updateService, updateResponse] = useUpdateServiceMutation()
+  const [deleteService, deleteResponse] = useDeleteServiceMutation()
 
   useEffect(() => {
     if (!getResponse.isSuccess) {
@@ -51,23 +65,13 @@ const useUpdateService = (id: string) => {
     setService(getResponse.data)
   }, [getResponse.status])
 
-  return {
-    service,
-    setService,
-    error,
-    analyze,
-  }
-}
+  useEffect(() => {
+    if (![addResponse.isSuccess, updateResponse.isSuccess, deleteResponse.isSuccess].includes(true)) {
+      return
+    }
 
-const ServicePage = () => {
-  const navigate = useNavigate()
-
-  const { id } = useParams()
-  const { service, setService, error, analyze } = !!id ? useUpdateService(id) : useAddService()
-
-  const listCatalogResponse = useListCatalogsQuery({})
-  const listCategoryResponse = useListCategoriesQuery({}, { skip: !service.catalogId })
-  const listUnitResponse = useListUnitsQuery({}, { skip: service.amountType != 'FINITE' })
+    navigate(-1)
+  }, [addResponse.status, updateResponse.status, deleteResponse.status])
 
   const handlePropChange = (data: any) => {
     setService({
@@ -76,19 +80,29 @@ const ServicePage = () => {
     })
   }
 
-  const handleDelete = () => {}
+  const handleDelete = () => !!id && deleteService(id)
 
   const handleSave = () => {
+    const data = {
+      ...service,
+    }
+
     console.log(service)
     if (!analyze(service)) {
       return
+    }
+
+    if (!!id) {
+      updateService({ id, data })
+    } else {
+      addService(data)
     }
   }
 
   return (
     <>
       <Stack spacing={1}>
-        <PageHeader title={`${!!id ? 'Изменение' : 'Добавление'} услуги`} backTo={'../'} />
+        <PageHeader title={`${!!id ? 'Изменение' : 'Добавление'} услуги`} />
         <TextBox
           label={'Название'}
           error={error.label}
@@ -119,15 +133,15 @@ const ServicePage = () => {
               },
               {
                 label: '10%',
-                value: 0,
+                value: 10,
               },
               {
                 label: '18%',
-                value: 0,
+                value: 18,
               },
               {
                 label: '20%',
-                value: 0,
+                value: 20,
               },
             ]}
             onChange={(value) => handlePropChange({ vat: value })}
@@ -149,7 +163,7 @@ const ServicePage = () => {
               },
             ]}
             value={service.amountType}
-            onChange={(value) => handlePropChange({ amountType: value })}
+            onChange={(value) => handlePropChange({ amountType: value, unitId: null })}
           />
           <Autocomplete
             fullWidth

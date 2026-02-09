@@ -6,14 +6,14 @@ import Switch from '@components/Switch'
 import TextBox from '@components/new/TextBox'
 
 import { useEffect } from 'react'
-import { useListCatalogsQuery } from '@api/admin/articleCatalogs.api'
+import { useListCatalogsQuery } from '@api/admin/articles/catalogs.api'
 import {
   useAddCategoryMutation,
   useDeleteCategoryMutation,
   useGetCategoryQuery,
   useListCategoriesQuery,
   useUpdateCategoryMutation,
-} from '@api/admin/articleCategories.api'
+} from '@api/admin/articles/categories.api'
 import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
 import useObjectState from '@hooks/useObjectState'
 
