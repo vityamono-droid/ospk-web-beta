@@ -24,10 +24,19 @@
 
     "paths": {
       "@common": ["src/index.ts"],
-      "@auth/*": ["src/auth/*"],
-      "@notify/*": ["src/notify/*"],
-      "@vpn/*": ["src/vpn/*"],
-      "@wallet/*": ["src/wallet/*"]
+      "@announces": ["src/announces/index.ts"],
+      "@articles": ["src/articles/index.ts"],
+      "@auth": ["src/auth/index.ts"],
+      "@carousels": ["src/carousels/index.ts"],
+      "@clients": ["src/clients/index.ts"],
+      "@contacts": ["src/contacts/index.ts"],
+      "@departments": ["src/departments/index.ts"],
+      "@employees": ["src/employees/index.ts"],
+      "@news": ["src/@news/index.ts"],
+      "@orders": ["src/orders/index.ts"],
+      "@requests": ["src/requests/index.ts"],
+      "@services": ["src/services/index.ts"],
+      "@users": ["src/users/index.ts"]
     }
   },
   "include": ["src/**/*.ts"]

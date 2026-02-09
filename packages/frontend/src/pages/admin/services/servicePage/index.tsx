@@ -18,10 +18,11 @@ import { useListCatalogsQuery } from '@api/admin/services/catalogs.api'
 import { useListCategoriesQuery } from '@api/admin/services/categories.api'
 import { useListUnitsQuery } from '@api/admin/services/units.api'
 import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router'
 
 import { type UpsertServiceDetails } from '@ospk/web-models/services'
+import useObjectState from '@hooks/useObjectState'
 
 const ServicePage = () => {
   const navigate = useNavigate()
@@ -33,7 +34,7 @@ const ServicePage = () => {
   })
 
   const [error, analyze] = useAnalyzeRequired<UpsertServiceDetails>(['label', 'vat', 'price', 'catalogId'])
-  const [service, setService] = useState<UpsertServiceDetails>({
+  const [service, setService, setServiceProp] = useObjectState<UpsertServiceDetails>({
     label: '',
     banner: null,
     content: null,
@@ -73,13 +74,6 @@ const ServicePage = () => {
     navigate(-1)
   }, [addResponse.status, updateResponse.status, deleteResponse.status])
 
-  const handlePropChange = (data: any) => {
-    setService({
-      ...service,
-      ...data,
-    })
-  }
-
   const handleDelete = () => !!id && deleteService(id)
 
   const handleSave = () => {
@@ -107,7 +101,7 @@ const ServicePage = () => {
           label={'Название'}
           error={error.label}
           value={service.label}
-          onChange={(value) => handlePropChange({ label: value })}
+          onChange={(value) => setServiceProp({ label: value })}
         />
         <Stack direction={'row'} spacing={1}>
           <TextBox
@@ -115,7 +109,7 @@ const ServicePage = () => {
             label={'Цена'}
             error={error.price}
             value={service.price}
-            onChange={(value) => handlePropChange({ price: value })}
+            onChange={(value) => setServiceProp({ price: value })}
           />
           <Autocomplete
             fullWidth
@@ -144,7 +138,7 @@ const ServicePage = () => {
                 value: 20,
               },
             ]}
-            onChange={(value) => handlePropChange({ vat: value })}
+            onChange={(value) => setServiceProp({ vat: value })}
           />
         </Stack>
         <Stack direction={'row'} spacing={1}>
@@ -163,7 +157,7 @@ const ServicePage = () => {
               },
             ]}
             value={service.amountType}
-            onChange={(value) => handlePropChange({ amountType: value, unitId: null })}
+            onChange={(value) => setServiceProp({ amountType: value, unitId: null })}
           />
           <Autocomplete
             fullWidth
@@ -172,12 +166,12 @@ const ServicePage = () => {
             disabled={service.amountType != 'FINITE'}
             options={listUnitResponse.data?.map((item) => ({ label: item.label, value: item.id }))}
             value={service.unitId}
-            onChange={(value) => handlePropChange({ unitId: value })}
+            onChange={(value) => setServiceProp({ unitId: value })}
           />
         </Stack>
         <Stack direction={'row'} spacing={1}>
-          <Switch label={'Для юр лиц'} value={service.forLegals} onChange={(value) => handlePropChange({ forLegals: value })} />
-          <Switch label={'Включить'} value={!service.disabled} onChange={(value) => handlePropChange({ disabled: !value })} />
+          <Switch label={'Для юр лиц'} value={service.forLegals} onChange={(value) => setServiceProp({ forLegals: value })} />
+          <Switch label={'Включить'} value={!service.disabled} onChange={(value) => setServiceProp({ disabled: !value })} />
         </Stack>
         <Autocomplete
           label={'Каталог'}
@@ -185,7 +179,7 @@ const ServicePage = () => {
           loading={listCatalogResponse.isLoading}
           options={listCatalogResponse.data?.map((item) => ({ label: item.label, value: item.id }))}
           value={service.catalogId}
-          onChange={(value) => handlePropChange({ catalogId: value })}
+          onChange={(value) => setServiceProp({ catalogId: value })}
         />
         <Autocomplete
           label={'Категория'}
@@ -193,12 +187,12 @@ const ServicePage = () => {
           disabled={!service.catalogId}
           options={listCategoryResponse.data?.map((item) => ({ label: item.label, value: item.id }))}
           value={service.categoryId}
-          onChange={(value) => handlePropChange({ categoryId: value })}
+          onChange={(value) => setServiceProp({ categoryId: value })}
         />
         <Autocomplete
           label={'Отделения'}
           value={service.departments}
-          onChange={(value) => handlePropChange({ departments: value })}
+          onChange={(value) => setServiceProp({ departments: value })}
         />
         <FileUpload />
       </Stack>
@@ -210,7 +204,7 @@ const ServicePage = () => {
               {service.removedAt == undefined || service.removedAt == null ? 'Удалить' : 'Восстановить'}
             </Button>
           )}
-          <Button onClick={() => navigate('../')}>Отмена</Button>
+          <Button onClick={() => navigate(-1)}>Отмена</Button>
           <Button color={'success'} variant={'outlined'} onClick={handleSave}>
             Сохранить
           </Button>

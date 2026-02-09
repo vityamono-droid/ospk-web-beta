@@ -1,16 +1,11 @@
 import { DateStats, PaginationQuery, Removable } from '@common'
 
-export enum CLIENT_TYPE {
-  CLIENT = 'CLIENT',
-  STAFF = 'STAFF',
-}
-
 export interface ListClientsQuery extends PaginationQuery {
   lastName?: string
   phone?: string
   email?: string
   disabled?: boolean
-  type?: CLIENT_TYPE
+  type?: 'CLIENT' | 'STAFF'
 }
 
 export interface ClientDetails extends Removable, DateStats {
