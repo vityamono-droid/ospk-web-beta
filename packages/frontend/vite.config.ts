@@ -1,4 +1,5 @@
 import { defineConfig, loadEnv, type UserConfig } from 'vite'
+import commonjs from 'vite-plugin-commonjs'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 import path from 'path'
@@ -26,7 +27,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [react(), svgr()],
+    plugins: [react(), svgr(), commonjs()],
     resolve: {
       alias: resolvePaths([]),
     },

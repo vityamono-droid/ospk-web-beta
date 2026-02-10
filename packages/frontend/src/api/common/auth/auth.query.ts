@@ -12,11 +12,10 @@ interface AuthenticatedQueryParams {
 const authenticatedQuery =
   ({ baseUrl, on401 }: AuthenticatedQueryParams): BaseQueryType =>
   async (args, api, options) => {
-    const client = localStorage.getItem('client')
     const baseQuery = fetchBaseQuery({
       baseUrl: baseUrl,
       prepareHeaders: (headers) => {
-        const token = localStorage.getItem(`${client}`)
+        const token = localStorage.getItem(`ospk.apps.`)
         if (token) {
           headers.set('Authorization', `Bearer ${token}`)
         }

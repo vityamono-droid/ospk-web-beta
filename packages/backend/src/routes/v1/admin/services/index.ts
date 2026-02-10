@@ -30,6 +30,6 @@ servicesRouter.get('/:id', getService)
 servicesRouter.post('/', upsertService)
 servicesRouter.put(':id', upsertService)
 servicesRouter.patch('/', updateServiceList)
-servicesRouter.delete(':id', deleteService)
+servicesRouter.delete('/:id', deleteService)
 
 export default servicesRouter

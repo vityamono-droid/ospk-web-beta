@@ -1,11 +1,11 @@
 /// Каталог новостей, отображаемый в навигации приложения.
 model NewsCatalog {
-  id          String  @id @default(uuid()) @db.Uuid
-  label       String  @unique @db.VarChar(128)
+  id          String         @id @default(uuid()) @db.Uuid
+  label       String         @unique @db.VarChar(128)
   banner      String?
-  description String? @db.VarChar(512)
+  description String?        @db.VarChar(512)
   disabled    Boolean
-  news        News[]  @relation("news_catalog_fkey")
+  news        News[]         @relation("news_catalog_fkey")
   categories  NewsCategory[]
 
   createdAt DateTime  @default(now())
@@ -25,10 +25,10 @@ model NewsCategory {
   updatedAt DateTime? @updatedAt
   removedAt DateTime?
 
-  catalogId  String       @db.Uuid
-  catalog    NewsCatalog  @relation(fields: [catalogId], references: [id])
-  parentId String?       @db.Uuid
-  parent   NewsCategory? @relation(fields: [parentId], references: [id], name: "news_category_parent_fkey")
+  catalogId String        @db.Uuid
+  catalog   NewsCatalog   @relation(fields: [catalogId], references: [id])
+  parentId  String?       @db.Uuid
+  parent    NewsCategory? @relation(fields: [parentId], references: [id], name: "news_category_parent_fkey")
 
   @@unique([parentId, label])
   @@index([parentId])
@@ -36,13 +36,14 @@ model NewsCategory {
 
 /// Новостные статьи.
 model News {
-  id         String       @id @default(uuid()) @db.Uuid
-  label      String       @db.VarChar(128)
-  content    String
-  banner     String?
-  disabled   Boolean
-  comments   Comment[]    @relation("comment_news_fkey")
-  statistics Statistics[] @relation("statistics_news_fkey")
+  id          String       @id @default(uuid()) @db.Uuid
+  label       String       @db.VarChar(128)
+  content     String
+  description String?
+  banner      String?
+  disabled    Boolean
+  comments    Comment[]    @relation("comment_news_fkey")
+  statistics  Statistics[] @relation("statistics_news_fkey")
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt

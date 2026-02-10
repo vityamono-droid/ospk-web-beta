@@ -1,15 +1,16 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 import { transformErrorResponse, transformResponse } from '@api/transformers'
+import authenticatedQuery from '@api/common/auth/auth.query'
 
 import type { ApiResponse } from '@ospk/web-models'
-import type { CategoryDetails, UpsertCategoryDetails } from '@ospk/web-models/services'
+import type { ServiceCategoryDetails, UpsertServiceCategoryDetails } from '@ospk/web-models/services'
 
 const serviceCategoriesApi = createApi({
   reducerPath: 'serviceCategories',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/services/categories' }),
+  baseQuery: authenticatedQuery({ baseUrl: '/api/v1/admin/services/categories', on401: 'follow' }),
   tagTypes: ['categoryList'],
   endpoints: (builder) => ({
-    listCategories: builder.query<CategoryDetails[], any, ApiResponse<CategoryDetails[]>>({
+    listCategories: builder.query<ServiceCategoryDetails[], any, ApiResponse<ServiceCategoryDetails[]>>({
       providesTags: ['categoryList'],
       query: () => ({
         url: `/`,
@@ -19,13 +20,13 @@ const serviceCategoriesApi = createApi({
       transformResponse: transformResponse({ defaultValue: [] }),
     }),
 
-    getCategory: builder.query<UpsertCategoryDetails, string, ApiResponse<UpsertCategoryDetails>>({
+    getCategory: builder.query<UpsertServiceCategoryDetails, string, ApiResponse<UpsertServiceCategoryDetails>>({
       query: (id) => `/${id}`,
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({}),
     }),
 
-    addCategory: builder.mutation<undefined, UpsertCategoryDetails, ApiResponse>({
+    addCategory: builder.mutation<undefined, UpsertServiceCategoryDetails, ApiResponse>({
       invalidatesTags: ['categoryList'],
       query: (data) => ({
         url: `/`,
@@ -36,7 +37,7 @@ const serviceCategoriesApi = createApi({
       transformResponse: transformResponse({ successMessage: 'Категория добавлена успешно' }),
     }),
 
-    updateCategory: builder.mutation<undefined, UpdateData<UpsertCategoryDetails>, ApiResponse>({
+    updateCategory: builder.mutation<undefined, UpdateData<UpsertServiceCategoryDetails>, ApiResponse>({
       invalidatesTags: ['categoryList'],
       query: ({ id, data }) => ({
         url: `/${id}`,

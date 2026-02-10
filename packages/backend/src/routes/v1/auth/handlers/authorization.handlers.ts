@@ -15,8 +15,7 @@ export const authorizeHandler: RequestHandler<any, ApiResponse, any, AuthorizeRe
 
     authRequest.user = req.session.user
     if (!req.session.user) {
-      const loginUrl = authRequest.client?.loginUrl ?? `/auth/login?${queryString.stringify(req.query)}`
-      res.redirect(loginUrl)
+      res.redirect(`/auth/login?${queryString.stringify(req.query)}`)
       return
     }
 

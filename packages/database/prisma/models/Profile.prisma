@@ -12,6 +12,5 @@ model Profile {
   updatedAt DateTime? @updatedAt
   removedAt DateTime?
 
-  userId String @unique @db.Uuid
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User?
 }

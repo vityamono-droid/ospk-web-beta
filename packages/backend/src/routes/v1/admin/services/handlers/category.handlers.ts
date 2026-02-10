@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express'
 import type { ActiveOnlyQuery, ApiResponse } from '@ospk/web-models'
-import type { CategoryDetails, UpsertCategoryDetails } from '@ospk/web-models/services'
+import type { ServiceCategoryDetails, UpsertServiceCategoryDetails } from '@ospk/web-models/services'
 
 // GET /api/v1/admin/services/categories
-type ListCategoriesRequest = RequestHandler<any, ApiResponse<CategoryDetails[]>, any, ActiveOnlyQuery>
+type ListCategoriesRequest = RequestHandler<any, ApiResponse<ServiceCategoryDetails[]>, any, ActiveOnlyQuery>
 export const listCategories: ListCategoriesRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
@@ -39,7 +39,7 @@ export const listCategories: ListCategoriesRequest = async (req, res, next) => {
 }
 
 // GET /api/v1/admin/services/categories/:id
-type GetCategoryRequest = RequestHandler<IdParams, ApiResponse<UpsertCategoryDetails>>
+type GetCategoryRequest = RequestHandler<IdParams, ApiResponse<UpsertServiceCategoryDetails>>
 export const getCategory: GetCategoryRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
@@ -63,7 +63,7 @@ export const getCategory: GetCategoryRequest = async (req, res, next) => {
 }
 
 // POST:PUT /api/v1/admin/services/categories/:id?
-type UpsertCategoryRequest = RequestHandler<any, ApiResponse, UpsertCategoryDetails>
+type UpsertCategoryRequest = RequestHandler<any, ApiResponse, UpsertServiceCategoryDetails>
 export const upsertCategory: UpsertCategoryRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma

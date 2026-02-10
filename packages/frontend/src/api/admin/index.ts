@@ -1,5 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit/react'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
+// Auth
+import authApi from '@api/common/auth/auth.api'
+import accountsApi from '@api/common/accounts.api'
 //Clients
 import clientsApi from './client.api'
 // Articles
@@ -8,6 +11,9 @@ import * as services from './services'
 
 const adminStore = configureStore({
   reducer: {
+    // Auth
+    [authApi.reducerPath]: authApi.reducer,
+    [accountsApi.reducerPath]: accountsApi.reducer,
     // Clients
     [clientsApi.reducerPath]: clientsApi.reducer,
     // Articles
@@ -22,6 +28,9 @@ const adminStore = configureStore({
   },
   middleware: (getDefault) =>
     getDefault()
+      // Auth
+      .concat(authApi.middleware)
+      .concat(accountsApi.middleware)
       // Clients
       .concat(clientsApi.middleware)
       // Articles

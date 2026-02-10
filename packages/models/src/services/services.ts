@@ -40,13 +40,8 @@ export interface UpsertServiceDetails extends Removable {
   departments: DepartmentDetails[]
 }
 
-export enum BULK_ACTIONS {
-  STATUS,
-  DELETE,
-}
-
 export interface ServiceDetailsAction {
-  action: BULK_ACTIONS
+  action: 0 | 1
   ids: string[]
   status?: boolean
 }

@@ -1,34 +1,50 @@
 import { PaginationQuery } from '@common'
 
-export interface ArticleCatalogNav {
+// Catalog
+
+export interface CatalogItem {
   id: string
   label: string
 }
 
-export interface ArticleCatalogNavDetails {
-  id: string
+export interface CatalogData {
   label: string
   banner: string | null
   description: string | null
 }
 
-export interface ListArticleNavQuery extends PaginationQuery {
-  categoryId: string
+// Category
+
+export interface ListCategoryItemsQuery {
+  catalogId: string
 }
 
-export interface ArticleNav {
+export interface CategoryItem {
   id: string
   label: string
+}
+
+// Article
+
+export interface ListListArticlesItemsQuery extends PaginationQuery {
+  catalogId?: string
+}
+
+export interface ArticleItem {
+  id: string
+  label: string
+  banner: string | null
+  description: string | null
+  categories: CategoryItem[]
   createdAt: Date
   statistics: number
 }
 
-export interface ArticleNavDetails {
-  id: string
+export interface ArticleData {
   label: string
   content: string
   banner: string | null
-  statistics: number
   createdAt: Date
-  categories: string[]
+  statistics: number
+  categories: CategoryItem[]
 }

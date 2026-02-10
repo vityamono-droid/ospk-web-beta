@@ -1,15 +1,16 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 import { transformErrorResponse, transformResponse } from '@api/transformers'
+import authenticatedQuery from '@api/common/auth/auth.query'
 
 import type { ApiResponse } from '@ospk/web-models'
-import type { CatalogDetails, ListCatalogDetailsQuery, UpsertCatalogDetails } from '@ospk/web-models/articles'
+import type { ArticleCatalogDetails, ListCatalogDetailsQuery, UpsertArticleCatalogDetails } from '@ospk/web-models/articles'
 
 const articleCatalogsApi = createApi({
   reducerPath: 'articleCatalogs',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/articles/catalogs' }),
+  baseQuery: authenticatedQuery({ baseUrl: '/api/v1/admin/articles/catalogs', on401: 'follow' }),
   tagTypes: ['catalogList'],
   endpoints: (builder) => ({
-    listCatalogs: builder.query<CatalogDetails[], ListCatalogDetailsQuery, ApiResponse<CatalogDetails[]>>({
+    listCatalogs: builder.query<ArticleCatalogDetails[], ListCatalogDetailsQuery, ApiResponse<ArticleCatalogDetails[]>>({
       providesTags: (_result, _error, arg) => (typeof arg.activeOnly === 'undefined' ? ['catalogList'] : []),
       query: (search) => ({
         url: `/`,
@@ -20,7 +21,7 @@ const articleCatalogsApi = createApi({
       transformResponse: transformResponse({ defaultValue: [] }),
     }),
 
-    getCatalog: builder.query<UpsertCatalogDetails, string, ApiResponse<UpsertCatalogDetails>>({
+    getCatalog: builder.query<UpsertArticleCatalogDetails, string, ApiResponse<UpsertArticleCatalogDetails>>({
       query: (id) => ({
         url: `/${id}`,
         method: 'GET',
@@ -29,7 +30,7 @@ const articleCatalogsApi = createApi({
       transformResponse: transformResponse({}),
     }),
 
-    addCatalog: builder.mutation<undefined, UpsertCatalogDetails, ApiResponse>({
+    addCatalog: builder.mutation<undefined, UpsertArticleCatalogDetails, ApiResponse>({
       invalidatesTags: ['catalogList'],
       query: (data) => ({
         url: `/`,
@@ -40,7 +41,7 @@ const articleCatalogsApi = createApi({
       transformResponse: transformResponse({ successMessage: 'Каталог добавлен успешно' }),
     }),
 
-    updateCatalog: builder.mutation<undefined, UpdateData<UpsertCatalogDetails>, ApiResponse>({
+    updateCatalog: builder.mutation<undefined, UpdateData<UpsertArticleCatalogDetails>, ApiResponse>({
       invalidatesTags: ['catalogList'],
       query: ({ id, data }) => ({
         url: `/${id}`,

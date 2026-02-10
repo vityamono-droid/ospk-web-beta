@@ -1,39 +1,43 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { ApiResponse } from '@ospk/web-models'
 import {
-  type ArticleNavDetails,
-  type ArticleCatalogNav,
-  type ArticleCatalogNavDetails,
-  type ArticleNav,
+  type ArticleData,
+  type ArticleItem,
+  type CatalogData,
+  type CatalogItem,
+  type ListListArticlesItemsQuery,
 } from '@ospk/web-models/articles'
+import { transformResponse } from '@api/transformers'
 
 const articlesApi = createApi({
   reducerPath: 'articles',
   baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/articles' }),
   endpoints: (builder) => ({
-    listArticles: builder.query<ArticleNav[], any, ApiResponse<ArticleNav[]>>({
-      query: () => ({
+    listArticles: builder.query<ArticleItem[], ListListArticlesItemsQuery, ApiResponse<ArticleItem[]>>({
+      query: (search) => ({
         url: '/',
+        params: search,
       }),
+      transformResponse: transformResponse({ defaultValue: [] }),
     }),
-    listCatalogs: builder.query<ArticleCatalogNav[], string, ApiResponse<ArticleCatalogNav[]>>({
-      query: (id) => ({
-        url: `/catalogs/${id}`,
-      }),
+
+    getArticle: builder.query<ArticleData, string, ApiResponse<ArticleData>>({
+      query: (id) => `/${id}`,
+      transformResponse: transformResponse({}),
     }),
-    getArticles: builder.query<ArticleCatalogNavDetails, string, ApiResponse<ArticleCatalogNavDetails>>({
-      query: (id) => ({
-        url: `/${id}`,
-      }),
+
+    listCatalogs: builder.query<CatalogItem[], any, ApiResponse<CatalogItem[]>>({
+      query: () => `/catalogs`,
+      transformResponse: transformResponse({ defaultValue: [] }),
     }),
-    getCatalogs: builder.query<ArticleNavDetails, string, ArticleCatalogNavDetails>({
-      query: (id) => ({
-        url: `/catalogs/${id}`,
-      }),
+
+    getCatalog: builder.query<CatalogData, string, ApiResponse<CatalogData>>({
+      query: (id) => `/catalogs/${id}`,
+      transformResponse: transformResponse({}),
     }),
   }),
 })
 
-export const { useGetArticlesQuery, useGetCatalogsQuery, useListArticlesQuery, useListCatalogsQuery } = articlesApi
+export const { useGetArticleQuery, useGetCatalogQuery, useListArticlesQuery, useListCatalogsQuery } = articlesApi
 
 export default articlesApi

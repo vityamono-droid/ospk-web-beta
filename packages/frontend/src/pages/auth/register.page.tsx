@@ -14,8 +14,11 @@ const LoginPage = () => {
   const navigate = useNavigate()
 
   const [register, response] = useRegisterMutation()
-  const [error, analyze] = useAnalyzeRequired<RegisterRequest>(['phone', 'email', 'password'])
+  const [error, analyze] = useAnalyzeRequired<RegisterRequest>(['firstName', 'lastName', 'phone', 'email', 'password'])
   const [form, _, setFormProp] = useObjectState<RegisterRequest>({
+    firstName: '',
+    lastName: '',
+    patronymic: '',
     phone: '',
     email: '',
     password: '',
@@ -24,6 +27,8 @@ const LoginPage = () => {
   const handleSignUp = () => {
     const data = {
       ...form,
+      firstName: form.phone.trim(),
+      lastName: form.email.trim(),
       phone: form.phone.trim(),
       email: form.email.trim(),
       password: form.password.trim(),
@@ -44,6 +49,23 @@ const LoginPage = () => {
         </Alert>
       )}
       <Stack spacing={2}>
+        <Stack direction={'row'} spacing={2}>
+          <TextBox
+            fullWidth
+            label={'Имя'}
+            error={error.firstName}
+            value={form.firstName}
+            onChange={(value) => setFormProp({ firstName: value })}
+          />
+          <TextBox
+            fullWidth
+            label={'Фамилия'}
+            error={error.lastName}
+            value={form.lastName}
+            onChange={(value) => setFormProp({ lastName: value })}
+          />
+        </Stack>
+        <TextBox label={'Отчество'} value={form.patronymic} onChange={(value) => setFormProp({ patronymic: value })} />
         <TextBox
           label={'Телефон'}
           error={error.phone}
@@ -66,7 +88,7 @@ const LoginPage = () => {
         />
       </Stack>
       <Stack direction={'row'} spacing={2}>
-        <Button fullWidth variant={'outlined'} onClick={() => navigate('../login')}>
+        <Button fullWidth variant={'outlined'} onClick={() => navigate(`../login${location.search}`)}>
           Вход
         </Button>
         <Button fullWidth variant={'contained'} onClick={handleSignUp}>

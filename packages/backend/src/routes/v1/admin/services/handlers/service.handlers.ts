@@ -1,7 +1,6 @@
 import { RequestHandler } from 'express'
 import type { ApiResponse } from '@ospk/web-models'
 import {
-  BULK_ACTIONS,
   type ServiceDetailsAction,
   type UpsertServiceDetails,
   type ListServiceDetailsQuery,
@@ -42,6 +41,7 @@ export const listServices: ListServicesRequest = async (req, res, next) => {
           select: { label: true },
         },
       },
+      orderBy: { createdAt: 'desc' },
       skip: typeof req.query.offset === 'undefined' ? undefined : +req.query.offset,
       take: typeof req.query.limit === 'undefined' ? undefined : +req.query.limit,
     })
@@ -131,19 +131,21 @@ export const upsertService: UpsertServiceRequest = async (req, res, next) => {
       priceHistory,
     }
 
+    let upserted
     if (!!req.params.id) {
-      await prisma.service.update({
+      upserted = await prisma.service.update({
         where: { id: req.params.id },
         data: data,
       })
     } else {
-      await prisma.service.create({
+      upserted = await prisma.service.create({
         data: data,
       })
     }
 
     res.json({
       error: false,
+      data: upserted.id,
     })
   } catch (err) {
     next(err)
@@ -157,7 +159,7 @@ export const updateServiceList: UpdateServiceListRequest = async (req, res, next
     const prisma = res.locals.prisma
 
     switch (req.body.action) {
-      case BULK_ACTIONS.STATUS: {
+      case 0: {
         await prisma.service.updateMany({
           where: {
             id: { in: req.body.ids },
@@ -167,7 +169,7 @@ export const updateServiceList: UpdateServiceListRequest = async (req, res, next
 
         break
       }
-      case BULK_ACTIONS.DELETE: {
+      case 1: {
         await prisma.service.updateMany({
           where: {
             id: { in: req.body.ids },

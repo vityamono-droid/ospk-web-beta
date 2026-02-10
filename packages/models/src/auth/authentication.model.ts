@@ -4,7 +4,10 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
+  firstName: string
+  lastName: string
+  patronymic?: string
   email: string
-  username: string
+  phone: string
   password: string
 }

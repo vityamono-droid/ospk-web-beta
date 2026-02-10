@@ -1,9 +1,9 @@
 import DataGrid from '@components/DataGrid'
 import RemovedDisabled from '@components/RemovedDisabled'
-import type { CategoryDetails } from '@ospk/web-models/services'
+import type { ServiceCategoryDetails } from '@ospk/web-models/services'
 
 interface CategoryTableProps {
-  data: CategoryDetails[]
+  data: ServiceCategoryDetails[]
   onRowClick: (id: string) => void
 }
 

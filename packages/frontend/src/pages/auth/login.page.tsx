@@ -57,7 +57,7 @@ const LoginPage = () => {
         />
       </Stack>
       <Stack direction={'row'} spacing={2}>
-        <Button fullWidth variant={'outlined'} onClick={() => navigate('../register')}>
+        <Button fullWidth variant={'outlined'} onClick={() => navigate(`../register${location.search}`)}>
           Регистрация
         </Button>
         <Button fullWidth variant={'contained'} onClick={handleSignIn}>

@@ -1,12 +1,13 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 import { transformErrorResponse, transformResponse } from '@api/transformers'
+import authenticatedQuery from '@api/common/auth/auth.query'
 
 import type { ApiResponse } from '@ospk/web-models'
 import type { ArticleDetails, ListArticlesQuery, UpsertArticleDetails } from '@ospk/web-models/articles'
 
 const articlesApi = createApi({
   reducerPath: 'articles',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/articles' }),
+  baseQuery: authenticatedQuery({ baseUrl: '/api/v1/admin/articles', on401: 'follow' }),
   tagTypes: ['articleList'],
   endpoints: (builder) => ({
     listArticles: builder.query<ArticleDetails[], ListArticlesQuery, ApiResponse<ArticleDetails[]>>({

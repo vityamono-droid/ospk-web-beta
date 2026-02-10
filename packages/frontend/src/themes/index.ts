@@ -27,6 +27,20 @@ const options = {
         },
       },
     },
+    MuiButton: {
+      variants: [
+        {
+          props: { variant: 'nav-link' },
+          style: {
+            borderRadius: 0,
+            fontSize: '1rem',
+            ':hover': {
+              backgroundColor: '#00000016',
+            },
+          },
+        },
+      ],
+    },
   },
 } satisfies ThemeOptions
 

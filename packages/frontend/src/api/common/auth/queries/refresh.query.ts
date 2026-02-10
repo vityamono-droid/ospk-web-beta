@@ -24,7 +24,7 @@ const refreshQuery: ClientQueryType = async (_args, api, options) => {
       body: {
         grant_type: 'refresh_token',
         refresh_token: token,
-        client_name: localStorage.getItem('client') ?? undefined,
+        client_name: 'webapp',
       } satisfies RefreshTokenRequest,
     }
 

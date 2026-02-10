@@ -4,7 +4,7 @@ export interface ListCategoryDetailsQuery extends ActiveOnlyQuery {
   catalogId?: string
 }
 
-export interface CategoryDetails extends Removable, DateStats {
+export interface ArticleCategoryDetails extends Removable, DateStats {
   id: string
   label: string
   news: number
@@ -12,7 +12,7 @@ export interface CategoryDetails extends Removable, DateStats {
   parentId: string | null
 }
 
-export interface UpsertCategoryDetails extends Removable {
+export interface UpsertArticleCategoryDetails extends Removable {
   label: string
   catalogId: string
   parentId: string | null

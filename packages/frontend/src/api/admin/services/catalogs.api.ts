@@ -1,15 +1,16 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 import { transformErrorResponse, transformResponse } from '@api/transformers'
+import authenticatedQuery from '@api/common/auth/auth.query'
 
 import type { ApiResponse } from '@ospk/web-models'
-import type { CatalogDetails, UpsertCatalogDetails } from '@ospk/web-models/services'
+import type { ServiceCatalogDetails, UpsertServiceCatalogDetails } from '@ospk/web-models/services'
 
 const serviceCatalogsApi = createApi({
   reducerPath: 'serviceCatalogs',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/services/catalogs' }),
+  baseQuery: authenticatedQuery({ baseUrl: '/api/v1/admin/services/catalogs', on401: 'follow' }),
   tagTypes: ['catalogList'],
   endpoints: (builder) => ({
-    listCatalogs: builder.query<CatalogDetails[], any, ApiResponse<CatalogDetails[]>>({
+    listCatalogs: builder.query<ServiceCatalogDetails[], any, ApiResponse<ServiceCatalogDetails[]>>({
       providesTags: ['catalogList'],
       query: () => ({
         url: `/`,
@@ -19,13 +20,13 @@ const serviceCatalogsApi = createApi({
       transformResponse: transformResponse({ defaultValue: [] }),
     }),
 
-    getCatalog: builder.query<UpsertCatalogDetails, string, ApiResponse<UpsertCatalogDetails>>({
+    getCatalog: builder.query<UpsertServiceCatalogDetails, string, ApiResponse<UpsertServiceCatalogDetails>>({
       query: (id) => `/${id}`,
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({}),
     }),
 
-    addCatalog: builder.mutation<undefined, UpsertCatalogDetails, ApiResponse>({
+    addCatalog: builder.mutation<undefined, UpsertServiceCatalogDetails, ApiResponse>({
       invalidatesTags: ['catalogList'],
       query: (data) => ({
         url: `/`,
@@ -36,7 +37,7 @@ const serviceCatalogsApi = createApi({
       transformResponse: transformResponse({ successMessage: 'Каталог добавлен успешно' }),
     }),
 
-    updateCatalog: builder.mutation<undefined, UpdateData<UpsertCatalogDetails>, ApiResponse>({
+    updateCatalog: builder.mutation<undefined, UpdateData<UpsertServiceCatalogDetails>, ApiResponse>({
       invalidatesTags: ['catalogList'],
       query: ({ id, data }) => ({
         url: `/${id}`,

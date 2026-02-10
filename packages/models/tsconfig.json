@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
-    "target": "ESNext",
-    "moduleResolution": "nodenext",
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "bundler",
     "lib": ["ESNext"],
     "skipLibCheck": true,
 

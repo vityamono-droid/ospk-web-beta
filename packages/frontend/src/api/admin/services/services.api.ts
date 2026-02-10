@@ -1,12 +1,18 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 import { transformErrorResponse, transformResponse } from '@api/transformers'
+import authenticatedQuery from '@api/common/auth/auth.query'
 
 import type { ApiResponse } from '@ospk/web-models'
-import type { ListServiceDetailsQuery, ServiceDetails, ServiceDetailsAction, UpsertServiceDetails } from '@ospk/web-models/services'
+import type {
+  ListServiceDetailsQuery,
+  ServiceDetails,
+  ServiceDetailsAction,
+  UpsertServiceDetails,
+} from '@ospk/web-models/services'
 
 const servicesApi = createApi({
   reducerPath: 'services',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/admin/services' }),
+  baseQuery: authenticatedQuery({ baseUrl: '/api/v1/admin/services', on401: 'follow' }),
   tagTypes: ['serviceList'],
   endpoints: (builder) => ({
     listServices: builder.query<ServiceDetails[], ListServiceDetailsQuery, ApiResponse<ServiceDetails[]>>({
@@ -26,7 +32,7 @@ const servicesApi = createApi({
       transformResponse: transformResponse({}),
     }),
 
-    addService: builder.mutation<undefined, UpsertServiceDetails, ApiResponse>({
+    addService: builder.mutation<string, UpsertServiceDetails, ApiResponse<string>>({
       invalidatesTags: ['serviceList'],
       query: (data) => ({
         url: `/`,
@@ -37,7 +43,7 @@ const servicesApi = createApi({
       transformResponse: transformResponse({ successMessage: 'Услуга добавлена успешно' }),
     }),
 
-    updateService: builder.mutation<undefined, UpdateData<UpsertServiceDetails>, ApiResponse>({
+    updateService: builder.mutation<string, UpdateData<UpsertServiceDetails>, ApiResponse<string>>({
       invalidatesTags: ['serviceList'],
       query: ({ id, data }) => ({
         url: `/${id}`,

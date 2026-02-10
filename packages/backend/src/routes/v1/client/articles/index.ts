@@ -1,11 +1,15 @@
-import { Router } from 'express';
-import { getArticle, getCatalog, listArticle, ListCatalogs } from './handlers'
+import { Router } from 'express'
+
+import { listCatalogs, getCatalog } from './handlers/catalog.handlers'
+import { listCategories } from './handlers/category.handlers'
+import { getArticle, listArticles } from './handlers/article.handlers'
 
 const articlesRouter = Router()
 
-articlesRouter.get('/catalogs', ListCatalogs)
+articlesRouter.get('/catalogs', listCatalogs)
 articlesRouter.get('/catalogs/:id', getCatalog)
-articlesRouter.get('/', listArticle)
+articlesRouter.get('/categories', listCategories)
+articlesRouter.get('/', listArticles)
 articlesRouter.get('/:id', getArticle)
 
 export default articlesRouter

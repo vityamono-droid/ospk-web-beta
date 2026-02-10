@@ -23,6 +23,7 @@ import { useNavigate, useParams } from 'react-router'
 
 import { type UpsertServiceDetails } from '@ospk/web-models/services'
 import useObjectState from '@hooks/useObjectState'
+import SaveCancelButton from '@components/SaveCancelButton'
 
 const ServicePage = () => {
   const navigate = useNavigate()
@@ -71,6 +72,16 @@ const ServicePage = () => {
       return
     }
 
+    if (addResponse.isSuccess) {
+      navigate(addResponse.data)
+      return
+    }
+
+    if (updateResponse.isSuccess) {
+      getResponse.refetch()
+      return
+    }
+
     navigate(-1)
   }, [addResponse.status, updateResponse.status, deleteResponse.status])
 
@@ -87,7 +98,7 @@ const ServicePage = () => {
     }
 
     if (!!id) {
-      updateService({ id, data })
+      updateService({ id: id, data })
     } else {
       addService(data)
     }
@@ -96,7 +107,7 @@ const ServicePage = () => {
   return (
     <>
       <Stack spacing={1}>
-        <PageHeader title={`${!!id ? 'Изменение' : 'Добавление'} услуги`} />
+        <PageHeader title={`${!!id ? 'Изменение' : 'Добавление'} услуги`} backTo={'../'} />
         <TextBox
           label={'Название'}
           error={error.label}
@@ -194,21 +205,17 @@ const ServicePage = () => {
           value={service.departments}
           onChange={(value) => setServiceProp({ departments: value })}
         />
-        <FileUpload />
+        <FileUpload label={'Баннер'} subLabel={'изображение'} fileTypes={['.png', '.jpg']} />
       </Stack>
       <Box mt={1} flex={1} gap={1} display={'flex'} flexDirection={'column'}>
         <TextEditor editable content={service.content ?? ''} />
-        <Stack direction={'row'} justifyContent={'flex-end'}>
-          {!!id && (
-            <Button color={'error'} onClick={handleDelete}>
-              {service.removedAt == undefined || service.removedAt == null ? 'Удалить' : 'Восстановить'}
-            </Button>
-          )}
-          <Button onClick={() => navigate(-1)}>Отмена</Button>
-          <Button color={'success'} variant={'outlined'} onClick={handleSave}>
-            Сохранить
-          </Button>
-        </Stack>
+        <SaveCancelButton
+          showRemoved={!!id}
+          removed={!!service.removedAt}
+          onDelete={handleDelete}
+          onCancel={() => navigate(-1)}
+          onSave={handleSave}
+        />
       </Box>
     </>
   )

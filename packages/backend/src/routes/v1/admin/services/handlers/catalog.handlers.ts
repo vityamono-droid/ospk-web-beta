@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express'
 import type { ActiveOnlyQuery, ApiResponse } from '@ospk/web-models'
-import type { CatalogDetails, UpsertCatalogDetails } from '@ospk/web-models/services'
+import type { ServiceCatalogDetails, UpsertServiceCatalogDetails } from '@ospk/web-models/services'
 
 // GET /api/v1/admin/services/catalogs
-type ListCatalogsRequest = RequestHandler<any, ApiResponse<CatalogDetails[]>, any, ActiveOnlyQuery>
+type ListCatalogsRequest = RequestHandler<any, ApiResponse<ServiceCatalogDetails[]>, any, ActiveOnlyQuery>
 export const listCatalogs: ListCatalogsRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
@@ -41,7 +41,7 @@ export const listCatalogs: ListCatalogsRequest = async (req, res, next) => {
 }
 
 // GET /api/v1/admin/services/catalogs/:id
-type GetCatalogRequest = RequestHandler<IdParams, ApiResponse<UpsertCatalogDetails>>
+type GetCatalogRequest = RequestHandler<IdParams, ApiResponse<UpsertServiceCatalogDetails>>
 export const getCatalog: GetCatalogRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
@@ -65,7 +65,7 @@ export const getCatalog: GetCatalogRequest = async (req, res, next) => {
 }
 
 // POST:PUT /api/v1/admin/services/catalogs/:id?
-type UpsertCatalogRequest = RequestHandler<any, ApiResponse, UpsertCatalogDetails>
+type UpsertCatalogRequest = RequestHandler<any, ApiResponse, UpsertServiceCatalogDetails>
 export const upsertCatalog: UpsertCatalogRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma

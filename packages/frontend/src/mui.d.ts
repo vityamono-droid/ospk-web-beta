@@ -15,6 +15,10 @@ declare module '@mui/material/Button' {
     black: true
     white: true
   }
+
+  interface ButtonPropsVariantOverrides {
+    'nav-link': true
+  }
 }
 
 declare module '@mui/material/IconButton' {
