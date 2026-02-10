@@ -27,8 +27,9 @@ const LoginPage = () => {
   const handleSignUp = () => {
     const data = {
       ...form,
-      firstName: form.phone.trim(),
-      lastName: form.email.trim(),
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      patronymic: form.patronymic?.trim(),
       phone: form.phone.trim(),
       email: form.email.trim(),
       password: form.password.trim(),

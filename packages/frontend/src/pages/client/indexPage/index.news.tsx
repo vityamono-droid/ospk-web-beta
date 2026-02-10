@@ -38,7 +38,7 @@ const IndexNews = () => {
       </Stack>
       <Grid container spacing={2}>
         {articles.map((item) => (
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid key={item.id} size={{ xs: 12, sm: 6 }}>
             <NewsListItem key={item.id} showBanner data={item} />
           </Grid>
         ))}

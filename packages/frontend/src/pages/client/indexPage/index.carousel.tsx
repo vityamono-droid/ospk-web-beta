@@ -8,10 +8,10 @@ import ChevronRight from '@mui/icons-material/ChevronRight'
 import Circle from '@mui/icons-material/Circle'
 
 const carouselImages = [
-  'https://waltonstaffs.com/wp-content/uploads/2022/09/walton-catering-banner-1920x250px.webp',
-  'https://waltonstaffs.com/wp-content/uploads/2022/09/department-mathematics-banner-1920x250px.webp',
-  'https://waltonstaffs.com/wp-content/uploads/2022/07/banner-sixth-form-1920x250px.webp',
-  'https://waltonstaffs.com/wp-content/uploads/2022/09/department-english-banner-1920x250px.webp',
+  `/static/carousel/carousel001.webp`,
+  `/static/carousel/carousel002.webp`,
+  `/static/carousel/carousel003.webp`,
+  `/static/carousel/carousel004.webp`,
 ]
 
 const IndexCarousel = () => {
@@ -35,7 +35,7 @@ const IndexCarousel = () => {
     <Box width={'100%'} height={'250px'} position={'relative'}>
       <Box
         sx={{
-          backgroundImage: `url(${carouselImages[currIndex]})`,
+          backgroundImage: `url(${location.origin}${carouselImages[currIndex]})`,
           backgroundSize: 'auto auto',
           backgroundPositionX: '50%',
           backgroundRepeat: 'no-repeat',
@@ -65,7 +65,10 @@ const IndexCarousel = () => {
       </Box>
       <Box position={'absolute'} width={'100%'} bottom={16} display={'flex'} justifyContent={'center'}>
         {carouselImages.map((_, index) => (
-          <IconButton color={index == currIndex ? 'primary' : undefined} onClick={() => setCurrIndex(index)}>
+          <IconButton
+            key={`cnb_${index}`}
+            color={index == currIndex ? 'primary' : undefined}
+            onClick={() => setCurrIndex(index)}>
             <Box position={'relative'}>
               <Circle sx={{ fill: '#AEAEAE99', position: 'absolute', fontSize: 16 }} />
               <Circle sx={{ position: 'absolute', top: 3, left: 3, fontSize: 10 }} />

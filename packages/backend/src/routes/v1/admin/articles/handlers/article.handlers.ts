@@ -56,7 +56,7 @@ export const listArticles: ListArticlesRequest = async (req, res, next) => {
 }
 
 // GET /api/v1/admin/articles/:id
-type GetArticleRequest = RequestHandler<any, ApiResponse<UpsertArticleDetails>>
+type GetArticleRequest = RequestHandler<IdParams, ApiResponse<UpsertArticleDetails>>
 export const getArticle: GetArticleRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
