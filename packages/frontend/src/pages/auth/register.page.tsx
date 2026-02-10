@@ -1,4 +1,5 @@
 import { useRegisterMutation } from '@api/common/auth/auth.api'
+import MPhoneBox from '@components/MPhoneBox'
 import PasswordBox from '@components/new/PasswordBox'
 import TextBox from '@components/new/TextBox'
 import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
@@ -73,6 +74,11 @@ const LoginPage = () => {
           type={'phone'}
           value={form.phone}
           onChange={(value) => setFormProp({ phone: value })}
+          slotProps={{
+            input: {
+              inputComponent: MPhoneBox as any,
+            },
+          }}
         />
         <TextBox
           label={'Email'}

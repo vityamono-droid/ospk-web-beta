@@ -22,13 +22,13 @@ const TextInput: <TValue = any>(props: TextInputProps<TValue>) => JSX.Element = 
     }
 
     if (onEnterDown) {
-      event.preventDefault()
+      event.preventDefault && event.preventDefault()
       onEnterDown()
     }
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault()
+    event.preventDefault && event.preventDefault()
 
     !!onChange && onChange(event.target.value)
   }
