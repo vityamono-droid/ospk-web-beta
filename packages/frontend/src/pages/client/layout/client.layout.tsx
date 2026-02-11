@@ -6,10 +6,8 @@ import ClientAppBar from './client.appBar'
 import ClientFooter from './client.footer'
 
 const ClientLayout = () => {
-  //const context = useClientContext()
-
   return (
-    <Stack height={'100vh'} spacing={2}>
+    <Stack position={'relative'} spacing={2} height={'100vh'}>
       {/* AppBar */}
       <ClientAppBar />
       {/* Content */}

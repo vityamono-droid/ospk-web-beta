@@ -2,6 +2,8 @@ logs/
 dest/
 generated/
 node_modules/
+unknown/
+avatars/
 
 package-lock.json
 

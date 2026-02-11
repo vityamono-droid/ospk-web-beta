@@ -5,6 +5,7 @@ import authApi from '@api/common/auth/auth.api'
 import accountsApi from '@api/common/accounts.api'
 import servicesApi from './services.api'
 import articlesApi from './articles.api'
+import staticApi from './static.api'
 
 const clientStore = configureStore({
   reducer: {
@@ -12,13 +13,15 @@ const clientStore = configureStore({
     [accountsApi.reducerPath]: accountsApi.reducer,
     [articlesApi.reducerPath]: articlesApi.reducer,
     [servicesApi.reducerPath]: servicesApi.reducer,
+    [staticApi.reducerPath]: staticApi.reducer,
   },
   middleware: (getDefault) =>
     getDefault()
       .concat(authApi.middleware)
       .concat(accountsApi.middleware)
       .concat(articlesApi.middleware)
-      .concat(servicesApi.middleware),
+      .concat(servicesApi.middleware)
+      .concat(staticApi.middleware),
 })
 
 setupListeners(clientStore.dispatch)

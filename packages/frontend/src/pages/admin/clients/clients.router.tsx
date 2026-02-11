@@ -2,8 +2,7 @@ import { lazy } from 'react'
 import { Outlet, Route, Routes } from 'react-router'
 import ClientsLayout from './clients.layout'
 
-const IndexPage = lazy(() => import('./index/index.page'))
-const DetailsPage = lazy(() => import('./details/details.page'))
+const ClientListPage = lazy(() => import('./clientList'))
 
 const ClientsRouter = () => {
 
@@ -11,9 +10,9 @@ const ClientsRouter = () => {
     <>
       <Routes>
         <Route element={<ClientsLayout />}>
-          <Route index element={<IndexPage />} />
+          <Route index element={<ClientListPage type={'CLIENT'} />} />
+          <Route path={'staff'} element={<ClientListPage type={'STAFF'} />} />
         </Route>
-        <Route path={'/:id'} element={<DetailsPage />} />
       </Routes>
       <Outlet />
     </>

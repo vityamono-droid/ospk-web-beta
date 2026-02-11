@@ -12,6 +12,7 @@ import ViewsIcon from '@mui/icons-material/Visibility'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import CategoryBreadcrumbs from '@components/NewsListItem/CategoryBreadcrumbs'
+import CommentView from '@components/CommentView'
 
 const ArticlePage = () => {
   const contentRenderer = useRef(null)
@@ -61,6 +62,7 @@ const ArticlePage = () => {
             </Stack>
           )}
           <div dangerouslySetInnerHTML={{ __html: article.content }} />
+          <CommentView />
         </Stack>
       )}
     </>

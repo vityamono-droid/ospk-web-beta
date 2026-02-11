@@ -3,9 +3,8 @@ import { setupListeners } from '@reduxjs/toolkit/query/react'
 // Auth
 import authApi from '@api/common/auth/auth.api'
 import accountsApi from '@api/common/accounts.api'
-//Clients
-import clientsApi from './client.api'
-// Articles
+
+import * as clients from './clients'
 import * as articles from './articles'
 import * as services from './services'
 
@@ -15,7 +14,8 @@ const adminStore = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [accountsApi.reducerPath]: accountsApi.reducer,
     // Clients
-    [clientsApi.reducerPath]: clientsApi.reducer,
+    [clients.clientsApi.reducerPath]: clients.clientsApi.reducer,
+    [clients.rolesApi.reducerPath]: clients.rolesApi.reducer,
     // Articles
     [articles.articlesApi.reducerPath]: articles.articlesApi.reducer,
     [articles.catalogsApi.reducerPath]: articles.catalogsApi.reducer,
@@ -32,7 +32,8 @@ const adminStore = configureStore({
       .concat(authApi.middleware)
       .concat(accountsApi.middleware)
       // Clients
-      .concat(clientsApi.middleware)
+      .concat(clients.clientsApi.middleware)
+      .concat(clients.rolesApi.middleware)
       // Articles
       .concat(articles.articlesApi.middleware)
       .concat(articles.catalogsApi.middleware)

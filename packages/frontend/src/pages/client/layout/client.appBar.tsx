@@ -17,15 +17,18 @@ const ClientAppBar = () => {
   const navigate = useNavigate()
 
   return (
-    <Box bgcolor={'white.main'}>
+    <Box bgcolor={'white.main'} position={'sticky'} top={0} left={0} right={0} zIndex={999}>
       <Container>
         <Stack direction={'row'} justifyContent={'space-between'}>
           <Link component={RouterLink} to={'/'} underline={'none'} color={'textPrimary'}>
             <Stack p={2} direction={'row'} spacing={1} alignItems={'center'}>
-              <AppLogo height={32} />
-              <Typography component={'h1'} variant={'h5'} fontWeight={'bold'}>
-                ОСПК
-              </Typography>
+              <AppLogo height={36} />
+              <Stack component={'h1'}>
+                <Typography fontWeight={'bold'}>Челябинская областная</Typography>
+                <Typography variant={'caption'} fontWeight={'bold'} lineHeight={1}>
+                  Станция переливания крови
+                </Typography>
+              </Stack>
             </Stack>
           </Link>
           <Stack direction={'row'}>

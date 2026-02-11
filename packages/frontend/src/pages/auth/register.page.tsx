@@ -55,6 +55,7 @@ const LoginPage = () => {
           <TextBox
             fullWidth
             label={'Имя'}
+            maxLength={32}
             error={error.firstName}
             value={form.firstName}
             onChange={(value) => setFormProp({ firstName: value })}
@@ -62,16 +63,21 @@ const LoginPage = () => {
           <TextBox
             fullWidth
             label={'Фамилия'}
+            maxLength={32}
             error={error.lastName}
             value={form.lastName}
             onChange={(value) => setFormProp({ lastName: value })}
           />
         </Stack>
-        <TextBox label={'Отчество'} value={form.patronymic} onChange={(value) => setFormProp({ patronymic: value })} />
+        <TextBox
+          label={'Отчество'}
+          maxLength={32}
+          value={form.patronymic}
+          onChange={(value) => setFormProp({ patronymic: value })}
+        />
         <TextBox
           label={'Телефон'}
           error={error.phone}
-          type={'phone'}
           value={form.phone}
           onChange={(value) => setFormProp({ phone: value })}
           slotProps={{
@@ -82,6 +88,7 @@ const LoginPage = () => {
         />
         <TextBox
           label={'Email'}
+          maxLength={245}
           error={error.email}
           type={'email'}
           value={form.email}
@@ -89,6 +96,7 @@ const LoginPage = () => {
         />
         <PasswordBox
           label={'Пароль'}
+          maxLength={48}
           error={error.password}
           value={form.password}
           onChange={(value) => setFormProp({ password: value })}

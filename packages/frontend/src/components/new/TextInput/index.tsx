@@ -30,7 +30,7 @@ const TextInput: <TValue = any>(props: TextInputProps<TValue>) => JSX.Element = 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault && event.preventDefault()
 
-    !!onChange && onChange(event.target.value)
+    !!onChange && onChange(event.target.value as any)
   }
 
   return (
