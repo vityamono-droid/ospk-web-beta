@@ -1,4 +1,3 @@
-import DashboardIcon from '@mui/icons-material/Dashboard'
 import ClientIcon from '@mui/icons-material/Person'
 import AnnouncesIcon from '@mui/icons-material/Notifications'
 import EmployeesIcon from '@mui/icons-material/Badge'
@@ -11,13 +10,7 @@ import RequestsIcon from '@mui/icons-material/Label'
 
 const adminNav = [
   {
-    title: 'Главная',
-    icon: <DashboardIcon />,
-    link: '/',
-    underline: true,
-  },
-  {
-    title: 'Клиенты',
+    title: 'Пользователи',
     icon: <ClientIcon />,
     link: 'clients',
   },
@@ -25,15 +18,17 @@ const adminNav = [
     title: 'Заказы',
     icon: <OrdersIcon />,
     link: 'orders',
+    preview: true,
   },
   {
-    title: 'Запросы',
+    title: 'Обращения',
     icon: <RequestsIcon />,
     link: 'requests',
+    preview: true,
     underline: true,
   },
   {
-    title: 'Сотрудники',
+    title: 'Персонал',
     icon: <EmployeesIcon />,
     link: 'employees',
   },
@@ -41,17 +36,29 @@ const adminNav = [
     title: 'Отделения',
     icon: <DepartmentIcon />,
     link: 'departments',
-    underline: true,
   },
   {
-    title: 'Каталог',
+    title: 'Услуги',
     icon: <ServicesIcon />,
     link: 'services',
+    underline: true,
   },
   {
     title: 'Новости',
     icon: <NewsIcon />,
     link: 'news',
+  },
+  {
+    title: 'Рассылка',
+    icon: <AnnouncesIcon />,
+    link: 'announces',
+    preview: true,
+  },
+  {
+    title: 'Карусель',
+    icon: <CarouselsIcon />,
+    link: 'carousels',
+    preview: true,
   },
 ]
 

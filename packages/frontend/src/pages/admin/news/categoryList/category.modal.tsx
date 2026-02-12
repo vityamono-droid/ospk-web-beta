@@ -19,7 +19,7 @@ import useObjectState from '@hooks/useObjectState'
 
 import toAcOptions from '@utils/toAcOptions'
 
-import type { UpsertArticleCategory } from '@ospk/web-models/articles'
+import type { UpsertArticleCategoryDetails } from '@ospk/web-models/articles'
 
 interface CategoryModalProps {
   id?: string
@@ -37,8 +37,8 @@ const CategoryModal = ({ id, open, onClose }: CategoryModalProps) => {
   const [updateCategory, updateResponse] = useUpdateCategoryMutation()
   const [deleteCategory, deleteResponse] = useDeleteCategoryMutation()
 
-  const [error, analyze] = useAnalyzeRequired<UpsertArticleCategory>(['label', 'catalogId'])
-  const [category, setCategory, setCategoryProp] = useObjectState<UpsertArticleCategory>({
+  const [error, analyze] = useAnalyzeRequired<UpsertArticleCategoryDetails>(['label', 'catalogId'])
+  const [category, setCategory, setCategoryProp] = useObjectState<UpsertArticleCategoryDetails>({
     catalogId: '',
     parentId: null,
     label: '',
@@ -119,11 +119,7 @@ const CategoryModal = ({ id, open, onClose }: CategoryModalProps) => {
           value={category.parentId}
           onChange={(value) => setCategoryProp({ parentId: value })}
         />
-        <Switch
-          label={category.disabled ? 'Не активно' : 'Активно'}
-          checked={!category.disabled}
-          onChange={(value) => setCategoryProp({ disabled: !value })}
-        />
+        <Switch label={'Активна'} checked={!category.disabled} onChange={(value) => setCategoryProp({ disabled: !value })} />
         <SaveCancelButton
           removed={!!category.removedAt}
           showRemoved={!!id}

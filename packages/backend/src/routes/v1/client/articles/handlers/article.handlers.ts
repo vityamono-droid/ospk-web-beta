@@ -72,7 +72,7 @@ export const getArticle: GetArticleRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
-    const category = await prisma.news.findUniqueOrThrow({
+    const article = await prisma.news.findUniqueOrThrow({
       where: {
         id: req.params.id,
         disabled: false,
@@ -91,12 +91,21 @@ export const getArticle: GetArticleRequest = async (req, res, next) => {
       },
     })
 
-    const categories: CategoryItem[] = !!category.categoryId
+    await prisma.news.update({
+      where: { id: req.params.id },
+      data: {
+        statistics: {
+          create: { type: 'VIEW' },
+        },
+      },
+    })
+
+    const categories: CategoryItem[] = !!article.categoryId
       ? await prisma.$queryRaw`
           with recursive cte_news_categories as (
             select nc.id, nc.label, nc."parentId"
             from "NewsCategory" nc
-            where nc.id = ${category.categoryId}
+            where nc.id = ${article.categoryId}
 
             union all
 
@@ -111,9 +120,9 @@ export const getArticle: GetArticleRequest = async (req, res, next) => {
     res.json({
       error: false,
       data: {
-        ...category,
+        ...article,
         _count: undefined,
-        statistics: category._count.statistics,
+        statistics: article._count.statistics,
         categories: categories,
       } as any,
     })

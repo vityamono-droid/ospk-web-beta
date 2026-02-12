@@ -9,7 +9,9 @@ import ServiceSidebar from './services.sidebar'
 import ServiceTable from './services.table'
 
 const ServiceListPage = () => {
-  const { services: { catalogs, selected, onChange } } = useClientContext()
+  const {
+    services: { catalogs, selected, onChange },
+  } = useClientContext()
 
   useEffect(() => {
     if (!selected && catalogs.length) {
@@ -59,9 +61,16 @@ const ServiceListPage = () => {
           <Stack width={'100%'}>
             <Paper>
               <Stack p={2} spacing={4}>
-                <Stack spacing={1}>
-                  <Typography variant={'h4'}>{catalog.label}</Typography>
-                  <Typography>{catalog.description}</Typography>
+                <Stack direction={'row'} spacing={1}>
+                  {catalog.banner && (
+                    <Stack minWidth={150} borderRadius={1.5} overflow={'hidden'}>
+                      <img width={150} height={100} src={catalog.banner} />
+                    </Stack>
+                  )}
+                  <Stack spacing={1} justifyContent={'flex-end'}>
+                    <Typography variant={'h4'}>{catalog.label}</Typography>
+                    {catalog.description && <Typography>{catalog.description}</Typography>}
+                  </Stack>
                 </Stack>
                 {catalog.categories?.map((item) => (
                   <ServiceTable data={item} />

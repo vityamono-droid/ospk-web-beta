@@ -4,6 +4,7 @@ import { Provider as ApiProvider } from 'react-redux'
 import { SnackbarProvider } from 'notistack'
 import { BrowserRouter } from 'react-router'
 
+import AppIcon from '@assets/ospk-logo.svg'
 import Loading from '@components/Loading'
 
 import { createRoot } from 'react-dom/client'
@@ -19,6 +20,7 @@ if (!root) {
 
 createRoot(root).render(
   <StrictMode>
+    <link rel={'icon'} type={'image/x-icon'} href={AppIcon} />
     <ThemeProvider theme={appTheme} noSsr>
       <CssBaseline />
       <ApiProvider store={commonStore}>

@@ -2,6 +2,7 @@ import { IntrospectTokenResponse } from '@ospk/web-models/auth'
 import ApiError from '@models/ApiError'
 import User from '@models/User'
 import { RequestHandler } from 'express'
+import config from '@config'
 
 const withAuth: RequestHandler = async (req, res, next) => {
   try {
@@ -14,7 +15,7 @@ const withAuth: RequestHandler = async (req, res, next) => {
       throw ApiError.unauthenticated()
     }
 
-    const result = await fetch(`${req.protocol}://${req.host}/api/v1/auth/token/introspect`, {
+    const result = await fetch(`http://${config.app.host}:${config.app.port}/api/v1/auth/token/introspect`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

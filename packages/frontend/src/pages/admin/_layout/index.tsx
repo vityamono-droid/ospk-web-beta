@@ -24,7 +24,7 @@ const AdminLayout = () => {
           {/* Section title */}
           <Box sx={{ p: 2 }}>
             <Typography component={'h2'} variant={'h5'} fontWeight={'bold'}>
-              {adminNav.find((item) => item.link == section)?.title}
+              {section == '/' ? 'Главная' : adminNav.find((item) => item.link == section)?.title}
             </Typography>
           </Box>
           {/* Account box */}

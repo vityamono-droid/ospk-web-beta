@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import {
-  MenuButtonAddImage,
+  MenuButtonAddTable,
   MenuButtonBlockquote,
   MenuButtonCode,
   MenuButtonCodeBlock,
@@ -12,7 +12,6 @@ import {
 import TopControls from './TopControls'
 import FontGroup from './FontControls'
 import ParagraphGroup from './ParagraphGroup'
-import TableGroup from './TableGroup'
 
 const TextEditorControls = () => {
   return (
@@ -29,15 +28,13 @@ const TextEditorControls = () => {
               <MenuButtonBlockquote />
               <MenuButtonCode />
               <MenuButtonCodeBlock />
-              <MenuButtonEditLink />
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <MenuButtonHorizontalRule />
-              <MenuButtonAddImage onClick={() => {}} />
+              <MenuButtonEditLink />
+              <MenuButtonAddTable />
             </Box>
           </Box>
-          <MenuDivider sx={{ height: 56 }} />
-          <TableGroup />
         </Box>
       </Box>
     </MenuControlsContainer>

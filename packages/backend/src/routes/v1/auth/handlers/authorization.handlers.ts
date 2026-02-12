@@ -3,6 +3,7 @@ import type { AuthorizeRequest, IntrospectTokenRequest, RevokeTokenRequest, Toke
 import { ApiResponse } from '@ospk/web-models'
 import queryString from 'query-string'
 import { handleExpressResponse } from '@jmondi/oauth2-server/express'
+import ApiError from '@models/ApiError'
 
 export const authorizeHandler: RequestHandler<any, ApiResponse, any, AuthorizeRequest> = async (req, res, next) => {
   try {
@@ -13,12 +14,20 @@ export const authorizeHandler: RequestHandler<any, ApiResponse, any, AuthorizeRe
       delete req.query.client_id
     }
 
-    authRequest.user = req.session.user
-    if (!req.session.user) {
+    if (!req.session.userId) {
       res.redirect(`/auth/login?${queryString.stringify(req.query)}`)
       return
     }
 
+    const user = await res.locals.prisma.user.findUnique({
+      where: { id: req.session.userId, removedAt: null },
+    })
+    if (!user) {
+      throw ApiError.invalidCredentials()
+    }
+
+    req.session.user = user
+    authRequest.user = req.session.user
     authRequest.isAuthorizationApproved = authRequest.client.firstParty ?? false
     if (!authRequest.isAuthorizationApproved) {
       res.redirect(`/auth/consent?${queryString.stringify(req.query)}`)
@@ -36,6 +45,20 @@ export const authorizeHandler: RequestHandler<any, ApiResponse, any, AuthorizeRe
 export const tokenHandler: RequestHandler<any, ApiResponse, TokenRequest> = async (req, res, next) => {
   try {
     res.locals.logger.info('Handling incoming token request...')
+    if (req.body.grant_type === 'refresh_token') {
+      if (!req.session.userId) {
+        throw ApiError.unauthenticated()
+      }
+
+      const count = await res.locals.prisma.user.count({
+        where: { id: req.session.userId, removedAt: null },
+      })
+
+      if (!count) {
+        throw ApiError.unauthenticated()
+      }
+    }
+
     const authResponse = await res.locals.auth.respondToAccessTokenRequest(req)
 
     handleExpressResponse(res, authResponse)

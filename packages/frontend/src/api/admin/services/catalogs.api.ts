@@ -12,10 +12,7 @@ const serviceCatalogsApi = createApi({
   endpoints: (builder) => ({
     listCatalogs: builder.query<ServiceCatalogDetails[], any, ApiResponse<ServiceCatalogDetails[]>>({
       providesTags: ['catalogList'],
-      query: () => ({
-        url: `/`,
-        method: 'GET',
-      }),
+      query: () => `/`,
       transformErrorResponse: transformErrorResponse([]),
       transformResponse: transformResponse({ defaultValue: [] }),
     }),
@@ -26,7 +23,7 @@ const serviceCatalogsApi = createApi({
       transformResponse: transformResponse({}),
     }),
 
-    addCatalog: builder.mutation<undefined, UpsertServiceCatalogDetails, ApiResponse>({
+    addCatalog: builder.mutation<undefined, FormData, ApiResponse>({
       invalidatesTags: ['catalogList'],
       query: (data) => ({
         url: `/`,
@@ -37,7 +34,7 @@ const serviceCatalogsApi = createApi({
       transformResponse: transformResponse({ successMessage: 'Каталог добавлен успешно' }),
     }),
 
-    updateCatalog: builder.mutation<undefined, UpdateData<UpsertServiceCatalogDetails>, ApiResponse>({
+    updateCatalog: builder.mutation<undefined, UpdateData<FormData>, ApiResponse>({
       invalidatesTags: ['catalogList'],
       query: ({ id, data }) => ({
         url: `/${id}`,

@@ -54,19 +54,19 @@ const LoginPage = () => {
         <Stack direction={'row'} spacing={2}>
           <TextBox
             fullWidth
-            label={'Имя'}
-            maxLength={32}
-            error={error.firstName}
-            value={form.firstName}
-            onChange={(value) => setFormProp({ firstName: value })}
-          />
-          <TextBox
-            fullWidth
             label={'Фамилия'}
             maxLength={32}
             error={error.lastName}
             value={form.lastName}
             onChange={(value) => setFormProp({ lastName: value })}
+          />
+          <TextBox
+            fullWidth
+            label={'Имя'}
+            maxLength={32}
+            error={error.firstName}
+            value={form.firstName}
+            onChange={(value) => setFormProp({ firstName: value })}
           />
         </Stack>
         <TextBox

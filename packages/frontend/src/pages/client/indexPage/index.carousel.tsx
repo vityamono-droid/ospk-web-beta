@@ -8,10 +8,9 @@ import ChevronRight from '@mui/icons-material/ChevronRight'
 import Circle from '@mui/icons-material/Circle'
 
 const carouselImages = [
-  `/static/carousel/carousel001.webp`,
-  `/static/carousel/carousel002.webp`,
-  `/static/carousel/carousel003.webp`,
-  `/static/carousel/carousel004.webp`,
+  `/static/carousel/carousel001.jpg`,
+  `/static/carousel/carousel002.jpg`,
+  `/static/carousel/carousel003.jpg`,
 ]
 
 const IndexCarousel = () => {

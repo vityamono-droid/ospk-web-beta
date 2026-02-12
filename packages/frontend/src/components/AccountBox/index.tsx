@@ -16,12 +16,7 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import RedirectIcon from '@mui/icons-material/ChevronRight'
 import { useLocation, useNavigate } from 'react-router'
 import formatPhone from '@utils/formatPhone'
-
-const getFullname = (firstName: string, lastName: string, patronymic: string | null) => {
-  const lastNameLetter = lastName[0]
-  const patronymicLetter = patronymic ? patronymic[0] : undefined
-  return `${firstName} ${lastNameLetter}. ${!!patronymicLetter ? `${patronymicLetter}.` : ''}`
-}
+import shortFullname from '@utils/shortFullname'
 
 const AccountBox = () => {
   const ref = useRef(null)
@@ -48,10 +43,10 @@ const AccountBox = () => {
             ref={ref}
             sx={{ p: 1.5, gap: 1, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
             onClick={() => setOpen(true)}>
-            <Avatar sx={{ width: 36, height: 36 }} src={account.avatar ?? undefined} />
+            <Avatar sx={{ width: 36, height: 36, border: '1px solid gray' }} src={account.avatar ?? undefined} />
             <Box sx={{ width: 150, display: 'flex', flexDirection: 'column' }}>
               <Typography variant={'body2'} noWrap>
-                {getFullname(account.firstName, account.lastName, account.patronymic)}
+                {shortFullname(account.firstName, account.lastName, account.patronymic)}
               </Typography>
               <Typography color={'gray'} variant={'caption'} noWrap>
                 {account.email}

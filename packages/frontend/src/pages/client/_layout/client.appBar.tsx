@@ -23,24 +23,26 @@ const ClientAppBar = () => {
           <Link component={RouterLink} to={'/'} underline={'none'} color={'textPrimary'}>
             <Stack p={2} direction={'row'} spacing={1} alignItems={'center'}>
               <AppLogo height={36} />
-              <Stack component={'h1'}>
-                <Typography fontWeight={'bold'}>Челябинская областная</Typography>
-                <Typography variant={'caption'} fontWeight={'bold'} lineHeight={1}>
+              <Stack component={'h1'} sx={{ display: { xs: 'none', lg: 'flex' } }}>
+                <Typography noWrap fontWeight={'bold'}>
+                  Челябинская областная
+                </Typography>
+                <Typography noWrap variant={'caption'} fontWeight={'bold'} lineHeight={1}>
                   Станция переливания крови
                 </Typography>
               </Stack>
             </Stack>
           </Link>
-          <Stack direction={'row'}>
+          <Stack direction={'row'} sx={{ display: { xs: 'none', md: 'flex' } }}>
             <ServicesNavItem />
             <NewsNavItem />
-            <Button variant={'nav-link'} onClick={() => navigate('/donors')}>
+            <Button variant={'nav-link'} sx={{ whiteSpace: 'noWrap' }} onClick={() => navigate('/donors')}>
               Донорам
             </Button>
-            <Button variant={'nav-link'} onClick={() => navigate('/about')}>
+            <Button variant={'nav-link'} sx={{ whiteSpace: 'noWrap' }} onClick={() => navigate('/about')}>
               О станции
             </Button>
-            <Button variant={'nav-link'} onClick={() => navigate('/contacts')}>
+            <Button variant={'nav-link'} sx={{ whiteSpace: 'noWrap' }} onClick={() => navigate('/contacts')}>
               Контакты
             </Button>
           </Stack>

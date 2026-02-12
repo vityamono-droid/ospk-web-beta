@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography'
 
 import { useNavigate } from 'react-router'
 
-const Error501Page = () => {
+const Error501Page = ({ backTo }: { backTo?: string }) => {
   const navigate = useNavigate()
 
   return (
@@ -14,7 +14,7 @@ const Error501Page = () => {
           В разработке
         </Typography>
         <Typography variant={'h6'}>Скоро тут что-то будет</Typography>
-        <Button onClick={() => navigate(`/`, { relative: 'path' })}>На главную</Button>
+        <Button onClick={() => navigate(backTo ?? `/`, { relative: 'path' })}>На главную</Button>
       </Box>
     </Box>
   )

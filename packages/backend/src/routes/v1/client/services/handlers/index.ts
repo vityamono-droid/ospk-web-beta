@@ -41,11 +41,19 @@ export const getCatalog: RequestHandler<IdParams, ApiResponse<ServiceCatalogNavD
         banner: true,
         description: true,
         categories: {
+          where: {
+            disabled: false,
+            removedAt: null,
+          },
           select: {
             id: true,
             label: true,
             description: true,
             services: {
+              where: {
+                disabled: false,
+                removedAt: null,
+              },
               select: {
                 id: true,
                 label: true,
@@ -112,6 +120,15 @@ export const getService: RequestHandler<any, ApiResponse> = async (req, res, nex
             price: true,
             createdAt: true,
           },
+        },
+      },
+    })
+
+    await prisma.service.update({
+      where: { id: req.params.id },
+      data: {
+        statistics: {
+          create: { type: 'VIEW' },
         },
       },
     })

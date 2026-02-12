@@ -73,11 +73,17 @@ export const upsertCatalog: UpsertCatalogRequest = async (req, res, next) => {
     if (!!req.params.id) {
       await prisma.serviceCatalog.update({
         where: { id: req.params.id },
-        data: req.body,
+        data: {
+          ...req.body,
+          banner: req.body.banner == null ? null : req.file?.path,
+        },
       })
     } else {
       await prisma.serviceCatalog.create({
-        data: req.body,
+        data: {
+          ...req.body,
+          banner: req.file?.path,
+        },
       })
     }
 

@@ -30,7 +30,7 @@ const articleCatalogsApi = createApi({
       transformResponse: transformResponse({}),
     }),
 
-    addCatalog: builder.mutation<undefined, UpsertArticleCatalogDetails, ApiResponse>({
+    addCatalog: builder.mutation<undefined, FormData, ApiResponse>({
       invalidatesTags: ['catalogList'],
       query: (data) => ({
         url: `/`,
@@ -41,7 +41,7 @@ const articleCatalogsApi = createApi({
       transformResponse: transformResponse({ successMessage: 'Каталог добавлен успешно' }),
     }),
 
-    updateCatalog: builder.mutation<undefined, UpdateData<UpsertArticleCatalogDetails>, ApiResponse>({
+    updateCatalog: builder.mutation<undefined, UpdateData<FormData>, ApiResponse>({
       invalidatesTags: ['catalogList'],
       query: ({ id, data }) => ({
         url: `/${id}`,

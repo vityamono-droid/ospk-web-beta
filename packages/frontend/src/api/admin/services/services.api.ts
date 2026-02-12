@@ -32,7 +32,7 @@ const servicesApi = createApi({
       transformResponse: transformResponse({}),
     }),
 
-    addService: builder.mutation<string, UpsertServiceDetails, ApiResponse<string>>({
+    addService: builder.mutation<string, FormData, ApiResponse<string>>({
       invalidatesTags: ['serviceList'],
       query: (data) => ({
         url: `/`,
@@ -43,7 +43,7 @@ const servicesApi = createApi({
       transformResponse: transformResponse({ successMessage: 'Услуга добавлена успешно' }),
     }),
 
-    updateService: builder.mutation<string, UpdateData<UpsertServiceDetails>, ApiResponse<string>>({
+    updateService: builder.mutation<string, UpdateData<FormData>, ApiResponse<string>>({
       invalidatesTags: ['serviceList'],
       query: ({ id, data }) => ({
         url: `/${id}`,

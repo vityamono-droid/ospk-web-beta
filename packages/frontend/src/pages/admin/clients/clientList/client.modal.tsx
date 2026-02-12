@@ -144,7 +144,7 @@ const ClientModal = ({ id, open, onClose }: ClientModalProps) => {
           <Stack position={'relative'} alignItems={'center'} justifyContent={'center'} sx={{ height: 156, width: 156 }}>
             <Avatar
               src={client.avatar ?? undefined}
-              sx={{ height: 148, width: 148 }}
+              sx={{ height: 148, width: 148, border: '1px solid gray', borderTopRightRadius: 0 }}
               component={Button}
               onClick={handleAvatarClick}
             />

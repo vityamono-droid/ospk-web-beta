@@ -44,6 +44,7 @@ export const loginHandler: RequestHandler<any, any, LoginRequest, AuthorizeReque
       },
     })
 
+    req.session.userId = user.id
     req.session.user = new User(user)
     res.redirect(`${req.baseUrl}/authorize?${queryString.stringify(req.query)}`)
     res.locals.logger.info('Success handling login request')
@@ -100,6 +101,7 @@ export const registerHandler: RequestHandler<any, any, RegisterRequest, Authoriz
       },
     })
 
+    req.session.userId = user.id
     req.session.user = new User(user)
     res.redirect(`${req.baseUrl}/authorize?${queryString.stringify(req.query)}`)
     res.locals.logger.info('Success handling register request')

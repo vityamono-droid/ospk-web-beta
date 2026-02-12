@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router'
 
 /** Страница ошибки 404 (Не Найдено) */
-const Error404Page = () => {
+const Error404Page = ({ backTo }: { backTo?: string }) => {
   const navigate = useNavigate()
 
   return (
@@ -15,7 +15,7 @@ const Error404Page = () => {
           404
         </Typography>
         <Typography variant={'h6'}>Ничего не найдено</Typography>
-        <Button onClick={() => navigate(`/`, { relative: 'path' })}>На главную</Button>
+        <Button onClick={() => navigate(backTo ?? `/`, { relative: 'path' })}>На главную</Button>
       </Box>
     </Box>
   )

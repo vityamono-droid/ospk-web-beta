@@ -1,22 +1,18 @@
 import { useGetArticleQuery } from '@api/client/articles.api'
-import DateCube from '@components/DateCube'
 import IconCount from '@components/IconCount'
 import PageHeader from '@components/PageHeader'
 import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'
 import type { ArticleData } from '@ospk/web-models/articles'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
 import ViewsIcon from '@mui/icons-material/Visibility'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import CategoryBreadcrumbs from '@components/NewsListItem/CategoryBreadcrumbs'
-import CommentView from '@components/CommentView'
 
 const ArticlePage = () => {
-  const contentRenderer = useRef(null)
-
   const { id } = useParams()
 
   const [article, setArticle] = useState<ArticleData>()
@@ -29,8 +25,6 @@ const ArticlePage = () => {
     if (!isSuccess) {
       return
     }
-
-
 
     setArticle(data)
   }, [status])
@@ -58,11 +52,10 @@ const ArticlePage = () => {
           </Stack>
           {article.banner && (
             <Stack px={16}>
-              <img width={'100%'} src={article.banner} />
+              <img width={'100%'} src={article.banner} style={{ aspectRatio: 2 / 1 }} />
             </Stack>
           )}
           <div dangerouslySetInnerHTML={{ __html: article.content }} />
-          <CommentView />
         </Stack>
       )}
     </>

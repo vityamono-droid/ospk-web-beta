@@ -135,11 +135,17 @@ export const upsertService: UpsertServiceRequest = async (req, res, next) => {
     if (!!req.params.id) {
       upserted = await prisma.service.update({
         where: { id: req.params.id },
-        data: data,
+        data: {
+          ...data,
+          banner: req.body.banner == null ? null : req.file?.path,
+        },
       })
     } else {
       upserted = await prisma.service.create({
-        data: data,
+        data: {
+          ...data,
+          banner: req.file?.path,
+        },
       })
     }
 

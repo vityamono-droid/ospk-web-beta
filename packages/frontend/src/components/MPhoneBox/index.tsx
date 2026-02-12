@@ -1,7 +1,8 @@
 import React from 'react'
 import { IMaskInput } from 'react-imask'
+import type { InputBaseComponentProps } from '@mui/material/InputBase'
 
-interface MPhoneBoxProps {
+interface MPhoneBoxProps extends Omit<InputBaseComponentProps, 'onChange'> {
   onChange: (event: { target: { name: string; value: string } }) => void
   name: string
 }

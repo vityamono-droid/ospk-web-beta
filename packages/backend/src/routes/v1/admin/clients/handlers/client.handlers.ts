@@ -24,6 +24,9 @@ export const listClients: ListClientsRequest = async (req, res, next) => {
         lastName: req.query.lastName,
         phone: req.query.phone,
         email: req.query.email,
+        // id: {
+        //   not: req.session.userId,
+        // },
       },
       select: {
         id: true,

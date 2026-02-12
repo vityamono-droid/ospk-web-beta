@@ -19,6 +19,7 @@ export interface UpsertArticleDetails extends Removable {
   label: string
   content: string
   banner: string | null
+  description: string | null
   catalogId: string
   categoryId: string
 }

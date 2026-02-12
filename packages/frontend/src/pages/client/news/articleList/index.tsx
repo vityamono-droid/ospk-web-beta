@@ -80,7 +80,7 @@ const ArticleListPage = () => {
                     <Stack direction={'row'} spacing={2}>
                       {catalog.banner && (
                         <Stack>
-                          <img height={72} src={catalog.banner} />
+                          <img width={150} height={100} src={catalog.banner} />
                         </Stack>
                       )}
                       <Stack>

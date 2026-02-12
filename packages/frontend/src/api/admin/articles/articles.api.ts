@@ -25,7 +25,7 @@ const articlesApi = createApi({
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({}),
     }),
-    addArticle: builder.mutation<undefined, UpsertArticleDetails, ApiResponse>({
+    addArticle: builder.mutation<undefined, FormData, ApiResponse>({
       invalidatesTags: ['articleList'],
       query: (data) => ({
         url: `/`,
@@ -35,7 +35,7 @@ const articlesApi = createApi({
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({ successMessage: 'Статья добавлена успешно' }),
     }),
-    updateArticle: builder.mutation<undefined, UpdateData<UpsertArticleDetails>, ApiResponse>({
+    updateArticle: builder.mutation<undefined, UpdateData<FormData>, ApiResponse>({
       invalidatesTags: ['articleList'],
       query: ({ id, data }) => ({
         url: `/${id}`,

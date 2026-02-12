@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type JSX } from 'react'
 import { useLocation } from 'react-router'
+import adminNav from './admin.nav'
 
 interface AdminContextProps {
   section: string
@@ -15,13 +16,22 @@ const AdminProvider = ({ children }: { children: JSX.Element }) => {
   const [section, setSection] = useState('/')
 
   useEffect(() => {
-    const tokens = location.pathname.split('/')
-    if (tokens.length == 2 && tokens[1] == 'admin') {
-      setSection('/')
+    if (section == '/') {
+      document.title = '[Админ] Главная'
       return
     }
 
-    setSection(location.pathname.split('/')[2])
+    document.title = `[Админ] ${adminNav.find((item) => item.link == section)?.title}`
+  }, [section])
+
+  useEffect(() => {
+    const tokens = location.pathname.split('/').filter((item) => !!item)
+    if (tokens.length == 1 && tokens[0] == 'admin') {
+      section != '/' && setSection('/')
+      return
+    }
+
+    section != tokens[1] && setSection(tokens[1])
   }, [location.key])
 
   return <AdminContext value={{ section }}>{children}</AdminContext>

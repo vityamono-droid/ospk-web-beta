@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "SET MODE=DEV& tsx watch src/index.ts",
     "build": "tsc -b && tsc-alias",
+    "build:no-types": "tsc --noEmit && tsc-alias",
     "start": "SET MODE=PROD& node dest/index.js"
   },
   "devDependencies": {

@@ -1,16 +1,16 @@
 /// Информация об отделении.
 model Department {
-  id        String               @id @default(uuid()) @db.Uuid
-  address   String               @unique
-  phone     String?              @db.VarChar(10)
+  id        String              @id @default(uuid()) @db.Uuid
+  address   String              @unique
+  phone     String?             @db.VarChar(10)
   email     String?
   disabled  Boolean
-  schedules DepartmentSchedule[] @relation("department_schedule_department_fkey")
-  contacts  Contact[]            @relation("contact_department_fkey")
-  orders    Order[]              @relation("order_department_fkey")
-  services  ServiceDepartment[]  @relation("service_department_department_fkey")
-  carousels Carousel[]           @relation("carousel_department_m")
-  employees Employee[]           @relation("employee_department_fkey")
+  schedules ScheduleItem[]      @relation("department_schedule_department_fkey")
+  contacts  Contact[]           @relation("contact_department_fkey")
+  orders    Order[]             @relation("order_department_fkey")
+  services  ServiceDepartment[] @relation("service_department_department_fkey")
+  carousels Carousel[]          @relation("carousel_department_m")
+  employees Employee[]          @relation("employee_department_fkey")
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
@@ -31,30 +31,22 @@ enum WeekDay {
   CUSTOM
 }
 
-/// Элемент расписания.
+/// Секция расписания отделения.
 model ScheduleItem {
-  id            String              @id @default(uuid()) @db.Uuid
+  id            String    @id @default(uuid()) @db.Uuid
+  label         String    @db.VarChar(128)
   weekDays      WeekDay[]
   customWeekDay String[]
-  timeStart     DateTime            @db.Time()
-  timeEnd       DateTime            @db.Time()
-  departments   DepartmentSchedule? @relation("department_schedule_schedule_fkey")
+  timeStart     Int
+  timeEnd       Int
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   removedAt DateTime?
-}
 
-/// Секция расписания отделения.
-model DepartmentSchedule {
-  label String @db.VarChar(128)
+  departmentId String     @db.Uuid
+  department   Department @relation(fields: [departmentId], references: [id], name: "department_schedule_department_fkey")
 
-  departmentId String       @db.Uuid
-  department   Department   @relation(fields: [departmentId], references: [id], name: "department_schedule_department_fkey")
-  scheduleId   String       @unique @db.Uuid
-  schedule     ScheduleItem @relation(fields: [scheduleId], references: [id], name: "department_schedule_schedule_fkey")
-
-  @@id([departmentId, scheduleId])
   @@index([departmentId])
 }
 

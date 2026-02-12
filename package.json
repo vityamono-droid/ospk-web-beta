@@ -2,9 +2,9 @@
   "name": "@ospk/web",
   "version": "1.0.0",
   "scripts": {
-    "backend": "npm run build -w @ospk/web-backend",
-    "frontend": "npm run build -w @ospk/web-frontend",
-    "run": "npm-run-all --parallel backend frontend"
+    "backend:build": "npm run build:no-types -w @ospk/web-backend",
+    "frontend:build": "npm run build:no-types -w @ospk/web-frontend",
+    "build": "npm-run-all --parallel backend:build frontend:build"
   },
   "workspaces": [
     "./packages/database",

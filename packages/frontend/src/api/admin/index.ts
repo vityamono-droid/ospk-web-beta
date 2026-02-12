@@ -5,6 +5,7 @@ import authApi from '@api/common/auth/auth.api'
 import accountsApi from '@api/common/accounts.api'
 
 import * as clients from './clients'
+import departmentsApi from './departments.api'
 import * as articles from './articles'
 import * as services from './services'
 
@@ -16,6 +17,8 @@ const adminStore = configureStore({
     // Clients
     [clients.clientsApi.reducerPath]: clients.clientsApi.reducer,
     [clients.rolesApi.reducerPath]: clients.rolesApi.reducer,
+    // Departments
+    [departmentsApi.reducerPath]: departmentsApi.reducer,
     // Articles
     [articles.articlesApi.reducerPath]: articles.articlesApi.reducer,
     [articles.catalogsApi.reducerPath]: articles.catalogsApi.reducer,
@@ -34,6 +37,8 @@ const adminStore = configureStore({
       // Clients
       .concat(clients.clientsApi.middleware)
       .concat(clients.rolesApi.middleware)
+      // Departments
+      .concat(departmentsApi.middleware)
       // Articles
       .concat(articles.articlesApi.middleware)
       .concat(articles.catalogsApi.middleware)

@@ -88,11 +88,17 @@ export const upsertArticle: UpsertArticleRequest = async (req, res, next) => {
     if (!!req.params.id) {
       await prisma.news.update({
         where: { id: req.params.id },
-        data: req.body,
+        data: {
+          ...req.body,
+          banner: req.body.banner == null ? null : req.file?.path,
+        },
       })
     } else {
       await prisma.news.create({
-        data: req.body,
+        data: {
+          ...req.body,
+          banner: req.file?.path,
+        },
       })
     }
 

@@ -8,6 +8,10 @@ class User implements UserModel, OAuthUser {
   phone: string
   avatar: string | null
 
+  firstName: string
+  lastName: string
+  patronymic: string | null
+
   lastLoginAt: Date | null
   createdAt: Date
   updatedAt: Date | null
@@ -21,6 +25,10 @@ class User implements UserModel, OAuthUser {
     this.password = entity.password
     this.phone = entity.phone
     this.avatar = entity.avatar
+
+    this.firstName = entity.firstName
+    this.lastName = entity.lastName
+    this.patronymic = entity.patronymic
 
     this.lastLoginAt = entity.lastLoginAt
     this.createdAt = entity.createdAt

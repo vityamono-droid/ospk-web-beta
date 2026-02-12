@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:no-types": "tsc --noEmit && vite build",
     "lint": "eslint",
     "preview": "vite preview"
   },

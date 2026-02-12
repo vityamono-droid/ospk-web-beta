@@ -17,19 +17,15 @@ const withParseForm = ({ dest, parse = true }: ParseFormOptions): RequestHandler
   }
 
   if (!!dest && !!req.file) {
-    if (dest.startsWith('/')) {
-      dest = dest.slice(1)
+    const filepath = path.join(process.cwd(), dest)
+    if (!fs.existsSync(filepath)) {
+      fs.mkdirSync(filepath, { recursive: true })
     }
 
-    if (!fs.existsSync(dest)) {
-      fs.mkdirSync(dest)
-    }
-
-    const newName = path.join(dest, req.file.filename)
-    fs.copyFileSync(req.file.path, newName)
+    fs.copyFileSync(req.file.path, path.join(filepath, req.file.filename))
     fs.rmSync(req.file.path)
 
-    req.file.path = `/${newName.replaceAll('\\', '/')}`
+    req.file.path = `/${path.join(dest, req.file.filename).replaceAll('\\', '/')}`
   }
 
   next()

@@ -1,0 +1,30 @@
+services:
+  ospk_database_prod:
+    image: postgres:alpine3.22
+    container_name: ospk_database_prod
+    environment:
+      TZ: 'UTC'
+      PGTZ: 'UTC'
+      POSTGRES_DB: ${DB_CTLG}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', "sh -c 'pg_isready -U ${DB_USER} -d ${DB_CTLG}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    ports:
+      - ${DB_PORT}:5432
+  ospk_web_prod:
+    image: node:22.20.0
+    container_name: ospk_web_prod
+    ports:
+      - 22002:22002
+      - 11001:11001
+    volumes:
+      - ./package.json:/srv/package.json
+      - ./packages:/srv/packages
+      - ./static:/srv/packages/frontend/dest
+    command: bash -c "cd ./srv && npm i --no-audit && && npm exec -w @ospk/web-database -- prisma db push && npm run build && npm run start -w @ospk/web-backend"

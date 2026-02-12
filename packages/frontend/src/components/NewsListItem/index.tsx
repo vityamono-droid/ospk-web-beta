@@ -28,7 +28,7 @@ const NewsListItem = ({ data, showBanner, showCategories }: NewsListItemProps) =
       <Stack p={2} direction={'row'} spacing={2}>
         {/* Banner */}
         {showBanner && !!data.banner && (
-          <Stack>
+          <Stack sx={{ display: { xs: 'none', sm: 'flex' } }}>
             <img height={150} width={150} src={data.banner} />
           </Stack>
         )}

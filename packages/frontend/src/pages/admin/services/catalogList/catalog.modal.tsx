@@ -1,13 +1,22 @@
-import { useAddCatalogMutation, useGetCatalogQuery, useUpdateCatalogMutation } from '@api/admin/services/catalogs.api'
-import FileUpload from '@components/FileUpload'
+import BannerUpload from '@components/BannerUpload'
 import Modal from '@components/Modal'
 import TextBox from '@components/new/TextBox'
+import SaveCancelButton from '@components/SaveCancelButton'
 import Switch from '@components/Switch'
-import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
-import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
-import type { AddServiceCatalogRequest, UpdateServiceCatalogRequest } from '@ospk/web-models/services'
-import { useEffect, useState } from 'react'
+
+import {
+  useAddCatalogMutation,
+  useDeleteCatalogMutation,
+  useGetCatalogQuery,
+  useUpdateCatalogMutation,
+} from '@api/admin/services/catalogs.api'
+import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
+import useObjectState from '@hooks/useObjectState'
+import useStatusEffect from '@hooks/useStatusEffect'
+import { useState } from 'react'
+
+import type { UpsertServiceCatalogDetails } from '@ospk/web-models/services'
 
 interface CatalogModalProps {
   id?: string
@@ -23,108 +32,75 @@ const CatalogModal = ({ id, open, onClose }: CatalogModalProps) => {
 
   const [addCatalog, addResponse] = useAddCatalogMutation()
   const [updateCatalog, updateResponse] = useUpdateCatalogMutation()
+  const [deleteCatalog, deleteResponse] = useDeleteCatalogMutation()
 
-  const [error, analyze] = useAnalyzeRequired<AddServiceCatalogRequest>(['label'])
-
-  const [banner, setBanner] = useState<File | undefined>()
-  const [catalog, setCatalog] = useState<UpdateServiceCatalogRequest>({
+  const [banner, setBanner] = useState<File | null>()
+  const [error, analyze] = useAnalyzeRequired<UpsertServiceCatalogDetails>(['label'])
+  const [catalog, setCatalog, setCatalogProp] = useObjectState<UpsertServiceCatalogDetails>({
     label: '',
     disabled: false,
+    banner: null,
+    description: null,
+    removedAt: null,
   })
 
-  useEffect(() => {
-    if (!getResponse.isSuccess) {
-      return
-    }
+  useStatusEffect(() => setCatalog(getResponse.data), [getResponse])
+  useStatusEffect(() => onClose(), [addResponse, updateResponse, deleteResponse])
 
-    setCatalog(getResponse.data)
-  }, [getResponse.status])
-
-  useEffect(() => {
-    if (!updateResponse.isSuccess) {
-      return
-    }
-
-    onClose()
-  }, [updateResponse.status])
-
-  useEffect(() => {
-    if (!addResponse.isSuccess) {
-      return
-    }
-
-    onClose()
-  }, [addResponse.status])
-
-  const handlePropChange = (data: UpdateServiceCatalogRequest) => {
-    setCatalog({
-      ...catalog,
-      ...data,
-    })
-  }
-
-  const handleDelete = () => {
-    updateCatalog({
-      id: id!,
-      data: {
-        removedAt: catalog.removedAt != null || !!catalog.removedAt ? null : new Date(),
-      },
-    })
-  }
+  const handleDelete = () => !!id && deleteCatalog(id)
 
   const handleSave = () => {
-    if (!analyze(catalog as AddServiceCatalogRequest)) {
+    const data = catalog
+    if (!analyze(data)) {
       return
     }
 
+    const formData = new FormData()
+    !!banner && formData.append('banner', banner)
+    formData.append('data', JSON.stringify(data))
+
     if (!!id) {
-      updateCatalog({
-        id: id,
-        data: catalog,
-      })
+      updateCatalog({ id, data: formData })
     } else {
-      addCatalog(catalog as AddServiceCatalogRequest)
+      addCatalog(formData)
     }
   }
 
   return (
     <Modal title={`${!!id ? 'Изменение' : 'Добавление'} каталога`} open={open} onClose={onClose}>
-      <Stack spacing={2} width={350}>
-        <TextBox
-          label={'Название *'}
-          error={error.label}
-          value={catalog.label ?? ''}
-          onChange={(value) => handlePropChange({ label: value })}
-        />
-        <TextBox
-          label={'Описание'}
-          error={error.description}
-          multiline
-          rows={3}
-          value={catalog.description ?? ''}
-          onChange={(value) => handlePropChange({ description: value })}
-        />
-        <Switch
-          label={catalog.disabled ? 'Включить' : 'Отключить'}
-          checked={typeof catalog.disabled == 'undefined' ? true : !catalog.disabled}
-          onChange={(value) => handlePropChange({ disabled: !value })}
-        />
-        <FileUpload
-          value={!!banner ? [banner] : undefined}
-          fileTypes={['image/jpg', 'image/png']}
-          onChange={(value) => setBanner(Array.isArray(value) ? value[0] : value)}
-        />
-        <Stack direction={'row'} spacing={2} justifyContent={'flex-end'}>
-          {id && (
-            <Button color={'error'} onClick={handleDelete}>
-              {catalog.removedAt != null || !!catalog.removedAt ? 'Восстановить' : 'Удалить'}
-            </Button>
-          )}
-          <Button onClick={onClose}>Отмена</Button>
-          <Button color={'success'} variant={'outlined'} onClick={handleSave}>
-            Сохранить
-          </Button>
+      <Stack spacing={2}>
+        <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
+          <BannerUpload
+            file={catalog.banner}
+            onChange={(value) => setBanner(value)}
+            onPreview={(value) => setCatalogProp({ banner: value })}
+          />
+          <Stack spacing={2} minWidth={{ xs: 'reset', md: 300 }}>
+            <TextBox
+              label={'Название *'}
+              error={error.label}
+              value={catalog.label}
+              maxLength={64}
+              onChange={(value) => setCatalogProp({ label: value })}
+            />
+            <TextBox
+              label={'Описание'}
+              multiline
+              rows={4}
+              maxLength={128}
+              value={catalog.description ?? ''}
+              onChange={(value) => setCatalogProp({ description: value || null })}
+            />
+            <Switch label={'Активно'} checked={!catalog.disabled} onChange={(value) => setCatalogProp({ disabled: !value })} />
+          </Stack>
         </Stack>
+        <SaveCancelButton
+          showRemoved={!!id}
+          removed={!!catalog.removedAt}
+          onDelete={handleDelete}
+          onCancel={onClose}
+          onSave={handleSave}
+        />
       </Stack>
     </Modal>
   )
