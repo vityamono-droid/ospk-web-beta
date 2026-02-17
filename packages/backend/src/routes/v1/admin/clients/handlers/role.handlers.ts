@@ -80,16 +80,8 @@ export const deleteRole: DeleteRoleRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
-    const role = await prisma.role.findUniqueOrThrow({
+    await prisma.role.delete({
       where: { id: req.params.id },
-      select: { removedAt: true },
-    })
-
-    await prisma.role.update({
-      where: { id: req.params.id },
-      data: {
-        removedAt: !!role.removedAt ? null : new Date(),
-      },
     })
 
     res.json({

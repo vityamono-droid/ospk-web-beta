@@ -2,6 +2,7 @@
 model Department {
   id        String              @id @default(uuid()) @db.Uuid
   address   String              @unique
+  maps      String              @default("")
   phone     String?             @db.VarChar(10)
   email     String?
   disabled  Boolean

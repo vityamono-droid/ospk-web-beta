@@ -39,12 +39,8 @@ const ClientAppBar = () => {
             <Button variant={'nav-link'} sx={{ whiteSpace: 'noWrap' }} onClick={() => navigate('/donors')}>
               Донорам
             </Button>
-            <Button variant={'nav-link'} sx={{ whiteSpace: 'noWrap' }} onClick={() => navigate('/about')}>
-              О станции
-            </Button>
-            <Button variant={'nav-link'} sx={{ whiteSpace: 'noWrap' }} onClick={() => navigate('/contacts')}>
-              Контакты
-            </Button>
+            <AboutNavItem />
+            <ContactsNavItem />
           </Stack>
           <Stack direction={'row'} alignItems={'center'}>
             <AccountBox />
@@ -74,14 +70,67 @@ const ServicesNavItem = () => {
         Услуги
       </Button>
       <Menu anchorEl={ref.current} open={open} onClose={() => setOpen(false)}>
-        <MenuItem onClick={() => handleClick()}>
-          <ListItemText>Все услуги</ListItemText>
-        </MenuItem>
         {services.catalogs.map((item) => (
           <MenuItem key={item.id} onClick={() => handleClick(item.id)}>
             <ListItemText>{item.label}</ListItemText>
           </MenuItem>
         ))}
+      </Menu>
+    </>
+  )
+}
+
+const AboutNavItem = () => {
+  const navigate = useNavigate()
+  const ref = useRef(null)
+
+  const [open, setOpen] = useState(false)
+
+  const handleClick = (to: string) => {
+    navigate(to)
+    setOpen(false)
+  }
+
+  return (
+    <>
+      <Button ref={ref} variant={'nav-link'} onClick={() => setOpen(true)}>
+        О станции
+      </Button>
+      <Menu anchorEl={ref.current} open={open} onClose={() => setOpen(false)}>
+        <MenuItem onClick={() => handleClick('/employees')}>
+          <ListItemText>Сотрудники</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => handleClick('/legal')}>
+          <ListItemText>Правовые документы</ListItemText>
+        </MenuItem>
+      </Menu>
+    </>
+  )
+}
+
+const ContactsNavItem = () => {
+  const navigate = useNavigate()
+  const ref = useRef(null)
+
+  const [open, setOpen] = useState(false)
+
+  const handleClick = (to: string) => {
+    navigate(to)
+    setOpen(false)
+  }
+
+  return (
+    <>
+      <Button ref={ref} variant={'nav-link'} onClick={() => setOpen(true)}>
+        Контакты
+      </Button>
+      <Menu anchorEl={ref.current} open={open} onClose={() => setOpen(false)}>
+        <MenuItem onClick={() => handleClick('/faq')}>
+          <ListItemText>FAQ</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => handleClick('/contacts')}>
+          <ListItemText>Контакты</ListItemText>
+        </MenuItem>
       </Menu>
     </>
   )

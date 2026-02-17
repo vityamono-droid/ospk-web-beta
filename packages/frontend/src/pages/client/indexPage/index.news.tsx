@@ -32,9 +32,15 @@ const IndexNews = () => {
       <Grid container spacing={2}>
         {articles.map((item) => (
           <Grid key={item.id} size={{ xs: 12, md: 6 }}>
-            <NewsListItem key={item.id} showBanner data={item} />
+            <NewsListItem showBanner data={item} />
           </Grid>
         ))}
+        {(listResponse.isLoading || articles.length == 0) &&
+          [0, 1, 2, 3].map((_, index) => (
+            <Grid key={`${index}`} size={{ xs: 12, md: 6 }}>
+              <NewsListItem showBanner />
+            </Grid>
+          ))}
       </Grid>
       <Button onClick={() => navigate('/news')}>Все новости</Button>
     </Stack>

@@ -44,6 +44,7 @@ model JobTitle {
 /// Должность сотрудника.
 model EmployeeJobTitle {
   description String[]
+  primary Boolean @default(false)
 
   employeeId String   @db.Uuid
   employee   Employee @relation(fields: [employeeId], references: [id], name: "employee_job_title_employee_fkey")

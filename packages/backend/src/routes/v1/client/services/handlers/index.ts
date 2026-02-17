@@ -1,5 +1,5 @@
 import { ApiResponse } from '@ospk/web-models'
-import { ServiceCatalogNav, ServiceCatalogNavDetails } from '@ospk/web-models/services'
+import { ServiceCatalogNav, ServiceCatalogNavDetails, ServiceNavDetails } from '@ospk/web-models/services'
 import { RequestHandler } from 'express'
 
 export const listCatalogs: RequestHandler<any, ApiResponse<ServiceCatalogNav[]>> = async (req, res, next) => {
@@ -58,6 +58,7 @@ export const getCatalog: RequestHandler<IdParams, ApiResponse<ServiceCatalogNavD
                 id: true,
                 label: true,
                 amountType: true,
+                content: true,
                 vat: true,
                 price: true,
                 forLegals: true,
@@ -81,6 +82,7 @@ export const getCatalog: RequestHandler<IdParams, ApiResponse<ServiceCatalogNavD
           ...category,
           services: category.services.map((service) => ({
             ...service,
+            content: !!service.content,
             unit: service.unit?.label,
           })),
         })),
@@ -91,7 +93,7 @@ export const getCatalog: RequestHandler<IdParams, ApiResponse<ServiceCatalogNavD
   }
 }
 
-export const getService: RequestHandler<any, ApiResponse> = async (req, res, next) => {
+export const getService: RequestHandler<any, ApiResponse<ServiceNavDetails>> = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
@@ -105,20 +107,17 @@ export const getService: RequestHandler<any, ApiResponse> = async (req, res, nex
         label: true,
         banner: true,
         content: true,
-        forLegals: true,
-        amountType: true,
-        vat: true,
-        price: true,
-        unit: {
-          select: {
-            label: true,
-          },
-        },
+        createdAt: true,
         priceHistory: {
           select: {
             vat: true,
             price: true,
             createdAt: true,
+          },
+        },
+        _count: {
+          select: {
+            statistics: true,
           },
         },
       },
@@ -137,8 +136,9 @@ export const getService: RequestHandler<any, ApiResponse> = async (req, res, nex
       error: false,
       data: {
         ...service,
-        unit: service.unit?.label,
-      },
+        _count: undefined,
+        statistics: service._count.statistics,
+      } as any,
     })
   } catch (err) {
     next(err)

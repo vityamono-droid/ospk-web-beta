@@ -1,7 +1,9 @@
-import { IntrospectTokenResponse } from '@ospk/web-models/auth'
+import { RequestHandler } from 'express'
+
 import ApiError from '@models/ApiError'
 import User from '@models/User'
-import { RequestHandler } from 'express'
+import type { IntrospectTokenResponse } from '@ospk/web-models/auth'
+
 import config from '@config'
 
 const withAuth: RequestHandler = async (req, res, next) => {
@@ -12,7 +14,7 @@ const withAuth: RequestHandler = async (req, res, next) => {
       !req.headers.authorization.startsWith(token_type) ||
       req.headers.authorization.length <= token_type.length
     ) {
-      throw ApiError.unauthenticated()
+      throw undefined
     }
 
     const result = await fetch(`http://${config.app.host}:${config.app.port}/api/v1/auth/token/introspect`, {
@@ -25,29 +27,26 @@ const withAuth: RequestHandler = async (req, res, next) => {
       }),
     })
     if (!result.ok) {
-      throw ApiError.unauthenticated()
+      throw undefined
     }
 
     const tokenData = (await result.json()) as IntrospectTokenResponse
     if (!tokenData.active || !tokenData.sub) {
-      throw ApiError.unauthenticated()
+      throw undefined
     }
 
-    const userId = tokenData.sub
-    const user = await res.locals.prisma.user.findUnique({
-      where: { id: userId, removedAt: null }
+    const user = await res.locals.prisma.user.findUniqueOrThrow({
+      where: { id: tokenData.sub, removedAt: null },
+      include: { roles: true },
     })
 
-    if (!user) {
-      throw ApiError.unauthenticated()
-    }
-
     req.session.user = new User(user)
-    req.session.userId = userId
+    req.session.userId = user.id
 
+    res.locals.logger.info('User authenticated: %s', user.id)
     next()
-  } catch(err) {
-    next(err)
+  } catch {
+    next(ApiError.unauthenticated())
   }
 }
 

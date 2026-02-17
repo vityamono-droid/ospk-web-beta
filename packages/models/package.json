@@ -6,7 +6,7 @@
     "./articles": "./dest/articles/index.js",
     "./announces": "./dest/announces/index.js",
     "./auth": "./dest/auth/index.js",
-    "./carousel": "./dest/carousel/index.js",
+    "./carousels": "./dest/carousels/index.js",
     "./clients": "./dest/clients/index.js",
     "./contacts": "./dest/contacts/index.js",
     "./departments": "./dest/departments/index.js",

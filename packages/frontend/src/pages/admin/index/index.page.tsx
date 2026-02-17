@@ -33,41 +33,46 @@ const IndexPage = () => {
 
 const NavItem = ({ item }: { item: AdminNavItem }) => {
   const navigate = useNavigate()
+  const { account } = useAuthContext()
 
   return (
-    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-      <Paper elevation={2} sx={{ aspectRatio: { xs: 'unset', sm: 1, lg: 'unset' } }}>
-        <Box sx={{ p: 2, gap: 1, height: '100%', display: 'flex', flexDirection: { xs: 'row', sm: 'column', lg: 'row' } }}>
-          <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Box
-              sx={{
-                p: 2.5,
-                bgcolor: '#b0b0bb',
-                width: 'fit-content',
-                aspectRatio: 1,
-                borderRadius: 12,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              {cloneElement(item.icon, { color: 'white', sx: { fontSize: 48 } })}
+    <>
+      {account?.roles.some((role) => item.roles.includes(role)) && (
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <Paper elevation={2} sx={{ aspectRatio: { xs: 'unset', sm: 1, lg: 'unset' } }}>
+            <Box sx={{ p: 2, gap: 1, height: '100%', display: 'flex', flexDirection: { xs: 'row', sm: 'column', lg: 'row' } }}>
+              <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Box
+                  sx={{
+                    p: 2.5,
+                    bgcolor: '#b0b0bb',
+                    width: 'fit-content',
+                    aspectRatio: 1,
+                    borderRadius: 12,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  {cloneElement(item.icon, { color: 'white', sx: { fontSize: 48 } })}
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: { xs: 'flex-start', sm: 'center', lg: 'flex-start' },
+                  justifyContent: 'space-between',
+                }}>
+                <Typography variant={'h5'} textAlign={'center'}>
+                  {item.title}
+                </Typography>
+                <Button onClick={() => navigate(item.link)}>Перейти</Button>
+              </Box>
             </Box>
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: { xs: 'flex-start', sm: 'center', lg: 'flex-start' },
-              justifyContent: 'space-between',
-            }}>
-            <Typography variant={'h5'} textAlign={'center'}>
-              {item.title}
-            </Typography>
-            <Button onClick={() => navigate(item.link)}>Перейти</Button>
-          </Box>
-        </Box>
-      </Paper>
-    </Grid>
+          </Paper>
+        </Grid>
+      )}
+    </>
   )
 }
 

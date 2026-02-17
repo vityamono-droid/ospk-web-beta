@@ -1,5 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
+
 import type { LoginRequest, RegisterRequest } from '@ospk/web-models/auth'
+
 import authBaseQuery from './queries/auth.base'
 import authorizeQuery from './queries/authorize.query'
 import exchangeQuery from './queries/exchange.query'

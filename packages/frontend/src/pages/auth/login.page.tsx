@@ -1,4 +1,3 @@
-import { useLoginMutation } from '@api/common/auth/auth.api'
 import PasswordBox from '@components/new/PasswordBox'
 import TextBox from '@components/new/TextBox'
 import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
@@ -7,8 +6,11 @@ import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import type { LoginRequest } from '@ospk/web-models/auth'
+
 import { useNavigate } from 'react-router'
+import { useLoginMutation } from '@api/common/auth/auth.api'
+
+import type { LoginRequest } from '@ospk/web-models/auth'
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -17,7 +19,7 @@ const LoginPage = () => {
   const [error, analyze] = useAnalyzeRequired<LoginRequest>(['email', 'password'])
   const [form, _, setFormProp] = useObjectState<LoginRequest>({
     email: '',
-    password: ''
+    password: '',
   })
 
   const handleSignIn = () => {

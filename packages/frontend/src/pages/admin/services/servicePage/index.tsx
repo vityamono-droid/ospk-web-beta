@@ -12,6 +12,7 @@ import {
   useGetServiceQuery,
   useUpdateServiceMutation,
 } from '@api/admin/services/services.api'
+import { useListDepartmentsQuery } from '@api/admin/departments/departments.api'
 import { useListCatalogsQuery } from '@api/admin/services/catalogs.api'
 import { useListCategoriesQuery } from '@api/admin/services/categories.api'
 import { useListUnitsQuery } from '@api/admin/services/units.api'
@@ -28,7 +29,6 @@ import useTextEditor from '@hooks/useTextEditor'
 import toAcOptions from '@utils/toAcOptions'
 import MNumberBox from '@components/MNumberBox'
 import { enqueueSnackbar } from 'notistack'
-//import { useListDepartmentsQuery } from '@api/admin/departments.api'
 
 const ServicePage = () => {
   const navigate = useNavigate()
@@ -65,7 +65,7 @@ const ServicePage = () => {
   const listCatalogResponse = useListCatalogsQuery({})
   const listCategoryResponse = useListCategoriesQuery({}, { skip: !service.catalogId })
   const listUnitResponse = useListUnitsQuery({}, { skip: service.amountType != 'FINITE' })
-  //const listDepartmentsResponse = useListDepartmentsQuery({})
+  const listDepartmentsResponse = useListDepartmentsQuery({})
 
   useStatusEffect(() => setService(getResponse.data), [getResponse])
   useStatusEffect(() => {
@@ -148,30 +148,30 @@ const ServicePage = () => {
                 fullWidth
                 label={'НДС *'}
                 error={error.vat}
-                value={service.vat}
+                value={`${service.vat}`}
                 options={[
                   {
                     label: 'Не облагается',
-                    value: 0,
+                    value: '0',
                   },
                   {
                     label: '8%',
-                    value: 8,
+                    value: '8',
                   },
                   {
                     label: '10%',
-                    value: 10,
+                    value: '10',
                   },
                   {
                     label: '18%',
-                    value: 18,
+                    value: '18',
                   },
                   {
                     label: '20%',
-                    value: 20,
+                    value: '20',
                   },
                 ]}
-                onChange={(value) => setServiceProp({ vat: value })}
+                onChange={(value) => setServiceProp({ vat: !!value ? +value : null })}
               />
             </Stack>
             <Stack direction={'row'} spacing={1}>
@@ -234,14 +234,6 @@ const ServicePage = () => {
           value={service.categoryId}
           onChange={(value) => setServiceProp({ categoryId: value })}
         />
-        {/* <Autocomplete
-          fullWidth
-          multiple
-          label={'Отделения'}
-          options={listDepartmentsResponse.data?.map((item) => ({ label: item.address, value: item.id })) ?? []}
-          value={service.departments.map((item) => item.departmentId)}
-          onChange={(value) => setServiceProp({ departments: value ?? [] })}
-        /> */}
       </Stack>
       <Box mt={2} flex={1} gap={1} display={'flex'} flexDirection={'column'}>
         <TextEditor editable ref={ref} content={service.content ?? ''} />

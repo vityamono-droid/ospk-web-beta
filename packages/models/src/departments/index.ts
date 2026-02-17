@@ -26,8 +26,11 @@ export interface DepartmentDetails extends Removable, DateStats {
 
 export interface UpsertDepartmentDetails extends Removable {
   address: string
+  maps: string
   phone: string | null
   email: string | null
   contacts: ContactDetails[]
   schedules: ScheduleDetails[]
 }
+
+export * from './clientTypes'

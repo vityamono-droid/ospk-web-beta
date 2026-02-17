@@ -9,13 +9,14 @@ import { useRef, type ChangeEvent } from 'react'
 
 interface BannerUploadProps {
   file: string | null
+  error?: boolean
   onChange?: ValueCallback<File | null>
   onPreview?: ValueCallback<string | null>
 }
 
-const fileTypes = ['image/jpeg', 'image/png', 'image/webp']
+const fileTypes = ['image/jpeg', 'image/jgp', 'image/png', 'image/webp']
 
-const BannerUpload = ({ file, onChange, onPreview }: BannerUploadProps) => {
+const BannerUpload = ({ file, error, onChange, onPreview }: BannerUploadProps) => {
   const ref = useRef<HTMLInputElement>(null)
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +40,14 @@ const BannerUpload = ({ file, onChange, onPreview }: BannerUploadProps) => {
   }
 
   return (
-    <Stack p={1} width={322} height={222} position={'relative'} border={'3px dashed'} borderColor={'#808088'} borderRadius={2}>
+    <Stack
+      p={1}
+      width={322}
+      height={222}
+      position={'relative'}
+      border={'3px dashed'}
+      borderColor={error ? 'error.main' : '#808088'}
+      borderRadius={2}>
       <input hidden ref={ref} type='file' accept={fileTypes.join()} value={''} onChange={handleChange} />
       {file ? (
         <>

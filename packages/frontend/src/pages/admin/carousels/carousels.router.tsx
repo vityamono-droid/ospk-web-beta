@@ -1,14 +1,14 @@
 import { lazy } from 'react'
 import { Outlet, Route, Routes } from 'react-router'
 
-const IndexPage = lazy(() => import('./index.page'))
+const CarouselListPage = lazy(() => import('./carouselList'))
 
 const CarouselsRouter = () => {
 
   return (
     <>
       <Routes>
-        <Route index element={<IndexPage />} />
+        <Route index element={<CarouselListPage />} />
       </Routes>
       <Outlet />
     </>

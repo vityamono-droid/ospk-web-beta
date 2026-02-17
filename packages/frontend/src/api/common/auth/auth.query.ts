@@ -1,5 +1,7 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
 import type { BaseQueryType } from './queries/auth.base'
+
 import refreshQuery from './queries/refresh.query'
 import revokeQuery from './queries/revoke.query'
 import authorizeQuery from './queries/authorize.query'

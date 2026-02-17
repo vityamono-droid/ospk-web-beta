@@ -1,4 +1,3 @@
-import { useRegisterMutation } from '@api/common/auth/auth.api'
 import MPhoneBox from '@components/MPhoneBox'
 import PasswordBox from '@components/new/PasswordBox'
 import TextBox from '@components/new/TextBox'
@@ -8,8 +7,11 @@ import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import type {  RegisterRequest } from '@ospk/web-models/auth'
+
 import { useNavigate } from 'react-router'
+import { useRegisterMutation } from '@api/common/auth/auth.api'
+
+import type { RegisterRequest } from '@ospk/web-models/auth'
 
 const LoginPage = () => {
   const navigate = useNavigate()

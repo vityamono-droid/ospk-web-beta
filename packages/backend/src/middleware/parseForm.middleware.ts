@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express'
+
 import path from 'path'
 import fs from 'fs'
 
@@ -16,16 +17,32 @@ const withParseForm = ({ dest, parse = true }: ParseFormOptions): RequestHandler
     }
   }
 
-  if (!!dest && !!req.file) {
-    const filepath = path.join(process.cwd(), dest)
-    if (!fs.existsSync(filepath)) {
-      fs.mkdirSync(filepath, { recursive: true })
+  const handleFileArray = (dest: string, array: Express.Multer.File[]) => {
+    for (const file of array) {
+      const filepath = path.join(process.cwd(), dest)
+      if (!fs.existsSync(filepath)) {
+        fs.mkdirSync(filepath, { recursive: true })
+      }
+
+      fs.copyFileSync(file.path, path.join(filepath, file.filename))
+      fs.rmSync(file.path)
+
+      file.path = `/${path.join(dest, file.filename).replaceAll('\\', '/')}`
     }
+  }
 
-    fs.copyFileSync(req.file.path, path.join(filepath, req.file.filename))
-    fs.rmSync(req.file.path)
+  if (!!dest && !!req.file) {
+    handleFileArray(dest, [req.file])
+  }
 
-    req.file.path = `/${path.join(dest, req.file.filename).replaceAll('\\', '/')}`
+  if (!!dest && !!req.files) {
+    if (Array.isArray(req.files)) {
+      handleFileArray(dest, req.files)
+    } else {
+      for (const key in req.files) {
+        handleFileArray(dest, req.files[key])
+      }
+    }
   }
 
   next()

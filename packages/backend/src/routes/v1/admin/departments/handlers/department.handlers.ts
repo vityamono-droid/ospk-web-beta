@@ -59,29 +59,69 @@ export const upsertDepartment: UpsertDepartmentRequest = async (req, res, next) 
     const prisma = res.locals.prisma
 
     let newData
+    const { contacts, schedules, ...department } = req.body
     if (!!req.params.id) {
-      const { contacts, schedules, ...department } = req.body
-
+      const newContacts = contacts.filter((item) => !item.id)
+      const oldContacts = contacts.filter((item) => !!item.id)
+      const newSchedules = schedules.filter((item) => !item.id)
+      const oldSchedules = schedules.filter((item) => !!item.id)
       newData = await prisma.department.update({
         where: { id: req.params.id },
         data: {
           ...department,
           contacts: {
-            set: contacts,
+            createMany: {
+              data: newContacts,
+              skipDuplicates: true,
+            },
           },
           schedules: {
-            set: schedules.map((item) => ({
-              ...item,
-              weekDays: {
-                equals: item.weekDays,
-              },
-              customWeekDay: {
-                equals: [],
-              },
-              departmentId: req.params.id,
-            })),
+            createMany: {
+              data: newSchedules,
+              skipDuplicates: true,
+            },
           },
         },
+      })
+
+      const contactTransaction = oldContacts
+        .filter((item) => !item.removedAt)
+        .map((item) =>
+          prisma.contact.upsert({
+            where: { id: item.id },
+            update: item,
+            create: {
+              ...item,
+              departmentId: req.params.id,
+            },
+          }),
+        )
+
+      const scheduleTransaction = oldSchedules
+        .filter((item) => !item.removedAt)
+        .map((item) =>
+          prisma.scheduleItem.upsert({
+            where: { id: item.id },
+            update: item,
+            create: {
+              ...item,
+              departmentId: req.params.id,
+            },
+          }),
+        )
+
+      await prisma.$transaction(contactTransaction)
+      await prisma.$transaction(scheduleTransaction)
+
+      const contactsToDelete = oldContacts.filter((item) => !!item.removedAt).map((item) => item.id)
+      const schedulesToDelete = oldSchedules.filter((item) => !!item.removedAt).map((item) => item.id)
+
+      await prisma.contact.deleteMany({
+        where: { id: { in: contactsToDelete } },
+      })
+
+      await prisma.scheduleItem.deleteMany({
+        where: { id: { in: schedulesToDelete } },
       })
     } else {
       newData = await prisma.department.create({
@@ -89,13 +129,13 @@ export const upsertDepartment: UpsertDepartmentRequest = async (req, res, next) 
           ...req.body,
           contacts: {
             createMany: {
-              data: req.body.contacts,
+              data: contacts,
               skipDuplicates: true,
             },
           },
           schedules: {
             createMany: {
-              data: req.body.schedules,
+              data: schedules,
               skipDuplicates: true,
             },
           },

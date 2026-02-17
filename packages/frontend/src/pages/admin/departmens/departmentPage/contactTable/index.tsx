@@ -22,7 +22,10 @@ const ContactTable = ({ data, onChange }: ContactTableProps) => {
 
   const handleDelete = (index: number) => {
     const newData = data.slice()
-    newData.splice(index, 1)
+    newData.splice(index, 1, {
+      ...data[index],
+      removedAt: new Date(),
+    })
     !!onChange && onChange(newData)
   }
 

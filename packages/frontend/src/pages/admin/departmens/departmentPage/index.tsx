@@ -11,7 +11,12 @@ import ContactTable from './contactTable'
 import { useNavigate, useParams } from 'react-router'
 import { useEffect } from 'react'
 import type { UpsertDepartmentDetails } from '@ospk/web-models/departments'
-import { useAddDepartmentMutation, useDeleteDepartmentMutation, useGetDepartmentQuery, useUpdateDepartmentMutation } from '@api/admin/departments.api'
+import {
+  useAddDepartmentMutation,
+  useDeleteDepartmentMutation,
+  useGetDepartmentQuery,
+  useUpdateDepartmentMutation,
+} from '@api/admin/departments/departments.api'
 import MPhoneBox from '@components/MPhoneBox'
 
 const DepartmentPage = () => {
@@ -27,9 +32,10 @@ const DepartmentPage = () => {
   const [updateDepartment, updateResponse] = useUpdateDepartmentMutation()
   const [deleteDepartment, deleteResponse] = useDeleteDepartmentMutation()
 
-  const [error, analyze] = useAnalyzeRequired(['address'])
+  const [error, analyze] = useAnalyzeRequired<UpsertDepartmentDetails>(['address', 'maps'])
   const [department, setDepartment, setDepartmentProp] = useObjectState<UpsertDepartmentDetails>({
     address: '',
+    maps: '',
     phone: '',
     email: '',
     disabled: false,
@@ -64,12 +70,12 @@ const DepartmentPage = () => {
   const handleSave = () => {
     const data = {
       ...department,
-      address: department.address,
-      phone: department.phone || null,
-      email: department.email || null,
+      address: department.address.trim(),
+      maps: department.maps.trim(),
+      phone: department.phone?.trim() || null,
+      email: department.email?.trim() || null,
     }
 
-    console.log(data)
     if (!analyze(data)) {
       return
     }
@@ -84,7 +90,7 @@ const DepartmentPage = () => {
   return (
     <>
       <Stack spacing={2} sx={{ flex: 1 }}>
-        <PageHeader title={`${!!id ? 'Изменить' : 'Добавить'} отделение`} />
+        <PageHeader title={`${!!id ? 'Изменить' : 'Добавить'} отделение`} backTo={'/admin/departments'} />
         {/* Common */}
         <Typography fontWeight={'bold'}>• Основное</Typography>
         <TextBox
@@ -94,24 +100,31 @@ const DepartmentPage = () => {
           maxLength={128}
           onChange={(value) => setDepartmentProp({ address: value })}
         />
+        <TextBox
+          label={'Ссылка на карты'}
+          error={error.maps}
+          value={department.maps}
+          maxLength={128}
+          onChange={(value) => setDepartmentProp({ maps: value })}
+        />
         <Stack direction={'row'} spacing={1}>
           <TextBox
             fullWidth
             label={'Телефон'}
-            value={department.phone}
+            value={department.phone || ''}
             slotProps={{
               input: {
                 inputComponent: MPhoneBox,
               },
             }}
-            onChange={(value) => setDepartmentProp({ phone: value })}
+            onChange={(value) => setDepartmentProp({ phone: value || null })}
           />
           <TextBox
             fullWidth
             label={'Email'}
             maxLength={128}
-            value={department.email}
-            onChange={(value) => setDepartmentProp({ email: value })}
+            value={department.email || ''}
+            onChange={(value) => setDepartmentProp({ email: value || null })}
           />
           <Switch
             label={'Активно'}

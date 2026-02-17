@@ -7,6 +7,7 @@ import type { ServiceCatalogNavDetails } from '@ospk/web-models/services'
 import { useEffect, useState } from 'react'
 import ServiceSidebar from './services.sidebar'
 import ServiceTable from './services.table'
+import Empty from '@components/Empty'
 
 const ServiceListPage = () => {
   const {
@@ -75,6 +76,7 @@ const ServiceListPage = () => {
                 {catalog.categories?.map((item) => (
                   <ServiceTable data={item} />
                 ))}
+                {getResponse.isSuccess && catalog.categories?.length == 0 && <Empty />}
               </Stack>
             </Paper>
           </Stack>

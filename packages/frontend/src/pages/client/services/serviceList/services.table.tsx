@@ -10,12 +10,15 @@ import Typography from '@mui/material/Typography'
 import type { ServiceCategoryNav } from '@ospk/web-models/services'
 import LinkIcon from '@mui/icons-material/Link'
 import IconButton from '@mui/material/IconButton'
+import { useNavigate } from 'react-router'
 
 interface ServiceTableProps {
   data: ServiceCategoryNav
 }
 
 const ServiceTable = ({ data }: ServiceTableProps) => {
+  const navigate = useNavigate()
+
   const handleLink = () => {
     navigator.clipboard.writeText(`${location.origin}${location.pathname}#${data.id}`)
   }
@@ -42,7 +45,10 @@ const ServiceTable = ({ data }: ServiceTableProps) => {
           </TableHead>
           <TableBody>
             {data.services?.map((item) => (
-              <TableRow key={item.id}>
+              <TableRow
+                key={item.id}
+                sx={{ cursor: item.content ? 'pointer' : 'initial' }}
+                onClick={() => item.content && navigate(item.id)}>
                 <TableCell sx={{ borderRight: '1px solid #eee' }}>{item.label}</TableCell>
                 <TableCell align={'center'} sx={{ borderRight: '1px solid #eee' }}>
                   {item.forLegals && <Chip size={'small'} variant={'outlined'} label={'Для юр. лиц'} />}

@@ -1,14 +1,16 @@
-import { useGetAccountQuery } from '@api/common/accounts.api'
+import { useGetAccountQuery } from '@api/common/auth/accounts.api'
 import { useAuthorizeMutation } from '@api/common/auth/auth.api'
-import type { AccountData } from '@ospk/web-models/auth'
+
 import { createContext, useContext, useEffect, useState } from 'react'
+
 import type { ReactNode } from 'react'
+import type { AccountData } from '@ospk/web-models/auth'
 
 interface AppContextProps {
   account?: AccountData
 }
 
-const AppContext = createContext<AppContextProps>({})
+const AuthContext = createContext<AppContextProps>({})
 
 interface AppProviderProps {
   on401: 'follow' | 'none'
@@ -20,10 +22,12 @@ const AuthProvider = ({ on401, children }: AppProviderProps) => {
 
   const [authorize] = useAuthorizeMutation()
 
-  const getResponse = useGetAccountQuery({}, {
-    skip: !!account,
-    pollingInterval: 30000,
-  })
+  const getResponse = useGetAccountQuery(
+    {},
+    {
+      skip: !!account,
+    },
+  )
 
   useEffect(() => {
     if (!getResponse.isSuccess) {
@@ -37,9 +41,9 @@ const AuthProvider = ({ on401, children }: AppProviderProps) => {
     setAccount(getResponse.data)
   }, [getResponse.status])
 
-  return <AppContext value={{ account }}>{!!children && children}</AppContext>
+  return <AuthContext value={{ account }}>{!!children && children}</AuthContext>
 }
 
-export const useAuthContext = () => useContext(AppContext)
+export const useAuthContext = () => useContext(AuthContext)
 
 export default AuthProvider

@@ -138,6 +138,7 @@ const ClientModal = ({ id, open, onClose }: ClientModalProps) => {
             ref={ref}
             hidden
             type={'file'}
+            value={''}
             accept='image/webp, image/jpg, image/png'
             onChange={({ target }) => handleFileChange(target.files)}
           />
@@ -148,7 +149,11 @@ const ClientModal = ({ id, open, onClose }: ClientModalProps) => {
               component={Button}
               onClick={handleAvatarClick}
             />
-            <IconButton sx={{ position: 'absolute', top: 0, right: 0 }} onClick={handleClear}>
+            <IconButton
+              disableRipple
+              size={'small'}
+              sx={{ bgcolor: '#bdbdbd99', position: 'absolute', top: 6, right: 6, borderTopRightRadius: 0 }}
+              onClick={handleClear}>
               <ClearIcon />
             </IconButton>
           </Stack>
@@ -197,6 +202,7 @@ const ClientModal = ({ id, open, onClose }: ClientModalProps) => {
             />
           )}
           <Autocomplete
+            multiple
             fullWidth
             label={'Роли'}
             loading={listResponse.isLoading}
@@ -204,8 +210,8 @@ const ClientModal = ({ id, open, onClose }: ClientModalProps) => {
               label: item.label ?? item.name,
               value: item.id,
             }))}
-            value={client.roles[0]}
-            onChange={(value) => setClientProp({ roles: [value] })}
+            value={client.roles}
+            onChange={(value) => setClientProp({ roles: value })}
           />
         </Stack>
         <SaveCancelButton

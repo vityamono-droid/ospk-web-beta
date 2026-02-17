@@ -19,6 +19,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useState } from 'react'
 
 import adminNav, { type AdminNavItem } from '@apps/admin.nav'
+import { useAuthContext } from '@pages/auth/auth.context'
 
 interface SideBarItemProps {
   item: AdminNavItem
@@ -28,18 +29,23 @@ interface SideBarItemProps {
 }
 
 const SideBarItem = ({ item, selected, hideTitle, onClick }: SideBarItemProps) => {
+  const { account } = useAuthContext()
   return (
-    <MenuItem selected={selected} onClick={onClick} sx={{ py: 1.5 }} divider={item.underline}>
-      <ListItemIcon sx={{ '&.MuiListItemIcon-root': { minWidth: hideTitle ? 0 : 36 } }}>{item.icon}</ListItemIcon>
-      <Collapse in={!hideTitle} orientation={'horizontal'} timeout={200}>
-        <ListItemText>{item.title}</ListItemText>
-      </Collapse>
-      {item.preview && !hideTitle && (
-        <Tooltip arrow title={'Раздел в разработке'}>
-          <BuildIcon color={'disabled'} sx={{ ml: 'auto', fontSize: 16 }} />
-        </Tooltip>
+    <>
+      {account?.roles.some((role) => item.roles.includes(role)) && (
+        <MenuItem selected={selected} onClick={onClick} sx={{ py: 1.5 }} divider={item.underline}>
+          <ListItemIcon sx={{ '&.MuiListItemIcon-root': { minWidth: hideTitle ? 0 : 36 } }}>{item.icon}</ListItemIcon>
+          <Collapse in={!hideTitle} orientation={'horizontal'} timeout={200}>
+            <ListItemText>{item.title}</ListItemText>
+          </Collapse>
+          {item.preview && !hideTitle && (
+            <Tooltip arrow title={'Раздел в разработке'}>
+              <BuildIcon color={'disabled'} sx={{ ml: 'auto', fontSize: 16 }} />
+            </Tooltip>
+          )}
+        </MenuItem>
       )}
-    </MenuItem>
+    </>
   )
 }
 
@@ -76,7 +82,7 @@ const AdminSideBar = () => {
         <Box sx={{ mt: 'auto', display: 'flex', flexDirection: 'column' }}>
           <SideBarItem
             key={'help'}
-            item={{ title: 'Помощь', icon: <HelpIcon />, link: 'help' }}
+            item={{ title: 'Помощь', icon: <HelpIcon />, link: 'help', roles: ['*'] }}
             selected={false}
             hideTitle={media}
             onClick={() => setOpenModal(true)}

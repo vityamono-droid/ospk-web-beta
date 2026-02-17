@@ -7,6 +7,7 @@ export interface ServiceNav {
   id: string
   label: string
   amountType: 'INFINITE' | 'FINITE'
+  content: boolean
   vat: number
   price: number
   forLegals: boolean
@@ -25,6 +26,15 @@ export interface ServiceCatalogNavDetails {
   banner: string | null
   description: string | null
   categories: ServiceCategoryNav[]
+}
+
+export interface ServiceNavDetails {
+  label: string
+  banner: string | null
+  content: string | null
+  priceHistory: PriceHistoryDetails[]
+  statistics: number
+  createdAt: Date
 }
 
 export interface PriceHistoryDetails {

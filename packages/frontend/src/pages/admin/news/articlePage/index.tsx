@@ -74,10 +74,6 @@ const ArticlePage = () => {
     }
 
     if (!analyze(data)) {
-      enqueueSnackbar({
-        message: 'Ошибка валидации данных',
-        variant: 'error',
-      })
       return
     }
 

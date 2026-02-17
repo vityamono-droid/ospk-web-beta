@@ -45,7 +45,7 @@ const IndexButtons = () => {
   }
 
   return (
-    <Grid container spacing={2} px={{ xs: 2, md: 8, lg: 16 }} py={{ xs: 2, md: 6 }}>
+    <Grid container spacing={2} px={{ xs: 2, md: 8, lg: 16 }} pt={{ xs: 2, md: 6 }}>
       {navButtons.map((item) => (
         <Grid
           key={item.link}

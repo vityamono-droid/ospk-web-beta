@@ -15,6 +15,7 @@ const exchangeQuery: ClientQueryType = async (_args, api, options) => {
         error: {
           status: 400,
           data: {
+            error: true,
             message: 'Unable to verify authorization request',
           },
         },

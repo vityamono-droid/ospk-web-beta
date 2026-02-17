@@ -1,3 +1,4 @@
+import { enqueueSnackbar } from 'notistack'
 import { useState } from 'react'
 
 type InputType<TValue> = keyof TValue extends string ? (keyof TValue)[] : string[]
@@ -25,7 +26,17 @@ const useAnalyzeRequired = <TValue = any>(required: InputType<TValue>): ReturnTy
       }
 
       setError(currentError)
-      return !Object.values(currentError).find((item) => item === true)
+
+      const result = !Object.values(currentError).find((item) => item === true)
+
+      if (!result) {
+        enqueueSnackbar({
+          message: 'Ошибка валидации данных',
+          variant: 'error',
+        })
+      }
+
+      return result
     },
   ]
 }

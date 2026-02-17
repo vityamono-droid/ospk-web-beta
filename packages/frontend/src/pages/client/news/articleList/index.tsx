@@ -11,7 +11,7 @@ import { useClientContext } from '@apps/client.context'
 import { useEffect, useState } from 'react'
 
 import type { ArticleItem, CatalogData } from '@ospk/web-models/articles'
-import CircularProgress from '@mui/material/CircularProgress'
+import Empty from '@components/Empty'
 
 const ArticleListPage = () => {
   const context = useClientContext()
@@ -90,15 +90,10 @@ const ArticleListPage = () => {
                     </Stack>
                   </>
                 )}
-                {listResponse.isLoading ? (
-                  <CircularProgress />
-                ) : (
-                  <Stack spacing={2}>
-                    {articles.map((item) => (
-                      <NewsListItem data={item} showCategories />
-                    ))}
-                  </Stack>
-                )}
+                {listResponse.isLoading || (articles.length == 0 && listResponse.data?.length != 0)
+                  ? [0, 1, 2, 3, 4, 5].map((_, index) => <NewsListItem key={`${index}`} showCategories />)
+                  : articles.map((item) => <NewsListItem data={item} showCategories />)}
+                {listResponse.isSuccess && listResponse.data.length == 0 && <Empty />}
               </Stack>
               <Stack>
                 <Paginator count={articles.length} limit={6} offset={offset} onChange={(value) => setOffset(value)} />

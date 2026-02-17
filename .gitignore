@@ -4,8 +4,8 @@ generated/
 node_modules/
 unknown/
 avatars/
-/packages/backend/static/articles/
-/packages/backend/static/services/
+packages/backend/static/
+!packages/backend/static/html
 
 package-lock.json
 

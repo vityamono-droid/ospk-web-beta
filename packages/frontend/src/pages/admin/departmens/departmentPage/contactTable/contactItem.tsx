@@ -1,3 +1,4 @@
+import { useListEmployeesQuery } from '@api/admin/departments/employees.api'
 import Autocomplete from '@components/Autocomplete'
 import DeleteRestoreButton from '@components/DeleteRestoreButton'
 import MPhoneBox from '@components/MPhoneBox'
@@ -27,6 +28,8 @@ interface ContactItemProps {
 }
 
 const ContactItem = ({ item, onChange, onDelete }: ContactItemProps) => {
+  const listEmployeesResponse = useListEmployeesQuery({})
+
   const handleChange = (item: Partial<ContactDetails>) => {
     !!onChange && onChange(item)
   }
@@ -53,7 +56,15 @@ const ContactItem = ({ item, onChange, onDelete }: ContactItemProps) => {
             />
             <DeleteRestoreButton removed={!!item.removedAt} onClick={onDelete} />
           </Stack>
-          <Autocomplete label={'Сотрудник *'} />
+          <Autocomplete
+            label={'Сотрудник *'}
+            options={listEmployeesResponse.data?.map((item) => ({
+              label: `${item.lastName} ${item.firstName} ${item.patronymic}`,
+              value: item.id,
+            }))}
+            value={item.employeeId}
+            onChange={(value) => handleChange({ employeeId: value as any })}
+          />
           <Stack position={'relative'} direction={'row'} spacing={1}>
             <Autocomplete
               fullWidth

@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import DepartmentTable from './departments.table'
 import type { DepartmentDetails } from '@ospk/web-models/departments'
-import { useListDepartmentsQuery } from '@api/admin/departments.api'
+import { useListDepartmentsQuery } from '@api/admin/departments/departments.api'
 import Stack from '@mui/material/Stack'
 import AddButton from '@components/AddButton'
 import { useNavigate } from 'react-router'
+import useStatusEffect from '@hooks/useStatusEffect'
 
 const DepartmentListPage = () => {
   const navigate = useNavigate()
@@ -12,13 +13,7 @@ const DepartmentListPage = () => {
 
   const [departments, setDepartments] = useState<DepartmentDetails[]>([])
 
-  useEffect(() => {
-    if (!listResponse.isSuccess) {
-      return
-    }
-
-    setDepartments(listResponse.data)
-  }, [listResponse.status])
+  useStatusEffect(() => setDepartments(listResponse.data ?? []), [listResponse])
 
   return (
     <>

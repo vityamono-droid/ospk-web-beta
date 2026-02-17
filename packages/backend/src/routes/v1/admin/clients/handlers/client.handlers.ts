@@ -12,7 +12,7 @@ export const listClients: ListClientsRequest = async (req, res, next) => {
     const roleRule =
       req.query.type === 'STAFF'
         ? {
-            some: { name: 'admin' },
+            some: {},
           }
         : {
             none: {},
@@ -24,9 +24,9 @@ export const listClients: ListClientsRequest = async (req, res, next) => {
         lastName: req.query.lastName,
         phone: req.query.phone,
         email: req.query.email,
-        // id: {
-        //   not: req.session.userId,
-        // },
+        id: {
+          not: req.session.userId,
+        },
       },
       select: {
         id: true,

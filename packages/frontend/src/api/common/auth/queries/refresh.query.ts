@@ -11,8 +11,8 @@ const refreshQuery: ClientQueryType = async (_args, api, options) => {
         error: {
           status: 401,
           data: {
+            error: true,
             message: 'Unauthorized',
-            translate: 'common.errors.unauthorized',
           },
         },
       }
@@ -31,13 +31,13 @@ const refreshQuery: ClientQueryType = async (_args, api, options) => {
     const result = await authBaseQuery(args, api, options)
 
     if (!result.error && result.data && !result.meta?.response?.redirected) {
-          const { access_token, refresh_token } = result.data as TokenResponse
-          localStorage.setItem(`ospk.apps.`, access_token)
-          localStorage.setItem(`ospk.apps..`, refresh_token ?? '')
+      const { access_token, refresh_token } = result.data as TokenResponse
+      localStorage.setItem(`ospk.apps.`, access_token)
+      refresh_token && localStorage.setItem(`ospk.apps..`, refresh_token)
 
-          localStorage.removeItem(`ospk.apps_`)
-          localStorage.removeItem(`ospk.apps__`)
-          localStorage.removeItem(`ospk.apps___`)
+      localStorage.removeItem(`ospk.apps_`)
+      localStorage.removeItem(`ospk.apps__`)
+      localStorage.removeItem(`ospk.apps___`)
     }
 
     return result

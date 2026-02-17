@@ -69,7 +69,7 @@ const AccountBox = () => {
               </Box>
               <Divider sx={{ mx: -2 }} />
             </Box>
-            {account.roles.includes('admin') && (
+            {account.roles.length > 0 && (
               <MenuItem onClick={() => navigate(app == '/' ? '/admin' : '/')}>
                 <ListItemIcon>
                   <RedirectIcon />
