@@ -1,18 +1,11 @@
+import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
+
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
-interface NavTabItem {
-  label: string
-  value: string
-}
-
-interface NavTabsProps {
-  items: NavTabItem[]
-}
-
-const NavTabs = ({ items }: NavTabsProps) => {
+const NavTabs = ({ tabs }: { tabs: LabelValue[] }) => {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -23,16 +16,20 @@ const NavTabs = ({ items }: NavTabsProps) => {
     setValue(path.endsWith('/') ? path.slice(0, path.length - 1) : path)
   }, [location.key])
 
-  const handleChange = (value: string) => {
+  const handleChange = (event: React.SyntheticEvent, value: any) => {
+    event.preventDefault()
+    event.stopPropagation()
     navigate(value)
   }
 
   return (
-    <Tabs value={value} onChange={(_, value) => handleChange(value)}>
-      {items.map((item) => (
-        <Tab key={item.value} label={item.label} value={item.value} />
-      ))}
-    </Tabs>
+    <Box sx={{ mx: -2, px: 2, boxShadow: '0 -1px 0 #eeeeff inset' }}>
+      <Tabs value={value} onChange={handleChange}>
+        {tabs.map((item) => (
+          <Tab key={item.value} label={item.label} value={item.value} />
+        ))}
+      </Tabs>
+    </Box>
   )
 }
 

@@ -1,19 +1,16 @@
-import type { QueryStatus } from '@reduxjs/toolkit/query'
 import { useEffect } from 'react'
+
+import type { QueryStatus } from '@reduxjs/toolkit/query/react'
 
 interface Dependency {
   isSuccess: boolean
   status: QueryStatus
 }
 
-const useStatusEffect = (callback: Callback, dependencies: Dependency[]) => {
+const useStatusEffect = <TDep extends Dependency>(callback: Callback, dependencies: TDep[]) => {
   useEffect(
     () => {
-      if (!dependencies.map((item) => item.isSuccess).includes(true)) {
-        return
-      }
-
-      callback()
+      dependencies.map((item) => item.isSuccess).includes(true) && callback()
     },
     dependencies.map((item) => item.status),
   )

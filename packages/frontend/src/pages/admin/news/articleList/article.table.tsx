@@ -1,14 +1,14 @@
 import DataGrid from '@components/DataGrid'
 import IconCount from '@components/IconCount'
 import RemovedDisabled from '@components/RemovedDisabled'
-import type { Article } from '@ospk/web-models/articles'
+import type { ArticleDetails } from '@ospk/web-models/articles'
 import CommentsIcon from '@mui/icons-material/Try'
 import ViewsIcon from '@mui/icons-material/Visibility'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 
 interface ArticleTableProps {
-  data: Article[]
+  data: ArticleDetails[]
   onRowClick?: ValueCallback<string>
 }
 

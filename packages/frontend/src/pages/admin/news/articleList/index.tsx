@@ -1,14 +1,15 @@
 import { useListArticlesQuery } from '@api/admin/articles/articles.api'
 import AddButton from '@components/AddButton'
 import useObjectState from '@hooks/useObjectState'
-import type { Article, ListArticlesQuery } from '@ospk/web-models/articles'
+import type { ArticleDetails, ListArticlesQuery } from '@ospk/web-models/articles'
 import { useNavigate } from 'react-router'
 import ArticleTable from './article.table'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import ArticleFilter from './article.filter'
 import Stack from '@mui/material/Stack'
 import RefreshButton from '@components/RefreshButton'
 import Paginator from '@components/Paginator'
+import useStatusEffect from '@hooks/useStatusEffect'
 
 const defaultFilter = {
   limit: 50,
@@ -18,7 +19,7 @@ const defaultFilter = {
 const ArticleListPage = () => {
   const navigate = useNavigate()
 
-  const [articles, setArticles] = useState<Article[]>([])
+  const [articles, setArticles] = useState<ArticleDetails[]>([])
   const [filter, setFilter, setFilterProp] = useObjectState<ListArticlesQuery>({
     limit: 50,
     offset: 0,
@@ -28,13 +29,7 @@ const ArticleListPage = () => {
     refetchOnMountOrArgChange: true,
   })
 
-  useEffect(() => {
-    if (!listResponse.isSuccess) {
-      return
-    }
-
-    setArticles(listResponse.data)
-  }, [listResponse.status])
+  useStatusEffect(() => setArticles(listResponse.data ?? []), [listResponse])
 
   const handleAddEdit = (id?: string) => {
     navigate(!!id ? id : 'add')
@@ -46,7 +41,7 @@ const ArticleListPage = () => {
         filter={filter}
         defaultValue={defaultFilter}
         onFilterChange={(value) => setFilter(value)}
-        additional={
+        content={
           <>
             <Stack direction={'row'} spacing={2} alignItems={'center'}>
               <RefreshButton loading={listResponse.isLoading} onClick={listResponse.refetch} />

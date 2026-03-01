@@ -113,7 +113,7 @@ const RoleModal = ({ open, onClose }: RoleModal) => {
         </Stack>
         <Stack height={'100%'}>
           {roles.map((item) => (
-            <ListItem divider>
+            <ListItem key={item.id} divider>
               <ListItemText>
                 <Stack direction={'row'} spacing={1} alignItems={'center'}>
                   {selected?.id == item.id ? (

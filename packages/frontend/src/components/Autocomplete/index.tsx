@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField'
 
 type LabelValue = {
   label: string
-  value: string | number
+  value: string | number | boolean
 }
 
 interface AutocompleteProps<TValue extends LabelValue['value'], TMultiple extends boolean | undefined = false> {

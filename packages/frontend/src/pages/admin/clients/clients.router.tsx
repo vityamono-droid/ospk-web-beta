@@ -1,15 +1,26 @@
 import { lazy } from 'react'
 import { Outlet, Route, Routes } from 'react-router'
-import ClientsLayout from './clients.layout'
+import TabbedLayout from '../tabbed.layout'
 
 const ClientListPage = lazy(() => import('./clientList'))
 
-const ClientsRouter = () => {
+const tabs = [
+  {
+    label: 'Клиенты',
+    value: '/admin/clients',
+  },
+  {
+    label: 'Сотрудники',
+    value: '/admin/clients/staff',
+  },
+]
 
+// Роутер раздела "Пользователи"
+const ClientsRouter = () => {
   return (
     <>
       <Routes>
-        <Route element={<ClientsLayout />}>
+        <Route element={<TabbedLayout tabs={tabs} />}>
           <Route index element={<ClientListPage type={'CLIENT'} />} />
           <Route path={'staff'} element={<ClientListPage type={'STAFF'} />} />
         </Route>

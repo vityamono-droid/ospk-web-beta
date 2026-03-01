@@ -1,43 +1,48 @@
-export interface ServiceCatalogNav {
+export interface CatalogData {
   id: string
   label: string
 }
 
-export interface ServiceNav {
+export interface ServiceData {
   id: string
   label: string
   amountType: 'INFINITE' | 'FINITE'
-  content: boolean
   vat: number
   price: number
   forLegals: boolean
   unit?: string
 }
 
-export interface ServiceCategoryNav {
+export interface CategoryData {
   id: string
   label: string
   description: string | null
-  services: ServiceNav[]
+  services: ServiceData[]
 }
 
-export interface ServiceCatalogNavDetails {
+export interface CatalogDataDetails {
   label: string
   banner: string | null
   description: string | null
-  categories: ServiceCategoryNav[]
+  categories: CategoryData[]
 }
 
-export interface ServiceNavDetails {
+export interface ServiceDataDetails {
   label: string
   banner: string | null
   content: string | null
-  priceHistory: PriceHistoryDetails[]
+  amountType: 'INFINITE' | 'FINITE'
+  price: number
+  forLegals: boolean
+  unit?: string
+  catalog: string
+  category?: string
+  priceHistory: PriceHistoryData[]
   statistics: number
   createdAt: Date
 }
 
-export interface PriceHistoryDetails {
+export interface PriceHistoryData {
   price: number
   vat: number
   createdAt: Date

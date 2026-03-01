@@ -1,13 +1,18 @@
-import { ApiResponse } from '@ospk/web-models'
-import { ServiceCatalogNav, ServiceCatalogNavDetails, ServiceNavDetails } from '@ospk/web-models/services'
 import { RequestHandler } from 'express'
 
-export const listCatalogs: RequestHandler<any, ApiResponse<ServiceCatalogNav[]>> = async (req, res, next) => {
+import { ApiResponse } from '@ospk/web-models'
+import { CatalogData, CatalogDataDetails, ServiceDataDetails } from '@ospk/web-models/services'
+
+// GET /api/v1/services/catalogs
+type ListCatalogsRequest = RequestHandler<any, ApiResponse<CatalogData[]>>
+export const listCatalogs: ListCatalogsRequest = async (_, res, next) => {
   try {
     const prisma = res.locals.prisma
 
     const catalogs = await prisma.serviceCatalog.findMany({
       where: {
+        services: { some: {} },
+        categories: { some: {} },
         disabled: false,
         removedAt: null,
       },
@@ -26,13 +31,17 @@ export const listCatalogs: RequestHandler<any, ApiResponse<ServiceCatalogNav[]>>
   }
 }
 
-export const getCatalog: RequestHandler<IdParams, ApiResponse<ServiceCatalogNavDetails>> = async (req, res, next) => {
+// GET /api/v1/services/catalogs/:id
+type GetCatalogRequest = RequestHandler<IdParams, ApiResponse<CatalogDataDetails>>
+export const getCatalog: GetCatalogRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
     const catalog = await prisma.serviceCatalog.findUniqueOrThrow({
       where: {
         id: req.params.id,
+        services: { some: {} },
+        categories: { some: {} },
         disabled: false,
         removedAt: null,
       },
@@ -42,6 +51,7 @@ export const getCatalog: RequestHandler<IdParams, ApiResponse<ServiceCatalogNavD
         description: true,
         categories: {
           where: {
+            services: { some: {} },
             disabled: false,
             removedAt: null,
           },
@@ -58,7 +68,6 @@ export const getCatalog: RequestHandler<IdParams, ApiResponse<ServiceCatalogNavD
                 id: true,
                 label: true,
                 amountType: true,
-                content: true,
                 vat: true,
                 price: true,
                 forLegals: true,
@@ -82,7 +91,6 @@ export const getCatalog: RequestHandler<IdParams, ApiResponse<ServiceCatalogNavD
           ...category,
           services: category.services.map((service) => ({
             ...service,
-            content: !!service.content,
             unit: service.unit?.label,
           })),
         })),
@@ -93,7 +101,9 @@ export const getCatalog: RequestHandler<IdParams, ApiResponse<ServiceCatalogNavD
   }
 }
 
-export const getService: RequestHandler<any, ApiResponse<ServiceNavDetails>> = async (req, res, next) => {
+// GET /api/v1/services/:id
+type GetServiceRequest = RequestHandler<any, ApiResponse<ServiceDataDetails>>
+export const getService: GetServiceRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
@@ -103,21 +113,36 @@ export const getService: RequestHandler<any, ApiResponse<ServiceNavDetails>> = a
         disabled: false,
         removedAt: null,
       },
-      select: {
-        label: true,
-        banner: true,
-        content: true,
-        createdAt: true,
-        priceHistory: {
-          select: {
-            vat: true,
-            price: true,
-            createdAt: true,
-          },
-        },
+      omit: {
+        id: true,
+        vat: true,
+        disabled: true,
+        unitId: true,
+        catalogId: true,
+        categoryId: true,
+        updatedAt: true,
+        removedAt: true,
+      },
+      include: {
         _count: {
           select: {
             statistics: true,
+          },
+        },
+        unit: {
+          select: { label: true },
+        },
+        catalog: {
+          select: { label: true },
+        },
+        category: {
+          select: { label: true },
+        },
+        priceHistory: {
+          omit: {
+            id: true,
+            updatedAt: true,
+            removedAt: true,
           },
         },
       },
@@ -132,13 +157,16 @@ export const getService: RequestHandler<any, ApiResponse<ServiceNavDetails>> = a
       },
     })
 
+    const { unit, catalog, category, _count, ...data } = service
     res.json({
       error: false,
       data: {
-        ...service,
-        _count: undefined,
-        statistics: service._count.statistics,
-      } as any,
+        ...data,
+        unit: unit?.label,
+        catalog: catalog.label,
+        category: category?.label,
+        statistics: _count.statistics,
+      },
     })
   } catch (err) {
     next(err)

@@ -5,6 +5,11 @@ declare global {
 
   type UpdateData<TData = any> = { id: string; data: TData }
 
+  type LabelValue<TValue = string> = {
+    label: string
+    value: TValue
+  }
+
   type TreeViewLikeItem = {
     id: string
     label: string

@@ -19,7 +19,7 @@ const tabs = [
 const NewsLayout = () => {
   return (
     <>
-      <NavTabs items={tabs} />
+      <NavTabs tabs={tabs} />
       <Outlet />
     </>
   )

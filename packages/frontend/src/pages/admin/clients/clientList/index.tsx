@@ -1,38 +1,36 @@
-import { useListClientsQuery } from '@api/admin/clients/clients.api'
 import AddButton from '@components/AddButton'
-import type { ClientDetails } from '@ospk/web-models/clients'
-import { useEffect, useState } from 'react'
+import AtomButton from '@components/AtomButton'
+import ClientFilter from './client.filter'
+import ClientModal from './client.modal'
 import ClientsTable from './clients.table'
 import Paginator from '@components/Paginator'
-import ClientModal from './client.modal'
-import ClientFilter from './client.filter'
-import Stack from '@mui/material/Stack'
 import RefreshButton from '@components/RefreshButton'
-import CogButton from '@components/CogButton'
 import RoleModal from './role.modal'
+import Stack from '@mui/material/Stack'
+
+import useObjectState from '@hooks/useObjectState'
+import useStatusEffect from '@hooks/useStatusEffect'
+import { useListClientsQuery } from '@api/admin/clients/clients.api'
+import { useState } from 'react'
+
+import type { ListClientDetailsQuery, ClientDetails } from '@ospk/web-models/clients'
 
 const ClientListPage = ({ type }: { type: 'CLIENT' | 'STAFF' }) => {
-  const [offset, setOffset] = useState(0)
   const [clients, setClients] = useState<ClientDetails[]>([])
   const [selected, setSelected] = useState<string>()
+
   const [openModal, setOpenModal] = useState(false)
   const [openRoles, setOpenRoles] = useState(false)
 
-  const listResponse = useListClientsQuery({
+  const [filters, setFilters, setFilterProp] = useObjectState<ListClientDetailsQuery>({
     type: type,
+    offset: 0,
     limit: 50,
-    offset: offset
-  }, {
-    refetchOnMountOrArgChange: true,
   })
 
-  useEffect(() => {
-    if (!listResponse.isSuccess) {
-      return
-    }
+  const listResponse = useListClientsQuery(filters)
 
-    setClients(listResponse.data)
-  }, [listResponse.status])
+  useStatusEffect(() => setClients(listResponse.data ?? []), [listResponse])
 
   const handleOpenModal = (id?: string) => {
     setSelected(id)
@@ -47,19 +45,34 @@ const ClientListPage = ({ type }: { type: 'CLIENT' | 'STAFF' }) => {
   return (
     <>
       <ClientFilter
-        additional={
+        content={
           <>
             <Stack direction={'row'} spacing={1} alignItems={'center'}>
+              <AtomButton onClick={() => setOpenRoles(true)} />
               <RefreshButton onClick={listResponse.refetch} />
               <AddButton onClick={handleOpenModal} />
-              <CogButton onClick={() => setOpenRoles(true)} />
             </Stack>
-            <Paginator count={clients.length} limit={50} offset={offset} onChange={(offset) => setOffset(offset)} />
+            <Paginator
+              count={clients.length}
+              limit={50}
+              offset={filters.offset}
+              onChange={(value) => setFilterProp({ offset: value })}
+            />
           </>
         }
+        filters={filters}
+        setFilters={setFilters}
+        setFilterProp={setFilterProp}
       />
-      <ClientsTable data={clients} onRowClick={handleOpenModal} />
-      <Paginator count={clients.length} limit={50} offset={offset} onChange={(offset) => setOffset(offset)} />
+      <Stack flex={1}>
+        <ClientsTable data={clients} onRowClick={handleOpenModal} />
+      </Stack>
+      <Paginator
+        count={clients.length}
+        limit={50}
+        offset={filters.offset}
+        onChange={(value) => setFilterProp({ offset: value })}
+      />
       {openModal && <ClientModal id={selected} open={openModal} onClose={handleCloseModal} />}
       {openRoles && <RoleModal open={openRoles} onClose={() => setOpenRoles(false)} />}
     </>
