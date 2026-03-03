@@ -5,6 +5,11 @@ export interface ListCommentsQuery {
   forumPostId?: string
 }
 
+export interface VoteData {
+  direction: 'UP_VOTE' | 'DOWN_VOTE'
+  profileId: string | null
+}
+
 export interface CommentData {
   id: string
   fullName: string
@@ -12,12 +17,10 @@ export interface CommentData {
   content: string
   isStaff: boolean
   parentId: string | null
-  upVotes: number
-  downVotes: number
+  votes: VoteData[]
 }
 
 export interface UpsertCommentData {
-  id: string
   parentId: string | null
   content: string
   newsId?: string

@@ -10,13 +10,15 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import { useAuthContext } from '@pages/auth/auth.context'
 import { useEffect, useRef, useState } from 'react'
-import SettingsIcon from '@mui/icons-material/Settings'
+// import SettingsIcon from '@mui/icons-material/Settings'
+import OrderIcon from '@mui/icons-material/LocalMallOutlined'
 import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
 import RedirectIcon from '@mui/icons-material/ChevronRight'
 import { useLocation, useNavigate } from 'react-router'
 import formatPhone from '@utils/formatPhone'
 import shortFullname from '@utils/shortFullname'
+import OrdersModal from './orders.modal'
 
 const AccountBox = () => {
   const ref = useRef(null)
@@ -26,6 +28,7 @@ const AccountBox = () => {
   const { account } = useAuthContext()
 
   const [open, setOpen] = useState(false)
+  const [openOrders, setOpenOrders] = useState(false)
   const [app, setApp] = useState('/')
 
   const [authorize] = useAuthorizeMutation()
@@ -77,12 +80,20 @@ const AccountBox = () => {
                 <ListItemText>Перейти {app == '/' ? 'в админ' : 'на клиент'}</ListItemText>
               </MenuItem>
             )}
-            <MenuItem onClick={() => navigate('/account')}>
+            {/* <MenuItem onClick={() => navigate('/account')}>
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
               <ListItemText>Перейти в настройки</ListItemText>
-            </MenuItem>
+            </MenuItem> */}
+            {app == '/' && (
+              <MenuItem onClick={() => setOpenOrders(true)}>
+                <ListItemIcon>
+                  <OrderIcon />
+                </ListItemIcon>
+                <ListItemText>История заказов</ListItemText>
+              </MenuItem>
+            )}
             <MenuItem onClick={() => revoke({})}>
               <ListItemIcon>
                 <LogoutIcon />
@@ -96,6 +107,7 @@ const AccountBox = () => {
           Войти
         </Button>
       )}
+      {openOrders && <OrdersModal open={openOrders} onClose={() => setOpenOrders(false)} />}
     </>
   )
 }

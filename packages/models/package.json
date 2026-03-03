@@ -13,7 +13,7 @@
     "./departments": "./dest/departments/index.js",
     "./employees": "./dest/employees/index.js",
     "./news": "./dest/news/index.js",
-    "./order": "./dest/order/index.js",
+    "./orders": "./dest/orders/index.js",
     "./requests": "./dest/requests/index.js",
     "./services": "./dest/services/index.js",
     "./users": "./dest/users/index.js"

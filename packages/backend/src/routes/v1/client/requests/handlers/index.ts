@@ -118,7 +118,7 @@ export const getRequest: GetRequestRequest = async (req, res, next) => {
         statistics: _count.statistics,
         profileId: profile.id,
         avatar: profile.user?.avatar ?? null,
-        fullName: `${profile.user?.lastName} ${profile.user?.patronymic} ${profile.user?.lastName[0]}`.trim(),
+        fullName: `${profile.user?.firstName} ${profile.user?.patronymic} ${profile.user?.lastName[0]}.`.replaceAll('  ', ' '),
       },
     })
   } catch (err) {
@@ -126,16 +126,24 @@ export const getRequest: GetRequestRequest = async (req, res, next) => {
   }
 }
 
-// POST /api/v1/requests
+// POST|PUT /api/v1/requests/:id?
 type UpsertRequestRequest = RequestHandler<any, ApiResponse<string>, UpsertRequestData>
 export const upsertRequest: UpsertRequestRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
-    const upserted = await prisma.forumPost.create({
-      data: req.body,
-      select: { id: true },
-    })
+    let upserted
+    if (!!req.params.id) {
+      upserted = await prisma.forumPost.update({
+        where: { id: req.params.id },
+        data: req.body,
+      })
+    } else {
+      upserted = await prisma.forumPost.create({
+        data: req.body,
+        select: { id: true },
+      })
+    }
 
     res.json({
       error: false,

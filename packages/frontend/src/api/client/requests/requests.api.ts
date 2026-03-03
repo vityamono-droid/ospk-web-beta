@@ -13,13 +13,24 @@ const requestsApi = createApi({
       query: (data) => ({
         url: '/',
         body: data,
-        method: 'POST'
+        method: 'POST',
       }),
       transformResponse: transformResponse({}),
+    }),
+    updateRequest: builder.mutation<
+      string,
+      UpdateData<Partial<Omit<UpsertRequestData, 'categoryId' | 'removedAt'>>>,
+      ApiResponse<string>
+    >({
+      query: ({ id, data }) => ({
+        url: `/${id}`,
+        body: data,
+        method: 'PUT',
+      }),
     }),
   }),
 })
 
-export const { useAddRequestMutation } = requestsApi
+export const { useAddRequestMutation, useUpdateRequestMutation } = requestsApi
 
 export default requestsApi

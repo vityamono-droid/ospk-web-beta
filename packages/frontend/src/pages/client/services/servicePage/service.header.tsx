@@ -17,8 +17,11 @@ import ShareIcon from '@mui/icons-material/Share'
 import type { ServiceDataDetails } from '@ospk/web-models/services'
 import { enqueueSnackbar } from 'notistack'
 import Chip from '@mui/material/Chip'
+import { useAuthContext } from '@pages/auth/auth.context'
 
-const ServiceHeader = ({ service }: { service: ServiceDataDetails }) => {
+const ServiceHeader = ({ service, onOrderClick }: { service: ServiceDataDetails; onOrderClick: Callback }) => {
+  const { account } = useAuthContext()
+
   const breadcrumbs = [
     <Link component={RouterLink} to={`/services`} variant={'body2'}>
       {service.catalog}
@@ -32,7 +35,7 @@ const ServiceHeader = ({ service }: { service: ServiceDataDetails }) => {
   ].filter((item) => !!item)
 
   const handleShare = () => {
-    navigator.clipboard.readText().then(data => {
+    navigator.clipboard.readText().then((data) => {
       if (location.href === data) {
         return
       }
@@ -91,7 +94,12 @@ const ServiceHeader = ({ service }: { service: ServiceDataDetails }) => {
                 </Stack>
               </Stack>
               <Stack direction={'row'} spacing={2}>
-                <Button fullWidth variant={'outlined'} endIcon={<OrderIcon />}>
+                <Button
+                  fullWidth
+                  disabled={!account || service.departments.length == 0}
+                  variant={'outlined'}
+                  endIcon={<OrderIcon />}
+                  onClick={onOrderClick}>
                   Заказать
                 </Button>
                 <IconButton size={'small'} onClick={handleShare}>

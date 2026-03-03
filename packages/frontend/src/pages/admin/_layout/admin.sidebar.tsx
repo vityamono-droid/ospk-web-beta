@@ -32,7 +32,7 @@ const SideBarItem = ({ item, selected, hideTitle, onClick }: SideBarItemProps) =
   const { account } = useAuthContext()
   return (
     <>
-      {account?.roles.some((role) => item.roles.includes(role)) && (
+      {(item.roles.includes('*') || account?.roles.some((role) => item.roles.includes(role))) && (
         <MenuItem selected={selected} onClick={onClick} sx={{ py: 1.5 }} divider={item.underline}>
           <ListItemIcon sx={{ '&.MuiListItemIcon-root': { minWidth: hideTitle ? 0 : 36 } }}>{item.icon}</ListItemIcon>
           <Collapse in={!hideTitle} orientation={'horizontal'} timeout={200}>

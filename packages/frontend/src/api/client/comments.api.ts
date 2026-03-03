@@ -1,8 +1,9 @@
 import { transformResponse } from '@api/transformers'
 import { createApi } from '@reduxjs/toolkit/query/react'
-
-import type { ListCommentsQuery, UpsertCommentData } from '@ospk/web-models/comments'
 import authenticatedQuery from '@api/common/auth/auth.query'
+
+import type { ApiResponse } from '@ospk/web-models'
+import type { ListCommentsQuery, UpsertCommentData } from '@ospk/web-models/comments'
 
 const commentsApi = createApi({
   reducerPath: 'comments',
@@ -17,18 +18,27 @@ const commentsApi = createApi({
       }),
       transformResponse: transformResponse({ defaultValue: [] }),
     }),
-    addComment: builder.mutation({
+    addComment: builder.mutation<undefined, UpsertCommentData, ApiResponse>({
       invalidatesTags: ['commentList'],
-      query: (data: UpsertCommentData) => ({
+      query: (data) => ({
         url: '/',
         body: data,
         method: 'POST',
       }),
       transformResponse: transformResponse({ successMessage: 'Комментарий добавлен успешно' }),
     }),
+    voteComment: builder.mutation<undefined, UpdateData<{ direction: 'UP_VOTE' | 'DOWN_VOTE' }>, ApiResponse>({
+      invalidatesTags: ['commentList'],
+      query: ({ id, data }) => ({
+        url: `/${id}`,
+        body: data,
+        method: 'PUT',
+      }),
+      transformResponse: transformResponse({}),
+    }),
   }),
 })
 
-export const { useListCommentQuery, useAddCommentMutation } = commentsApi
+export const { useListCommentQuery, useAddCommentMutation, useVoteCommentMutation } = commentsApi
 
 export default commentsApi

@@ -19,7 +19,7 @@ const CommentView = (props: ListCommentsQuery) => {
 
   const [comments, setComments] = useState<CommentData[]>([])
   const [authorize] = useAuthorizeMutation()
-  const [addComment, addCommentResponse] = useAddCommentMutation()
+  const [addComment] = useAddCommentMutation()
 
   const listResponse = useListCommentQuery(props, {
     skip: Object.values(props).every((item) => !item || typeof item === 'undefined' || item === null),
@@ -32,6 +32,7 @@ const CommentView = (props: ListCommentsQuery) => {
     addComment({
       ...props,
       content: value,
+      parentId: null,
     })
   }
 
@@ -50,7 +51,7 @@ const CommentView = (props: ListCommentsQuery) => {
       )}
       <Stack spacing={1}>
         {unFlatten(comments).map((item) => (
-          <CommentItem data={item} />
+          <CommentItem data={item} query={props} />
         ))}
       </Stack>
     </>

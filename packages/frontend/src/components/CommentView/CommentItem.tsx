@@ -17,19 +17,21 @@ import OspkLogo from '@assets/ospk-logo.svg'
 
 import { useState } from 'react'
 
-import type { CommentData } from '@ospk/web-models/comments'
+import type { CommentData, ListCommentsQuery } from '@ospk/web-models/comments'
 import { useAuthContext } from '@pages/auth/auth.context'
+import { useAddCommentMutation, useVoteCommentMutation } from '@api/client/comments.api'
 
 interface CommentItemProps {
   data: TreeViewItem<CommentData>
+  query: ListCommentsQuery
 }
 
-const CommentItem = ({ data }: CommentItemProps) => {
+const CommentItem = ({ data, query }: CommentItemProps) => {
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} width={'100%'}>
       <CommentAvatar data={data} />
-      <CommentContent data={data} />
-      <CommentReplies data={data} />
+      <CommentContent data={data} query={query} />
+      <CommentReplies data={data} query={query} />
     </Stack>
   )
 }
@@ -47,36 +49,50 @@ const CommentAvatar = ({ data }: { data: TreeViewItem<CommentData> }) => {
   )
 }
 
-const CommentContent = ({ data }: { data: TreeViewItem<CommentData> }) => {
+const CommentContent = ({ data, query }: CommentItemProps) => {
   const { account } = useAuthContext()
+
+  const upVotes = data.votes.filter((item) => item.direction === 'UP_VOTE').reduce((prev) => prev + 1, 0)
+  const downVotes = data.votes.filter((item) => item.direction === 'DOWN_VOTE').reduce((prev) => prev + 1, 0)
+
+  const lastVote = data.votes.find((item) => item.profileId != null)
 
   const [reply, setReply] = useState(false)
 
-  const handleVote = (direction: 'UP' | 'DOWN') => () => {
-    // do something with id and direction
+  const [addComment] = useAddCommentMutation()
+  const [voteComment] = useVoteCommentMutation()
+
+  const handleVote = (direction: 'UP_VOTE' | 'DOWN_VOTE') => () => {
+    voteComment({ id: data.id, data: { direction } })
   }
 
   const handleReply = (value: string) => {
-    // do something with id and value
+    addComment({
+      ...query,
+      content: value,
+      parentId: data.id,
+    })
+
+    setReply(false)
   }
 
   return (
     <Stack direction={'row'} spacing={1}>
       <Stack minWidth={32} direction={'row'}>
-        {data.children && data.children.length > 0 && <Box my={-1} width={17} borderRight={'2px solid gray'} />}
+        {data.children && data.children.length > 0 && <Box my={-1} width={16} borderRight={'2px solid gray'} />}
       </Stack>
       {/* Content */}
-      <Stack spacing={1}>
+      <Stack spacing={1} width={'100%'}>
         {/* Comment */}
         <Typography>{data.content}</Typography>
         {/* Actions */}
         <Stack direction={'row'} spacing={1} alignItems={'center'}>
           <Stack border={'2px solid gray'} borderRadius={12} direction={'row'} spacing={2} alignItems={'center'}>
-            <IconButton size={'small'} disabled={!account} onClick={handleVote('UP')}>
+            <IconButton size={'small'} disabled={!account} onClick={handleVote('UP_VOTE')}>
               <UpvoteIcon fontSize={'small'} />
             </IconButton>
-            <Typography>{data.upVotes - data.downVotes}</Typography>
-            <IconButton size={'small'} disabled={!account} onClick={handleVote('DOWN')}>
+            <Typography>{upVotes - downVotes}</Typography>
+            <IconButton size={'small'} disabled={!account} onClick={handleVote('DOWN_VOTE')}>
               <DownvoteIcon fontSize={'small'} />
             </IconButton>
           </Stack>
@@ -97,14 +113,14 @@ const CommentContent = ({ data }: { data: TreeViewItem<CommentData> }) => {
   )
 }
 
-const CommentReplies = ({ data }: CommentItemProps) => {
+const CommentReplies = ({ data, query }: CommentItemProps) => {
   const [show, setShow] = useState(false)
 
   return (
     <>
       {!!data.children && data.children.length > 0 && (
         <Stack direction={'row'} spacing={1}>
-          <Stack width={32} alignItems={'flex-end'} justifyContent={'flex-start'}>
+          <Stack minWidth={32} alignItems={'flex-end'} justifyContent={'flex-start'}>
             <Box
               width={16}
               height={show ? '100%' : 16}
@@ -116,11 +132,11 @@ const CommentReplies = ({ data }: CommentItemProps) => {
           </Stack>
           <Stack spacing={1} width={'100%'}>
             {/* Replies */}
-            <Collapse in={show} orientation={'vertical'}>
+            <Collapse in={show} orientation={'vertical'} sx={{ width: '100%' }}>
               <Stack spacing={1}>
                 {data.children.map((item) => (
                   <Stack direction={'row'}>
-                    <Stack ml={-3} width={32} alignItems={'flex-end'} justifyContent={'flex-start'}>
+                    <Stack ml={-5} minWidth={32} alignItems={'flex-end'} justifyContent={'flex-start'}>
                       <Box
                         width={16}
                         height={16}
@@ -130,9 +146,7 @@ const CommentReplies = ({ data }: CommentItemProps) => {
                         borderBottom={'2px solid gray'}
                       />
                     </Stack>
-                    <Box>
-                      <CommentItem data={item} />
-                    </Box>
+                    <CommentItem data={item} query={query} />
                   </Stack>
                 ))}
               </Stack>
