@@ -12,7 +12,7 @@ declare global {
 
   type TreeViewLikeItem = {
     id: string
-    label: string
+    //label: string
     parentId: string | null
   }
 

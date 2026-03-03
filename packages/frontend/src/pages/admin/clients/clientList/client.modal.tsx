@@ -20,6 +20,7 @@ import { useEffect, useRef, useState } from 'react'
 import ClearIcon from '@mui/icons-material/Close'
 import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
 import PasswordBox from '@components/new/PasswordBox'
+import { useAuthContext } from '@pages/auth/auth.context'
 
 interface ClientModalProps {
   id?: string
@@ -35,6 +36,8 @@ const ClientModal = ({ id, open, onClose }: ClientModalProps) => {
   })
 
   const listResponse = useListRolesQuery({})
+
+  const { account } = useAuthContext()
 
   const [addClient, addResponse] = useAddClientMutation()
   const [updateClient, updateResponse] = useUpdateClientMutation()
@@ -205,6 +208,7 @@ const ClientModal = ({ id, open, onClose }: ClientModalProps) => {
             multiple
             fullWidth
             label={'Роли'}
+            disabled={!account?.roles.includes('admin')}
             loading={listResponse.isLoading}
             options={listResponse.data?.map((item) => ({
               label: item.label ?? item.name,

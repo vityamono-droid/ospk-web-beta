@@ -5,8 +5,8 @@ import TextField from '@mui/material/TextField'
 export type TextInputProps<TValue = any> = {
   maxLength?: number
   minLength?: number
-  startAdornment?: JSX.Element
-  endAdornment?: JSX.Element
+  startAdornment?: React.ReactNode
+  endAdornment?: React.ReactNode
   onEnterDown?: Callback
   onChange?: (value: TValue) => void
 } & Omit<TextFieldProps, 'onChange' | 'size'>

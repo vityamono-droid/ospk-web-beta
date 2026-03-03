@@ -7,6 +7,7 @@ import * as departments from './departments'
 import * as articles from './articles'
 import * as services from './services'
 import * as carousels from './carousels'
+import requestsApi from './requests'
 
 const adminStore = configureStore({
   reducer: {
@@ -16,6 +17,8 @@ const adminStore = configureStore({
     // Clients
     [clients.clientsApi.reducerPath]: clients.clientsApi.reducer,
     [clients.rolesApi.reducerPath]: clients.rolesApi.reducer,
+    // Requests
+    [requestsApi.reducerPath]: requestsApi.reducer,
     // Departments
     [departments.employeesApi.reducerPath]: departments.employeesApi.reducer,
     [departments.departmentsApi.reducerPath]: departments.departmentsApi.reducer,
@@ -39,6 +42,8 @@ const adminStore = configureStore({
       // Clients
       .concat(clients.clientsApi.middleware)
       .concat(clients.rolesApi.middleware)
+      // Requests
+      .concat(requestsApi.middleware)
       // Departments
       .concat(departments.employeesApi.middleware)
       .concat(departments.departmentsApi.middleware)

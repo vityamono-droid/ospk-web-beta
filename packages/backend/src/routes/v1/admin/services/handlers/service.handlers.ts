@@ -77,6 +77,7 @@ export const getService: GetServiceRequest = async (req, res, next) => {
       include: {
         departments: {
           select: {
+            id: true,
             available: true,
             departmentId: true,
           },
@@ -122,12 +123,6 @@ export const upsertService: UpsertServiceRequest = async (req, res, next) => {
       ...service,
       price: price,
       vat: vat,
-      departments: {
-        createMany: req.body.departments && {
-          data: req.body.departments,
-          skipDuplicates: true,
-        },
-      },
       priceHistory,
     }
 
@@ -140,10 +135,39 @@ export const upsertService: UpsertServiceRequest = async (req, res, next) => {
           banner: req.body.banner == null ? null : req.file?.path,
         },
       })
+
+      await Promise.all(
+        req.body.departments
+          .filter((item) => !item.removed)
+          .map((item) =>
+            prisma.serviceDepartment.upsert({
+              where: { id: item.id },
+              create: {
+                ...item,
+                serviceId: req.params.id,
+              },
+              update: item,
+            }),
+          ),
+      )
+
+      await prisma.serviceDepartment.deleteMany({
+        where: {
+          id: {
+            in: req.body.departments.filter((item) => item.removed).map((item) => item.id),
+          },
+        },
+      })
     } else {
       upserted = await prisma.service.create({
         data: {
           ...data,
+          departments: {
+            createMany: {
+              data: req.body.departments,
+              skipDuplicates: true,
+            },
+          },
           banner: req.file?.path,
         },
       })

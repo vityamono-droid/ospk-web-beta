@@ -27,6 +27,12 @@ export interface CatalogDataDetails {
   categories: CategoryData[]
 }
 
+export interface DepartmentData {
+  id: string
+  available: number | null
+  address: string
+}
+
 export interface ServiceDataDetails {
   label: string
   banner: string | null
@@ -36,8 +42,11 @@ export interface ServiceDataDetails {
   forLegals: boolean
   unit?: string
   catalog: string
+  catalogId: string
   category?: string
+  categoryId?: string
   priceHistory: PriceHistoryData[]
+  departments: DepartmentData[]
   statistics: number
   createdAt: Date
 }

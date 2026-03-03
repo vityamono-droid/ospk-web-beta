@@ -8,6 +8,8 @@ import articlesApi from './articles.api'
 import departmentsApi from './departments.api'
 import staticApi from './static.api'
 import carouselsApi from './carousels.api'
+import commentsApi from './comments.api'
+import * as requests from './requests'
 
 const clientStore = configureStore({
   reducer: {
@@ -18,6 +20,9 @@ const clientStore = configureStore({
     [departmentsApi.reducerPath]: departmentsApi.reducer,
     [staticApi.reducerPath]: staticApi.reducer,
     [carouselsApi.reducerPath]: carouselsApi.reducer,
+    [commentsApi.reducerPath]: commentsApi.reducer,
+    [requests.requestsApi.reducerPath]: requests.requestsApi.reducer,
+    [requests.categoriesApi.reducerPath]: requests.categoriesApi.reducer,
   },
   middleware: (getDefault) =>
     getDefault()
@@ -27,7 +32,10 @@ const clientStore = configureStore({
       .concat(servicesApi.middleware)
       .concat(departmentsApi.middleware)
       .concat(staticApi.middleware)
-      .concat(carouselsApi.middleware),
+      .concat(carouselsApi.middleware)
+      .concat(commentsApi.middleware)
+      .concat(requests.requestsApi.middleware)
+      .concat(requests.categoriesApi.middleware),
 })
 
 setupListeners(clientStore.dispatch)

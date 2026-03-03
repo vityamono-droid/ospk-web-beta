@@ -24,6 +24,14 @@ const ClientCarousel = ({ placement }: { placement: Placement }) => {
     setCurrIndex(newIndex < 0 ? len - 1 : newIndex >= len ? 0 : newIndex)
   }
 
+  const handleItemClick = () => {
+    if (!data[currIndex] || !data[currIndex].link) {
+      return
+    }
+
+    location.href = data[currIndex].link
+  }
+
   useEffect(() => {
     const intervalId = setTimeout(() => handleNavClick(1), 3500)
     return () => {
@@ -34,13 +42,7 @@ const ClientCarousel = ({ placement }: { placement: Placement }) => {
   return (
     <>
       {data && (
-        <Box
-          width={'100%'}
-          height={'250px'}
-          position={'relative'}
-          // component={!!data[currIndex]?.link ? 'a' : 'div'}
-          // href={data[currIndex]?.link ?? undefined}
-          >
+        <Box width={'100%'} height={'250px'} position={'relative'}>
           <Box
             sx={{
               backgroundImage: `url(${data[currIndex]?.banner})`,
@@ -57,7 +59,9 @@ const ClientCarousel = ({ placement }: { placement: Placement }) => {
             position={'absolute'}
             display={'flex'}
             alignItems={'center'}
-            justifyContent={'space-between'}>
+            justifyContent={'space-between'}
+            sx={{ cursor: data[currIndex]?.link ? 'pointer' : 'initial' }}
+            onClick={handleItemClick}>
             <Button
               sx={{ height: '50%', borderRadius: '0 6px 6px 0', bgcolor: '#AEAEAE99' }}
               variant={'contained'}

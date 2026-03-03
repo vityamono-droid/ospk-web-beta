@@ -133,16 +133,27 @@ export const getService: GetServiceRequest = async (req, res, next) => {
           select: { label: true },
         },
         catalog: {
-          select: { label: true },
+          select: { id: true, label: true },
         },
         category: {
-          select: { label: true },
+          select: { id: true, label: true },
         },
         priceHistory: {
           omit: {
             id: true,
             updatedAt: true,
             removedAt: true,
+          },
+        },
+        departments: {
+          select: {
+            id: true,
+            available: true,
+            department: {
+              select: {
+                address: true,
+              },
+            },
           },
         },
       },
@@ -164,8 +175,15 @@ export const getService: GetServiceRequest = async (req, res, next) => {
         ...data,
         unit: unit?.label,
         catalog: catalog.label,
+        catalogId: catalog.id,
         category: category?.label,
+        categoryId: category?.id,
         statistics: _count.statistics,
+        departments: data.departments.map((item) => ({
+          ...item,
+          department: undefined,
+          address: item.department.address,
+        })),
       },
     })
   } catch (err) {

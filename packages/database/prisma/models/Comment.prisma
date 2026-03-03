@@ -13,11 +13,11 @@ model Comment {
   profile     Profile    @relation(fields: [profileId], references: [id], name: "comment_profile_fkey")
   parentId    String?    @db.Uuid
   parent      Comment?   @relation(fields: [parentId], references: [id], name: "comment_parentId_fkey")
-  newsId      String     @db.Uuid
+  newsId      String?    @db.Uuid
   news        News?      @relation(fields: [newsId], references: [id], name: "comment_news_fkey")
-  serviceId   String     @db.Uuid
+  serviceId   String?    @db.Uuid
   service     Service?   @relation(fields: [serviceId], references: [id], name: "comment_service_fkey")
-  forumPostId String     @db.Uuid
+  forumPostId String?    @db.Uuid
   forumPost   ForumPost? @relation(fields: [forumPostId], references: [id], name: "comment_forum_post_fkey")
 
   @@index([parentId])

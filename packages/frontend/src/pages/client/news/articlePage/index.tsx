@@ -8,6 +8,7 @@ import { useParams } from 'react-router'
 
 import CategoryBreadcrumbs from '@components/NewsListItem/CategoryBreadcrumbs'
 import ArticleLikeContent from '@components/ArticleLikeContent'
+import CommentView from '@components/CommentView'
 
 const ArticlePage = () => {
   const { id } = useParams()
@@ -38,6 +39,7 @@ const ArticlePage = () => {
             </Stack>
           </Stack>
           <ArticleLikeContent item={article} />
+          <CommentView newsId={id} />
         </Stack>
       )}
     </>

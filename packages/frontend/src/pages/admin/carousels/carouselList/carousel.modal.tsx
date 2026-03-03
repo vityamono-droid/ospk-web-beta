@@ -116,7 +116,7 @@ const CarouselModal = ({ id, open, onClose }: CarouselModalProps) => {
             <TextBox
               label={'Ссылка'}
               maxLength={256}
-              value={carousel.link}
+              value={carousel.link ?? ''}
               onChange={(value) => setCarouselProp({ link: value })}
             />
             <Autocomplete
@@ -142,14 +142,6 @@ const CarouselModal = ({ id, open, onClose }: CarouselModalProps) => {
             </Stack>
           </Stack>
         </Stack>
-        <TextBox
-          multiline
-          label={'Описание'}
-          rows={3}
-          maxLength={256}
-          value={carousel.description ?? ''}
-          onChange={(value) => setCarouselProp({ description: value || null })}
-        />
         <Switch label={'Активна'} checked={!carousel.disabled} onChange={(value) => setCarouselProp({ disabled: !value })} />
         <SaveCancelButton
           showRemoved={!!id}

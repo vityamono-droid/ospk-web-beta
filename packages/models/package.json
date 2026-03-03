@@ -8,6 +8,7 @@
     "./auth": "./dest/auth/index.js",
     "./carousels": "./dest/carousels/index.js",
     "./clients": "./dest/clients/index.js",
+    "./comments": "./dest/comments/index.js",
     "./contacts": "./dest/contacts/index.js",
     "./departments": "./dest/departments/index.js",
     "./employees": "./dest/employees/index.js",

@@ -5,6 +5,7 @@ import AuthProvider, { useAuthContext } from '@pages/auth/auth.context'
 
 const IndexPage = lazy(() => import('./index/index.page'))
 const ClientsRouter = lazy(() => import('./clients/clients.router'))
+const RequestsRouter = lazy(() => import('./requests/requests.router'))
 const EmployeesRouter = lazy(() => import('./employeed/employees.router'))
 const DepartmentsRouter = lazy(() => import('./departmens/departments.router'))
 const ServicesRouter = lazy(() => import('./services/services.router'))
@@ -35,7 +36,7 @@ const AdminRoutes = () => {
 
                 <Route path={'/clients/*'} element={<ClientsRouter />} />
                 <Route path={'/orders/*'} element={<Page501 backTo='/admin' />} />
-                <Route path={'/requests/*'} element={<Page501 backTo='/admin' />} />
+                <Route path={'/requests/*'} element={<RequestsRouter />} />
 
                 <Route path={'/employees/*'} element={<EmployeesRouter />} />
                 <Route path={'/departments/*'} element={<DepartmentsRouter />} />

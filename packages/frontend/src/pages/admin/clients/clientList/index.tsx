@@ -14,8 +14,11 @@ import { useListClientsQuery } from '@api/admin/clients/clients.api'
 import { useState } from 'react'
 
 import type { ListClientDetailsQuery, ClientDetails } from '@ospk/web-models/clients'
+import { useAuthContext } from '@pages/auth/auth.context'
 
-const ClientListPage = ({ type }: { type: 'CLIENT' | 'STAFF' }) => {
+const ClientListPage = ({ type }: { type: 'STAFF' | 'CLIENT' }) => {
+  const { account } = useAuthContext()
+
   const [clients, setClients] = useState<ClientDetails[]>([])
   const [selected, setSelected] = useState<string>()
 
@@ -28,7 +31,15 @@ const ClientListPage = ({ type }: { type: 'CLIENT' | 'STAFF' }) => {
     limit: 50,
   })
 
-  const listResponse = useListClientsQuery(filters)
+  const listResponse = useListClientsQuery(
+    {
+      ...filters,
+      type: type,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  )
 
   useStatusEffect(() => setClients(listResponse.data ?? []), [listResponse])
 
@@ -48,7 +59,7 @@ const ClientListPage = ({ type }: { type: 'CLIENT' | 'STAFF' }) => {
         content={
           <>
             <Stack direction={'row'} spacing={1} alignItems={'center'}>
-              <AtomButton onClick={() => setOpenRoles(true)} />
+              {account?.roles.includes('admin') && <AtomButton onClick={() => setOpenRoles(true)} />}
               <RefreshButton onClick={listResponse.refetch} />
               <AddButton onClick={handleOpenModal} />
             </Stack>
@@ -74,7 +85,7 @@ const ClientListPage = ({ type }: { type: 'CLIENT' | 'STAFF' }) => {
         onChange={(value) => setFilterProp({ offset: value })}
       />
       {openModal && <ClientModal id={selected} open={openModal} onClose={handleCloseModal} />}
-      {openRoles && <RoleModal open={openRoles} onClose={() => setOpenRoles(false)} />}
+      {account?.roles.includes('admin') && openRoles && <RoleModal open={openRoles} onClose={() => setOpenRoles(false)} />}
     </>
   )
 }

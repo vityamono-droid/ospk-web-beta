@@ -97,6 +97,7 @@ model ServicePriceHistory {
 
 /// Отделения, в которых предоставляется услуга.
 model ServiceDepartment {
+  id        String @id @default(uuid()) @db.Uuid
   available Int?
 
   serviceId    String     @db.Uuid
@@ -104,7 +105,6 @@ model ServiceDepartment {
   departmentId String     @db.Uuid
   department   Department @relation(fields: [departmentId], references: [id], name: "service_department_department_fkey")
 
-  @@id([serviceId, departmentId])
   @@index([serviceId])
   @@index([departmentId])
 }

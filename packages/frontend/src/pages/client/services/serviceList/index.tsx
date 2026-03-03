@@ -3,7 +3,7 @@ import { useClientContext } from '@apps/client.context'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import type { ServiceCatalogNavDetails } from '@ospk/web-models/services'
+import type { CatalogDataDetails } from '@ospk/web-models/services'
 import { useEffect, useState } from 'react'
 import ServiceSidebar from './services.sidebar'
 import ServiceTable from './services.table'
@@ -21,7 +21,7 @@ const ServiceListPage = () => {
   }, [catalogs])
 
   const [hash, setHash] = useState<string | null>(null)
-  const [catalog, setCatalog] = useState<ServiceCatalogNavDetails>({} as any)
+  const [catalog, setCatalog] = useState<CatalogDataDetails>({} as any)
 
   const getResponse = useGetCatalogQuery(selected!, {
     skip: !selected,

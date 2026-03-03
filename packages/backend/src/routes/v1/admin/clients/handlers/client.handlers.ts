@@ -115,6 +115,11 @@ export const upsertClient: UpsertClientRequest = async (req, res, next) => {
             connect: roles.map((item) => ({ id: item })),
           },
           password: hash!,
+          profile: {
+            create: {
+              disabled: false,
+            },
+          },
         },
       })
     }

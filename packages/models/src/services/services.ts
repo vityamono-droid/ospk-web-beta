@@ -22,8 +22,10 @@ export interface ServiceDetails extends Removable, DateStats {
 }
 
 export interface DepartmentDetails {
+  id: string
   available: number | null
   departmentId: string
+  removed?: boolean
 }
 
 export interface UpsertServiceDetails extends Removable {

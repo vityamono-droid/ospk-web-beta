@@ -1,6 +1,7 @@
 // Статус заказа.
 enum OrderStatus {
   PENDING
+  READY
   FULFILLED
   REJECTED
 }

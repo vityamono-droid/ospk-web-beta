@@ -19,7 +19,7 @@ const tabs = [
 const ServicesLayout = () => {
   return (
     <>
-      <NavTabs items={tabs} />
+      <NavTabs tabs={tabs} />
       <Outlet />
     </>
   )

@@ -116,7 +116,7 @@ const CategoryModal = ({ id, open, onClose }: CategoryModalProps) => {
           label={'Родитель'}
           disabled={!category.catalogId}
           options={toAcOptions(listCategoriesResponse.data)}
-          value={category.parentId}
+          value={category.parentId ?? ''}
           onChange={(value) => setCategoryProp({ parentId: value })}
         />
         <Switch label={'Активна'} checked={!category.disabled} onChange={(value) => setCategoryProp({ disabled: !value })} />

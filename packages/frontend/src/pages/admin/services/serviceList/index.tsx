@@ -34,7 +34,7 @@ const ServiceList = () => {
   return (
     <>
       <ServiceFilter
-        additional={
+        content={
           <>
             <Stack direction={'row'}>
               <AddButton title={'Добавить'} onClick={() => navigate('service')} />

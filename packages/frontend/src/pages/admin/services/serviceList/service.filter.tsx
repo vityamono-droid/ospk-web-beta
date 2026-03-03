@@ -1,15 +1,11 @@
 import ListFilter from '@components/ListFilter'
 
 interface ServiceFilterProps {
-  additional?: any
+  content?: any
 }
 
-const ServiceFilter = ({ additional }: ServiceFilterProps) => {
-  return (
-    <ListFilter additional={additional}>
-
-    </ListFilter>
-  )
+const ServiceFilter = ({ content }: ServiceFilterProps) => {
+  return <ListFilter content={content}></ListFilter>
 }
 
 export default ServiceFilter

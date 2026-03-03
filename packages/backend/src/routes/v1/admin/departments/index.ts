@@ -12,13 +12,13 @@ departmentsRouter.get('/employees', listEmployees)
 departmentsRouter.get('/employees/:id', getEmployee)
 departmentsRouter.post(
   '/employees/',
-  withFormData({ type: 'SINGLE', fieldName: 'banner' }),
+  withFormData({ type: 'SINGLE', fieldName: 'photo' }),
   withParseForm({ dest: 'static/employee/photos' }),
   upsertEmployee,
 )
 departmentsRouter.put(
   '/employees/:id',
-  withFormData({ type: 'SINGLE', fieldName: '' }),
+  withFormData({ type: 'SINGLE', fieldName: 'photo' }),
   withParseForm({ dest: 'static/employee/photos' }),
   upsertEmployee,
 )
