@@ -179,11 +179,13 @@ export const getService: GetServiceRequest = async (req, res, next) => {
         category: category?.label,
         categoryId: category?.id,
         statistics: _count.statistics,
-        departments: data.departments.map((item) => ({
-          ...item,
-          department: undefined,
-          address: item.department.address,
-        })),
+        departments: data.departments
+          .filter((item) => item.available == null || item.available != 0)
+          .map((item) => ({
+            ...item,
+            department: undefined,
+            address: item.department.address,
+          })),
       },
     })
   } catch (err) {

@@ -2,13 +2,22 @@ import Modal from '@components/Modal'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 
 import NoImageIcon from '@mui/icons-material/HideImage'
+import CancelIcon from '@mui/icons-material/Close'
+import EmptyBanner from '@assets/empty.svg?react'
 
 import { useNavigate } from 'react-router'
 
-import type { OrderStatus } from '@ospk/web-models/orders'
+import { useListOrdersQuery, useUpdateOrdersMutation } from '@api/client/orders.api'
+import useStatusEffect from '@hooks/useStatusEffect'
+import { useState } from 'react'
+
+import { enqueueSnackbar } from 'notistack'
+
+import type { OrderData, OrderStatus } from '@ospk/web-models/orders'
 
 interface OrdersModalProps {
   open?: boolean
@@ -35,30 +44,19 @@ const statusToText = (status: OrderStatus) => {
 const OrdersModal = ({ open, onClose }: OrdersModalProps) => {
   const navigate = useNavigate()
 
-  const orders = [
-    {
-      id: crypto.randomUUID(),
-      label: 'Альбумин, 5%, 20 мл',
-      banner: '/static/services/banners/a89e2638880ae098_1770893163160',
-      department: 'г. Челябинск',
-      amount: 2,
-      price: 2174 * 2,
-      status: 'PENDING',
-      serviceId: '69345247-4a73-4ec0-8f9c-72d7ba99363f',
-      createdAt: new Date().toLocaleDateString(),
-    },
-    {
-      id: crypto.randomUUID(),
-      label: 'Стандартные изогемагглютинирующие сыворотки',
-      banner: '',
-      department: 'г. Сатка',
-      amount: 1,
-      price: 36,
-      status: 'FULFILLED',
-      serviceId: 'ac846b96-d2ec-4a38-9d03-439e693dcee6',
-      createdAt: new Date(new Date().setMonth(0)).toLocaleDateString(),
-    }
-  ]
+  const [orders, setOrders] = useState<OrderData[]>([])
+  const [updateOrder, updateResponse] = useUpdateOrdersMutation()
+
+  const listResponse = useListOrdersQuery({})
+
+  useStatusEffect(() => setOrders(listResponse.data ?? []), [listResponse])
+  useStatusEffect(() => {
+    enqueueSnackbar({
+      variant: 'success',
+      message: 'Заказа отменен успешно',
+      autoHideDuration: 2000,
+    })
+  }, [updateResponse])
 
   const handleItemClick = (serviceId: string) => {
     navigate(`/services/${serviceId}`)
@@ -68,53 +66,64 @@ const OrdersModal = ({ open, onClose }: OrdersModalProps) => {
   return (
     <Modal title={'История заказов'} open={open} onClose={onClose}>
       <Stack spacing={2} minWidth={550} minHeight={600} justifyContent={'space-between'}>
-        <Stack>
-          {orders.map((item) => (
-            <MenuItem key={item.id} divider onClick={() => handleItemClick(item.serviceId)}>
-              <Stack width={'100%'} direction={'row'} spacing={1}>
-                <Stack>
-                  {item.banner ? (
-                    <img width={72} src={item.banner ?? ''} />
-                  ) : (
-                    <Stack
-                      height={72}
-                      width={72}
-                      alignItems={'center'}
-                      justifyContent={'center'}
-                      border={'2px dotted gray'}
-                      borderRadius={2}>
-                      <NoImageIcon sx={{ color: 'gray' }} />
+        {orders.length > 0 ? (
+          <Stack>
+            {orders.map((item) => (
+              <MenuItem key={item.id} divider onClick={() => handleItemClick(item.serviceId)}>
+                <Stack width={'100%'} direction={'row'} spacing={1}>
+                  <Stack>
+                    {item.banner ? (
+                      <img width={72} src={item.banner ?? ''} />
+                    ) : (
+                      <Stack
+                        height={72}
+                        width={72}
+                        alignItems={'center'}
+                        justifyContent={'center'}
+                        border={'2px dotted gray'}
+                        borderRadius={2}>
+                        <NoImageIcon sx={{ color: 'gray' }} />
+                      </Stack>
+                    )}
+                  </Stack>
+                  <Stack width={'100%'}>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                      <Typography>{item.label}</Typography>
+                      <Typography>{item.price} ₽</Typography>
                     </Stack>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                      <Stack direction={'row'} spacing={1} alignItems={'baseline'}>
+                        <Typography color={'gray'} variant={'body2'}>
+                          Статус:
+                        </Typography>
+                        <Typography>{statusToText(item.status as OrderStatus)}</Typography>
+                      </Stack>
+                      <Typography>{item.amount} ед.</Typography>
+                    </Stack>
+                    <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                      <Stack direction={'row'} spacing={1} alignItems={'baseline'}>
+                        <Typography color={'gray'} variant={'body2'}>
+                          Отдел:
+                        </Typography>
+                        <Typography>{item.department}</Typography>
+                      </Stack>
+                      <Typography>{new Date(item.createdAt).toLocaleDateString()}</Typography>
+                    </Stack>
+                  </Stack>
+                  {(item.status === 'PENDING' || item.status === 'READY') && (
+                    <Tooltip title={'Отменить заказ'}>
+                      <Button variant={'outlined'} onClick={() => updateOrder(item.id)}>
+                        <CancelIcon />
+                      </Button>
+                    </Tooltip>
                   )}
                 </Stack>
-                <Stack width={'100%'}>
-                  <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                    <Typography>{item.label}</Typography>
-                    <Typography>{item.price} ₽</Typography>
-                  </Stack>
-                  <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                    <Stack direction={'row'} spacing={1} alignItems={'baseline'}>
-                      <Typography color={'gray'} variant={'body2'}>
-                        Статус:
-                      </Typography>
-                      <Typography>{statusToText(item.status as OrderStatus)}</Typography>
-                    </Stack>
-                    <Typography>{item.amount} ед.</Typography>
-                  </Stack>
-                  <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                    <Stack direction={'row'} spacing={1} alignItems={'baseline'}>
-                      <Typography color={'gray'} variant={'body2'}>
-                        Отдел:
-                      </Typography>
-                      <Typography>{item.department}</Typography>
-                    </Stack>
-                    <Typography>{item.createdAt}</Typography>
-                  </Stack>
-                </Stack>
-              </Stack>
-            </MenuItem>
-          ))}
-        </Stack>
+              </MenuItem>
+            ))}
+          </Stack>
+        ) : (
+          <EmptyBanner />
+        )}
         <Stack direction={'row'} justifyContent={'flex-end'}>
           <Button onClick={onClose}>Закрыть</Button>
         </Stack>

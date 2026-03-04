@@ -1,6 +1,7 @@
 import { Router } from 'express'
 // Routers
 import clientsRouter from './clients'
+import ordersRouter from './orders'
 import requestsRouter from './requests'
 import departmentsRouter from './departments'
 import articlesRouter from './articles'
@@ -10,6 +11,7 @@ import carouselsRouter from './carousels'
 const adminRouter = Router()
 
 adminRouter.use('/clients', clientsRouter)
+adminRouter.use('/orders', ordersRouter)
 adminRouter.use('/requests', requestsRouter)
 adminRouter.use('/departments', departmentsRouter)
 adminRouter.use('/articles', articlesRouter)

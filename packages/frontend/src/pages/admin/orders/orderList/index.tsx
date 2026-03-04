@@ -1,9 +1,14 @@
-import DataGrid from '@components/DataGrid'
-import { useState } from 'react'
-import OrderModal from './order.modal'
 import Chip from '@mui/material/Chip'
+import DataGrid from '@components/DataGrid'
+import OrderModal from './order.modal'
+import Stack from '@mui/material/Stack'
+import RefreshButton from '@components/RefreshButton'
 
-import type { OrderStatus } from '@ospk/web-models/orders'
+import { useState } from 'react'
+import { useListOrdersQuery } from '@api/admin/orders/orders.api'
+import useStatusEffect from '@hooks/useStatusEffect'
+
+import type { OrderDetails, OrderStatus } from '@ospk/web-models/orders'
 
 const statusToText = (status: OrderStatus) => {
   switch (status) {
@@ -25,8 +30,25 @@ const statusToText = (status: OrderStatus) => {
 const OrderListPage = () => {
   const [openModal, setOpenModal] = useState(false)
   const [selected, setSelected] = useState<string>()
+  const [orders, setOrders] = useState<OrderDetails[]>([])
+
+  const listResponse = useListOrdersQuery(
+    {},
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  )
+
+  useStatusEffect(() => setOrders(listResponse.data ?? []), [listResponse])
 
   const handleModalOpen = (id: string) => {
+    if (
+      orders.find((item) => item.id == id)?.status === 'REJECTED' ||
+      orders.find((item) => item.id == id)?.status === 'FULFILLED'
+    ) {
+      return
+    }
+
     setSelected(id)
     setOpenModal(true)
   }
@@ -38,6 +60,9 @@ const OrderListPage = () => {
 
   return (
     <>
+      <Stack direction={'row'}>
+        <RefreshButton onClick={() => {}} />
+      </Stack>
       <DataGrid
         head={[
           {
@@ -65,47 +90,22 @@ const OrderListPage = () => {
             value: 'createdAt',
           },
         ]}
-        body={[
-          {
-            id: crypto.randomUUID(),
-            label: 'Альбумин, 5%, 20 мл',
-            department: 'г. Челябинск',
-            amount: '2',
-            status: <Chip size={'small'} variant={'outlined'} label={statusToText('PENDING')} />,
-            price: '4348 ₽',
-            createdAt: <Chip size={'small'} variant={'outlined'} label={new Date().toLocaleDateString()} />,
-          },
-          {
-            id: crypto.randomUUID(),
-            label: 'Стандартные эритроциты AB0',
-            department: 'г. Магнитогорск',
-            amount: '1',
-            status: <Chip size={'small'} variant={'outlined'} label={statusToText('PENDING')} />,
-            price: '45 ₽',
-            createdAt: <Chip size={'small'} variant={'outlined'} label={new Date().toLocaleDateString()} />,
-          },
-          {
-            id: crypto.randomUUID(),
-            label: 'Стандартные изогемагглютинирующие сыворотки',
-            department: 'г. Златоуст,',
-            amount: '1',
-            status: <Chip size={'small'} variant={'outlined'} label={statusToText('PENDING')} />,
-            price: '36 ₽',
-            createdAt: <Chip size={'small'} variant={'outlined'} label={new Date().toLocaleDateString()} />,
-          },
-          {
-            id: crypto.randomUUID(),
-            label: 'Стандартные изогемагглютинирующие сыворотки',
-            department: 'г. Сатка',
-            amount: '1',
-            status: <Chip size={'small'} variant={'outlined'} label={statusToText('PENDING')} />,
-            price: '36 ₽',
-            createdAt: <Chip size={'small'} variant={'outlined'} label={new Date().toLocaleDateString()} />,
-          },
-        ]}
+        body={orders.map((item) => ({
+          ...item,
+          status: <Chip size={'small'} variant={'outlined'} label={statusToText(item.status)} />,
+          price: `${item.price} ₽`,
+          createdAt: <Chip size={'small'} variant={'outlined'} label={new Date(item.createdAt).toLocaleDateString()} />,
+        }))}
         onRowClick={handleModalOpen}
       />
-      {openModal && <OrderModal id={selected!} open={openModal} onClose={handleModalClose} />}
+      {openModal && (
+        <OrderModal
+          id={selected!}
+          status={orders.find((item) => item.id == selected)?.status ?? 'PENDING'}
+          open={openModal}
+          onClose={handleModalClose}
+        />
+      )}
     </>
   )
 }

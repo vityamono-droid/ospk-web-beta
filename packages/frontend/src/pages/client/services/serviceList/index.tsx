@@ -1,13 +1,16 @@
-import { useGetCatalogQuery } from '@api/client/services.api'
-import { useClientContext } from '@apps/client.context'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import type { CatalogDataDetails } from '@ospk/web-models/services'
-import { useEffect, useState } from 'react'
 import ServiceSidebar from './services.sidebar'
 import ServiceTable from './services.table'
+
 import Empty from '@components/Empty'
+
+import { useClientContext } from '@apps/client.context'
+import { useGetCatalogQuery } from '@api/client/services.api'
+import { useEffect, useState } from 'react'
+
+import type { CatalogDataDetails } from '@ospk/web-models/services'
 
 const ServiceListPage = () => {
   const {
@@ -56,11 +59,11 @@ const ServiceListPage = () => {
   }, [getResponse.status])
 
   return (
-    <Stack>
+    <Stack flex={1}>
       {!!catalog && (
-        <Stack direction={'row'} spacing={2}>
+        <Stack flex={1} direction={'row'} spacing={2}>
           <Stack width={'100%'}>
-            <Paper>
+            <Paper sx={{ flex: 1 }}>
               <Stack p={2} spacing={4}>
                 <Stack direction={'row'} spacing={1}>
                   {catalog.banner && (

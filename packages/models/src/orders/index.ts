@@ -4,12 +4,18 @@ export interface OrderDetails {
   id: string
   label: string
   department: string
+  status: OrderStatus
   amount: number | null
   price: number
   createdAt: Date
 }
 
+export interface UpsertOrderDetails {
+  status: OrderStatus
+}
+
 export interface OrderData {
+  id: string
   label: string
   banner: string | null
   department: string

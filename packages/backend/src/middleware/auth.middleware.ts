@@ -6,7 +6,7 @@ import type { IntrospectTokenResponse } from '@ospk/web-models/auth'
 
 import config from '@config'
 
-const withAuth: RequestHandler = async (req, res, next) => {
+const withAuth: RequestHandler<any> = async (req, res, next) => {
   try {
     const token_type = 'Bearer '
     if (

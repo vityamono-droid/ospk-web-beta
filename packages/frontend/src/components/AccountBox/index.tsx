@@ -1,4 +1,3 @@
-import { useAuthorizeMutation, useRevokeMutation } from '@api/common/auth/auth.api'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -8,17 +7,21 @@ import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import { useAuthContext } from '@pages/auth/auth.context'
-import { useEffect, useRef, useState } from 'react'
+import OrdersModal from './orders.modal'
+
 // import SettingsIcon from '@mui/icons-material/Settings'
 import OrderIcon from '@mui/icons-material/LocalMallOutlined'
 import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
 import RedirectIcon from '@mui/icons-material/ChevronRight'
+
+import { useAuthorizeMutation, useRevokeMutation } from '@api/common/auth/auth.api'
+import { useAuthContext } from '@pages/auth/auth.context'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
+
 import formatPhone from '@utils/formatPhone'
 import shortFullname from '@utils/shortFullname'
-import OrdersModal from './orders.modal'
 
 const AccountBox = () => {
   const ref = useRef(null)

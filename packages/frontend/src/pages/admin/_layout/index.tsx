@@ -31,7 +31,7 @@ const AdminLayout = () => {
           <AccountBox />
         </Box>
         {/* Page content */}
-        <Box sx={{ px: 2, pb: 2, height: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+        <Box sx={{ px: 2, pb: 2, gap: 2, height: '100%', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
           <Outlet />
         </Box>
       </Paper>

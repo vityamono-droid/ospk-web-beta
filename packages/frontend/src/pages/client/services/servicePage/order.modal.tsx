@@ -1,12 +1,18 @@
 import Autocomplete from '@components/Autocomplete'
 import MNumberBox from '@components/MNumberBox'
 import Modal from '@components/Modal'
-import TextBox from '@components/new/TextBox'
 import SaveCancelButton from '@components/SaveCancelButton'
-import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
-import useObjectState from '@hooks/useObjectState'
 import Stack from '@mui/material/Stack'
+import TextBox from '@components/new/TextBox'
 import Typography from '@mui/material/Typography'
+
+import useObjectState from '@hooks/useObjectState'
+import useStatusEffect from '@hooks/useStatusEffect'
+import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
+import { useAddOrderMutation } from '@api/client/orders.api'
+
+import { enqueueSnackbar } from 'notistack'
+
 import type { ServiceDataDetails } from '@ospk/web-models/services'
 import type { UpsertOrderData } from '@ospk/web-models/orders'
 
@@ -26,6 +32,18 @@ const OrderModal = ({ service, serviceId, open, onClose }: OrderModalProps) => {
     departmentId: '',
     amount: null,
   })
+
+  const [addOrder, addResponse] = useAddOrderMutation()
+
+  useStatusEffect(() => {
+    enqueueSnackbar({
+      variant: 'success',
+      message: 'Заказа размещен успешно',
+      autoHideDuration: 2000,
+    })
+
+    !!onClose && onClose()
+  }, [addResponse])
 
   const handleAmountChange = (value: string) => {
     if (!value || !+value) {
@@ -55,7 +73,7 @@ const OrderModal = ({ service, serviceId, open, onClose }: OrderModalProps) => {
       return
     }
 
-    // update
+    addOrder(data)
   }
 
   return (
