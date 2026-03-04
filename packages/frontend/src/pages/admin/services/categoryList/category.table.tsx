@@ -1,10 +1,11 @@
 import DataGrid from '@components/DataGrid'
 import RemovedDisabled from '@components/RemovedDisabled'
+
 import type { ServiceCategoryDetails } from '@ospk/web-models/services'
 
 interface CategoryTableProps {
   data: ServiceCategoryDetails[]
-  onRowClick: (id: string) => void
+  onRowClick: ValueCallback<string>
 }
 
 const CategoryTable = ({ data, onRowClick }: CategoryTableProps) => {

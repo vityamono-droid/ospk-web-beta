@@ -1,6 +1,5 @@
 import AddButton from '@components/AddButton'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
@@ -15,37 +14,38 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Close'
 
 import {
-  useAddRoleMutation,
-  useDeleteRoleMutation,
-  useListRolesQuery,
-  useUpdateRoleMutation,
-} from '@api/admin/clients/roles.api'
+  useAddUnitMutation,
+  useDeleteUnitMutation,
+  useListUnitsQuery,
+  useUpdateUnitMutation,
+} from '@api/admin/services/units.api'
 import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
 import useObjectState from '@hooks/useObjectState'
 import useStatusEffect from '@hooks/useStatusEffect'
 import { useState, type MouseEvent } from 'react'
 
-import type { RoleDetails } from '@ospk/web-models/clients'
+import type { UpsertUnitDetails, UnitDetails } from '@ospk/web-models/services'
 
-interface RoleModal {
+interface UnitsModalProps {
   open?: boolean
   onClose?: Callback
 }
 
-const RoleModal = ({ open, onClose }: RoleModal) => {
-  const listResponse = useListRolesQuery({})
+const UnitsModal = ({ open, onClose }: UnitsModalProps) => {
+  const listResponse = useListUnitsQuery({})
 
-  const [error, analyze] = useAnalyzeRequired(['label', 'name'])
-  const [roles, setRoles] = useState<RoleDetails[]>([])
-  const [selected, setSelected, setSelectedProp] = useObjectState<RoleDetails | undefined>(undefined)
+  const [error, analyze] = useAnalyzeRequired<UpsertUnitDetails>(['label'])
+  const [units, setUnits] = useState<UnitDetails[]>([])
+
+  const [selected, setSelected, setSelectedProp] = useObjectState<UnitDetails | undefined>(undefined)
   const [deleteRef, setDeleteRef] = useState<null | HTMLElement>(null)
   const [deleteItem, setDeleteItem] = useState<string>()
 
-  const [addRole, addResponse] = useAddRoleMutation()
-  const [updateRole, updateResponse] = useUpdateRoleMutation()
-  const [deleteRole, deleteResponse] = useDeleteRoleMutation()
+  const [addUnit, addResponse] = useAddUnitMutation()
+  const [updateUnit, updateResponse] = useUpdateUnitMutation()
+  const [deleteUnit, deleteResponse] = useDeleteUnitMutation()
 
-  useStatusEffect(() => setRoles(listResponse.data ?? []), [listResponse])
+  useStatusEffect(() => setUnits(listResponse.data ?? []), [listResponse])
   useStatusEffect(() => {
     setSelected(undefined)
     listResponse.refetch()
@@ -55,16 +55,16 @@ const RoleModal = ({ open, onClose }: RoleModal) => {
     const newItem = {
       id: '',
       label: '',
-      name: '',
+      removedAt: null,
     }
 
-    setRoles([...roles, newItem])
+    setUnits([...units, newItem])
     setSelected(newItem)
   }
 
   const handleCancel = () => {
     if (!selected?.id) {
-      setRoles(roles.filter((item) => !!item.id))
+      setUnits(units.filter((item) => !!item.id))
     }
 
     setSelected(undefined)
@@ -81,7 +81,7 @@ const RoleModal = ({ open, onClose }: RoleModal) => {
   }
 
   const handleDeleteConfirm = () => {
-    deleteItem && deleteRole(deleteItem)
+    deleteItem && deleteUnit(deleteItem)
     handleDeleteReject()
   }
 
@@ -91,8 +91,9 @@ const RoleModal = ({ open, onClose }: RoleModal) => {
     }
 
     const data = {
-      label: selected.label?.trim() || null,
-      name: selected.name.trim(),
+      ...selected,
+      id: undefined,
+      label: selected.label?.trim(),
     }
 
     if (!analyze(data)) {
@@ -100,9 +101,9 @@ const RoleModal = ({ open, onClose }: RoleModal) => {
     }
 
     if (!!selected.id) {
-      updateRole({ id: selected.id, data })
+      updateUnit({ id: selected.id, data })
     } else {
-      addRole(data)
+      addUnit(data)
     }
   }
 
@@ -114,7 +115,7 @@ const RoleModal = ({ open, onClose }: RoleModal) => {
             <AddButton disabled={!!selected} onClick={handleAdd} />
           </Stack>
           <Stack height={'100%'}>
-            {roles.map((item) => (
+            {units.map((item) => (
               <ListItem key={item.id} divider>
                 <ListItemText>
                   <Stack direction={'row'} spacing={1} alignItems={'center'}>
@@ -126,18 +127,10 @@ const RoleModal = ({ open, onClose }: RoleModal) => {
                           value={selected.label ?? ''}
                           onChange={(value) => setSelectedProp({ label: value || null })}
                         />
-                        <TextBox
-                          label={'Значение'}
-                          error={error.name}
-                          value={selected.name ?? ''}
-                          onChange={(value) => setSelectedProp({ name: value || null })}
-                        />
                       </>
                     ) : (
                       <>
                         <Typography>{item.label}</Typography>
-                        <Divider orientation={'vertical'} sx={{ height: 16 }} />
-                        <Typography>{item.name}</Typography>
                       </>
                     )}
                   </Stack>
@@ -145,11 +138,7 @@ const RoleModal = ({ open, onClose }: RoleModal) => {
                 <Stack direction={'row'} spacing={1}>
                   {selected?.id == item.id ? (
                     <>
-                      <Button
-                        disabled={
-                          !selected.label || !selected.name || (selected.label == item.label && selected.name == item.name)
-                        }
-                        onClick={handleSave}>
+                      <Button disabled={!selected.label || selected.label == item.label} onClick={handleSave}>
                         Сохранить
                       </Button>
                       <IconButton onClick={handleCancel}>
@@ -198,4 +187,4 @@ const RoleModal = ({ open, onClose }: RoleModal) => {
   )
 }
 
-export default RoleModal
+export default UnitsModal

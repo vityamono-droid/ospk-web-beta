@@ -101,11 +101,11 @@ export const deleteCatalog: DeleteCatalogRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
-    const catalog = await prisma.newsCatalog.findUniqueOrThrow({
+    const catalog = await prisma.serviceCatalog.findUniqueOrThrow({
       where: { id: req.params.id },
     })
 
-    await prisma.newsCatalog.update({
+    await prisma.serviceCatalog.update({
       where: { id: req.params.id },
       data: {
         removedAt: !!catalog.removedAt ? null : new Date(),

@@ -93,11 +93,11 @@ export const deleteCategory: DeleteCategoryRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
-    const category = await prisma.newsCategory.findUniqueOrThrow({
+    const category = await prisma.serviceCategory.findUniqueOrThrow({
       where: { id: req.params.id },
     })
 
-    await prisma.newsCategory.update({
+    await prisma.serviceCategory.update({
       where: { id: req.params.id },
       data: {
         removedAt: !!category.removedAt ? null : new Date(),

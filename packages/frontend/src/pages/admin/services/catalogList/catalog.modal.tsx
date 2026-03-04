@@ -11,25 +11,20 @@ import {
   useGetCatalogQuery,
   useUpdateCatalogMutation,
 } from '@api/admin/services/catalogs.api'
+import { useState } from 'react'
 import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
 import useObjectState from '@hooks/useObjectState'
 import useStatusEffect from '@hooks/useStatusEffect'
-import { useState } from 'react'
 
 import type { UpsertServiceCatalogDetails } from '@ospk/web-models/services'
 
 interface CatalogModalProps {
   id?: string
-  open: boolean
-  onClose: Callback
+  open?: boolean
+  onClose?: Callback
 }
 
 const CatalogModal = ({ id, open, onClose }: CatalogModalProps) => {
-  const getResponse = useGetCatalogQuery(id!, {
-    skip: !id,
-    refetchOnMountOrArgChange: true,
-  })
-
   const [addCatalog, addResponse] = useAddCatalogMutation()
   const [updateCatalog, updateResponse] = useUpdateCatalogMutation()
   const [deleteCatalog, deleteResponse] = useDeleteCatalogMutation()
@@ -44,8 +39,13 @@ const CatalogModal = ({ id, open, onClose }: CatalogModalProps) => {
     removedAt: null,
   })
 
+  const getResponse = useGetCatalogQuery(id!, {
+    skip: !id,
+    refetchOnMountOrArgChange: true,
+  })
+
   useStatusEffect(() => setCatalog(getResponse.data), [getResponse])
-  useStatusEffect(() => onClose(), [addResponse, updateResponse, deleteResponse])
+  useStatusEffect(() => !!onClose && onClose(), [addResponse, updateResponse, deleteResponse])
 
   const handleDelete = () => !!id && deleteCatalog(id)
 
@@ -79,9 +79,9 @@ const CatalogModal = ({ id, open, onClose }: CatalogModalProps) => {
             <TextBox
               label={'Название *'}
               error={error.label}
-              value={catalog.label}
+              value={catalog.label ?? ''}
               maxLength={64}
-              onChange={(value) => setCatalogProp({ label: value })}
+              onChange={(value) => setCatalogProp({ label: value || null })}
             />
             <TextBox
               label={'Описание'}

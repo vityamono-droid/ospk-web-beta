@@ -1,10 +1,11 @@
 import DataGrid from '@components/DataGrid'
 import RemovedDisabled from '@components/RemovedDisabled'
-import type { ServiceCatalog } from '@ospk/web-models/services'
+
+import type { ServiceCatalogDetails } from '@ospk/web-models/services'
 
 interface CatalogTableProps {
-  data: ServiceCatalog[]
-  onRowClick: (id: string) => void
+  data: ServiceCatalogDetails[]
+  onRowClick: ValueCallback<string>
 }
 
 const CatalogTable = ({ data, onRowClick }: CatalogTableProps) => {
@@ -29,7 +30,7 @@ const CatalogTable = ({ data, onRowClick }: CatalogTableProps) => {
       ]}
       body={data.map((item) => ({
         ...item,
-        removedDisabled: <RemovedDisabled disabled={item.disabled} removed={item.removed} removedAt={item.removedAt} />,
+        removedDisabled: <RemovedDisabled disabled={item.disabled} removedAt={item.removedAt} />,
       }))}
       onRowClick={onRowClick}
     />

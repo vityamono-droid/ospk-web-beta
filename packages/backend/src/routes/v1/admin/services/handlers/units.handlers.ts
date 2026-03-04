@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express'
+
 import type { ApiResponse } from '@ospk/web-models'
 import type { UnitDetails, UpsertUnitDetails } from '@ospk/web-models/services'
 
@@ -53,15 +54,8 @@ export const deleteUnit: DeleteUnitRequest = async (req, res, next) => {
   try {
     const prisma = res.locals.prisma
 
-    const unit = await prisma.unit.findUniqueOrThrow({
+    await prisma.unit.delete({
       where: { id: req.params.id },
-    })
-
-    await prisma.unit.update({
-      where: { id: req.params.id },
-      data: {
-        removedAt: !!unit.removedAt ? null : new Date(),
-      },
     })
 
     res.json({

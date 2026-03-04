@@ -1,95 +1,76 @@
-import { useListCatalogsQuery } from '@api/admin/services/catalogs.api'
-import { useAddCategoryMutation, useGetCategoryQuery, useUpdateCategoryMutation } from '@api/admin/services/categories.api'
+import Autocomplete from '@components/Autocomplete'
+import SaveCancelButton from '@components/SaveCancelButton'
+import Stack from '@mui/material/Stack'
+import Switch from '@components/Switch'
 import Modal from '@components/Modal'
 import TextBox from '@components/new/TextBox'
-import Autocomplete from '@components/Autocomplete'
-import Button from '@mui/material/Button'
-import Stack from '@mui/material/Stack'
-import type { AddServiceCategoryRequest, UpdateServiceCategoryRequest } from '@ospk/web-models/services'
-import { useEffect, useState } from 'react'
-import Switch from '@components/Switch'
+
 import useAnalyzeRequired from '@hooks/useAnalyzeRequired'
+import useStatusEffect from '@hooks/useStatusEffect'
+import useObjectState from '@hooks/useObjectState'
+import { useState } from 'react'
+import { useListCatalogsQuery } from '@api/admin/services/catalogs.api'
+import {
+  useAddCategoryMutation,
+  useGetCategoryQuery,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
+} from '@api/admin/services/categories.api'
+
+import toAcOptions from '@utils/toAcOptions'
+
+import type { ServiceCatalogDetails, UpsertServiceCategoryDetails } from '@ospk/web-models/services'
 
 interface CategoryModalProps {
   id?: string
-  open: boolean
-  onClose: Callback
+  open?: boolean
+  onClose?: Callback
 }
 
 const CategoryModal = ({ id, open, onClose }: CategoryModalProps) => {
+  const [error, analyze] = useAnalyzeRequired<UpsertServiceCategoryDetails>(['label', 'catalogId'])
+  const [catalogs, setCatalogs] = useState<ServiceCatalogDetails[]>([])
+  const [category, setCategory, setCategoryProp] = useObjectState<UpsertServiceCategoryDetails>({
+    label: '',
+    description: '',
+    catalogId: '',
+    disabled: false,
+    removedAt: null,
+  })
+
+  const [addCategory, addResponse] = useAddCategoryMutation()
+  const [updateCategory, updateResponse] = useUpdateCategoryMutation()
+  const [deleteCategory, deleteResponse] = useDeleteCategoryMutation()
+
+  const listCatalogsResponse = useListCatalogsQuery(
+    {},
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  )
+
   const getResponse = useGetCategoryQuery(id!, {
     skip: !id,
     refetchOnMountOrArgChange: true,
   })
-  const listCatalogsResponse = useListCatalogsQuery({})
 
-  const [addRequest, addResponse] = useAddCategoryMutation()
-  const [updateRequest, updateResponse] = useUpdateCategoryMutation()
+  useStatusEffect(() => setCategory(getResponse.data), [getResponse])
+  useStatusEffect(() => setCatalogs(listCatalogsResponse.data ?? []), [listCatalogsResponse])
+  useStatusEffect(() => !!onClose && onClose(), [addResponse, updateResponse, deleteResponse])
 
-  const [category, setCategory] = useState<UpdateServiceCategoryRequest>({
-    label: '',
-    description: '',
-    catalogId: null as any,
-    disabled: false,
-  })
-  const [error, analyze] = useAnalyzeRequired<UpdateServiceCategoryRequest>(['label', 'catalogId'])
-
-  useEffect(() => {
-    if (!getResponse.isSuccess) {
-      return
-    }
-
-    setCategory(getResponse.data)
-  }, [getResponse.status])
-
-  useEffect(() => {
-    if (!addResponse.isSuccess) {
-      return
-    }
-
-    onClose()
-  }, [addResponse.status])
-
-  useEffect(() => {
-    if (!updateResponse.isSuccess) {
-      return
-    }
-
-    onClose()
-  }, [updateResponse.status])
-
-  const handlePropChange = (data: UpdateServiceCategoryRequest) => {
-    setCategory({
-      ...category,
-      ...data,
-    })
-  }
-
-  const handleDelete = () => {
-    if (!id) {
-      return
-    }
-
-    updateRequest({
-      id: id,
-      data: {
-        removedAt: category.removedAt != null || !!category.removedAt ? null : new Date(),
-      },
-    })
-  }
+  const handleDelete = () => !!id && deleteCategory(id)
 
   const handleSave = () => {
-    if (!analyze(category)) {
+    const data = category
+
+    if (!analyze(data)) {
       return
     }
 
     if (!!id) {
-      updateRequest({
-        id: id,
-        data: category,
-      })
+      updateCategory({ id, data })
     } else {
-      addRequest(category as AddServiceCategoryRequest)
+      addCategory(data)
     }
   }
 
@@ -97,10 +78,10 @@ const CategoryModal = ({ id, open, onClose }: CategoryModalProps) => {
     <Modal title={`${!!id ? 'Изменить' : 'Добавить'} категорию`} open={open} onClose={onClose}>
       <Stack spacing={2} width={400}>
         <TextBox
-          label={'Название'}
+          label={'Название *'}
           error={error.label}
           value={category.label ?? ''}
-          onChange={(value) => handlePropChange({ label: value })}
+          onChange={(value) => setCategoryProp({ label: value || null })}
         />
         <TextBox
           label={'Описание'}
@@ -108,31 +89,23 @@ const CategoryModal = ({ id, open, onClose }: CategoryModalProps) => {
           multiline
           error={error.description}
           value={category.description ?? ''}
-          onChange={(value) => handlePropChange({ description: value })}
+          onChange={(value) => setCategoryProp({ description: value || null })}
         />
         <Autocomplete
-          label={'Каталог'}
+          label={'Каталог *'}
           error={error.catalogId}
-          options={(listCatalogsResponse.data ?? []).map((item) => ({ label: item.label, value: item.id }))}
+          options={toAcOptions(catalogs)}
           value={category.catalogId ?? null}
-          onChange={(value) => handlePropChange({ catalogId: value ?? undefined })}
+          onChange={(value) => setCategoryProp({ catalogId: value || null })}
         />
-        <Switch
-          label={category.disabled ? 'Включить' : 'Отключить'}
-          checked={typeof category.disabled === 'undefined' ? true : !category.disabled}
-          onChange={(value) => handlePropChange({ disabled: !value })}
+        <Switch label={'Активна'} checked={!category.disabled} onChange={(value) => setCategoryProp({ disabled: !value })} />
+        <SaveCancelButton
+          showRemoved={!!id}
+          removed={!!category.removedAt}
+          onDelete={handleDelete}
+          onCancel={onClose}
+          onSave={handleSave}
         />
-        <Stack spacing={2} direction={'row'} justifyContent={'flex-end'}>
-          {!!id && (
-            <Button color={'error'} onClick={handleDelete}>
-              {category.removedAt != null || !!category.removedAt ? 'Восстановить' : 'Удалить'}
-            </Button>
-          )}
-          <Button onClick={onClose}>Отмена</Button>
-          <Button color={'success'} variant={'outlined'} onClick={handleSave}>
-            Сохранить
-          </Button>
-        </Stack>
       </Stack>
     </Modal>
   )

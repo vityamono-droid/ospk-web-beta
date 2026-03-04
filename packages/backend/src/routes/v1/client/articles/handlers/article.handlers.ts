@@ -30,6 +30,7 @@ export const listArticles: ListArticlesRequest = async (req, res, next) => {
       },
       take: +req.query.limit,
       skip: +req.query.offset,
+      orderBy: { createdAt: 'desc' },
     })
 
     const itemCategories: { [key: string]: CategoryItem[] } = {}

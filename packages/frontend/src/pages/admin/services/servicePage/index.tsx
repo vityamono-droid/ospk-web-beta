@@ -36,7 +36,6 @@ import useTextEditor from '@hooks/useTextEditor'
 import useObjectState from '@hooks/useObjectState'
 
 import toAcOptions from '@utils/toAcOptions'
-import { enqueueSnackbar } from 'notistack'
 
 import type { DepartmentDetails, UpsertServiceDetails } from '@ospk/web-models/services'
 
@@ -87,7 +86,7 @@ const ServicePage = () => {
   }, [getResponse])
   useStatusEffect(() => {
     if (addResponse.isSuccess) {
-      navigate(addResponse.data)
+      navigate(`/admin/services/${addResponse.data}`)
       return
     }
 
@@ -154,10 +153,6 @@ const ServicePage = () => {
     }
 
     if (!analyze(service)) {
-      enqueueSnackbar({
-        message: 'Ошибка валидации данных',
-        variant: 'error',
-      })
       return
     }
 
