@@ -10,6 +10,7 @@ import staticApi from './static.api'
 import carouselsApi from './carousels.api'
 import commentsApi from './comments.api'
 import ordersApi from './orders.api'
+import gosuslugiApi from './gosuslugi.api'
 import * as requests from './requests'
 
 const clientStore = configureStore({
@@ -23,6 +24,7 @@ const clientStore = configureStore({
     [carouselsApi.reducerPath]: carouselsApi.reducer,
     [commentsApi.reducerPath]: commentsApi.reducer,
     [ordersApi.reducerPath]: ordersApi.reducer,
+    [gosuslugiApi.reducerPath]: gosuslugiApi.reducer,
     [requests.requestsApi.reducerPath]: requests.requestsApi.reducer,
     [requests.categoriesApi.reducerPath]: requests.categoriesApi.reducer,
   },
@@ -37,6 +39,7 @@ const clientStore = configureStore({
       .concat(carouselsApi.middleware)
       .concat(commentsApi.middleware)
       .concat(ordersApi.middleware)
+      .concat(gosuslugiApi.middleware)
       .concat(requests.requestsApi.middleware)
       .concat(requests.categoriesApi.middleware),
 })

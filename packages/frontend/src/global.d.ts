@@ -20,6 +20,13 @@ declare global {
     TreeViewLikeItem & {
       children?: TreeViewItem[]
     }
+
+  type RegionData = {
+    id: number
+    name: string
+    okato: string
+    coordinates: string
+  }
 }
 
 export {}

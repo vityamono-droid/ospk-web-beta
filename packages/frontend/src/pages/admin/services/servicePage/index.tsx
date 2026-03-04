@@ -231,15 +231,15 @@ const ServicePage = () => {
             <Stack direction={'row'} spacing={1}>
               <Autocomplete
                 fullWidth
-                label={'Исчисляемое *'}
+                label={'Тип *'}
                 error={error.amountType}
                 options={[
                   {
-                    label: 'Исчисляемое',
+                    label: 'Товар',
                     value: 'FINITE',
                   },
                   {
-                    label: 'Неисчисляемое',
+                    label: 'Услуга',
                     value: 'INFINITE',
                   },
                 ]}

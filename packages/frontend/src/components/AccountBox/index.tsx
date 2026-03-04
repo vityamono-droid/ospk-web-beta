@@ -70,7 +70,7 @@ const AccountBox = () => {
             <Box sx={{ p: 2, pb: 0, gap: 2, display: 'flex', flexDirection: 'column' }}>
               <Box sx={{ gap: 1, display: 'flex', alignItems: 'center' }}>
                 <Badge
-                  invisible={!account.verified}
+                  invisible={location.pathname.includes('/admin') || !account.verified}
                   badgeContent={<VerifiedIcon color={'info'} fontSize={'small'} />}
                   color={'black'}>
                   <Avatar variant={'rounded'} sx={{ width: 48, height: 48 }} src={account.avatar ?? undefined} />
@@ -82,7 +82,7 @@ const AccountBox = () => {
               </Box>
               <Divider sx={{ mx: -2 }} />
             </Box>
-            {!account.verified && (
+            {!location.pathname.includes('/admin') && !account.verified && (
               <MenuItem onClick={() => navigate(`/gosuslugi/?referer=${location.pathname}`)}>
                 <ListItemIcon>
                   <VerifiedIcon color={'info'} />

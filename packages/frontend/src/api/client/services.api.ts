@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { ApiResponse } from '@ospk/web-models'
-import type { CatalogData, ServiceData } from '@ospk/web-models/services'
+import type { CatalogData, CatalogDataDetails, ServiceDataDetails } from '@ospk/web-models/services'
 
 import { transformErrorResponse, transformResponse } from '@api/transformers'
 
@@ -13,12 +13,12 @@ const servicesApi = createApi({
       transformErrorResponse: transformErrorResponse([]),
       transformResponse: transformResponse({ defaultValue: [] }),
     }),
-    getCatalog: builder.query<CatalogData, string, ApiResponse<CatalogData>>({
+    getCatalog: builder.query<CatalogDataDetails, string, ApiResponse<CatalogDataDetails>>({
       query: (id) => `/catalogs/${id}`,
       transformErrorResponse: transformErrorResponse([]),
       transformResponse: transformResponse({}),
     }),
-    getService: builder.query<ServiceData, string, ApiResponse<ServiceData>>({
+    getService: builder.query<ServiceDataDetails, string, ApiResponse<ServiceDataDetails>>({
       query: (id) => `/${id}`,
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({}),

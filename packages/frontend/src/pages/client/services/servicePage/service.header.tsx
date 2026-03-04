@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router'
+import { Link as RouterLink, useNavigate } from 'react-router'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Stack from '@mui/material/Stack'
 import Paper from '@mui/material/Paper'
@@ -20,6 +20,8 @@ import Chip from '@mui/material/Chip'
 import { useAuthContext } from '@pages/auth/auth.context'
 
 const ServiceHeader = ({ service, onOrderClick }: { service: ServiceDataDetails; onOrderClick: Callback }) => {
+  const navigate = useNavigate()
+
   const { account } = useAuthContext()
 
   const breadcrumbs = [
@@ -98,9 +100,14 @@ const ServiceHeader = ({ service, onOrderClick }: { service: ServiceDataDetails;
                   fullWidth
                   disabled={!account || service.departments.length == 0}
                   variant={'outlined'}
-                  endIcon={<OrderIcon />}
-                  onClick={onOrderClick}>
-                  Заказать
+                  endIcon={service.amountType === 'INFINITE' && account && !account.verified ? undefined : <OrderIcon />}
+                  sx={{ textTransform: 'none' }}
+                  onClick={
+                    service.amountType === 'INFINITE' && account && !account.verified
+                      ? () => navigate(`/gosuslugi/?referer=${location.pathname}`)
+                      : onOrderClick
+                  }>
+                  {service.amountType === 'INFINITE' && account && !account.verified ? 'Подтвердить через ЕСИА' : 'Заказать'}
                 </Button>
                 <IconButton size={'small'} onClick={handleShare}>
                   <ShareIcon fontSize={'small'} />
