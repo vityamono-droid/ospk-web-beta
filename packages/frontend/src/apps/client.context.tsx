@@ -5,12 +5,12 @@ import useStatusEffect from '@hooks/useStatusEffect'
 
 import type { CatalogItem } from '@ospk/web-models/articles'
 import type { CarouselData } from '@ospk/web-models/carousels'
-import type { ServiceCatalogNav } from '@ospk/web-models/services'
+import type { CatalogData } from '@ospk/web-models/services'
 
 import { createContext, useContext, useEffect, useState, type JSX } from 'react'
 
 interface ServiceConfig {
-  catalogs: ServiceCatalogNav[]
+  catalogs: CatalogData[]
   selected?: string
   onChange: ValueCallback<string | undefined>
 }
@@ -52,10 +52,15 @@ const ClientContext = createContext<ClientContextProps>({
 })
 
 const useServiceConfig = (): ServiceConfig => {
-  const [catalogs, setCatalogs] = useState<ServiceCatalogNav[]>([])
+  const [catalogs, setCatalogs] = useState<CatalogData[]>([])
   const [selected, setSelected] = useState<string>()
 
-  const listResponse = useListServiceCatalogsQuery({})
+  const listResponse = useListServiceCatalogsQuery(
+    {},
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  )
 
   useEffect(() => {
     if (!listResponse.isSuccess) {

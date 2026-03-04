@@ -7,6 +7,7 @@ export interface AccountData extends DateStats {
   email: string
   phone: string
   avatar: string | null
+  verified: boolean
   roles: string[]
   profileId: string
 }

@@ -37,13 +37,14 @@ model User {
   ips        IpAddress[]
   authCodes  Code[]
   authTokens Token[]
+  verified   Boolean     @default(false)
 
   lastLoginAt DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   removedAt   DateTime?
 
-  profileId String?  @db.Uuid @unique
+  profileId String?  @unique @db.Uuid
   profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   @@index([email])

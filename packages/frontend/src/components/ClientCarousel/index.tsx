@@ -41,7 +41,7 @@ const ClientCarousel = ({ placement }: { placement: Placement }) => {
 
   return (
     <>
-      {data && (
+      {data && data.length > 0 && (
         <Box width={'100%'} height={'250px'} position={'relative'}>
           <Box
             sx={{

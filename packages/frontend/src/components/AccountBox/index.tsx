@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography'
 import OrdersModal from './orders.modal'
 
 // import SettingsIcon from '@mui/icons-material/Settings'
+import VerifiedIcon from '@mui/icons-material/Verified'
 import OrderIcon from '@mui/icons-material/LocalMallOutlined'
 import LoginIcon from '@mui/icons-material/Login'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -22,6 +23,7 @@ import { useLocation, useNavigate } from 'react-router'
 
 import formatPhone from '@utils/formatPhone'
 import shortFullname from '@utils/shortFullname'
+import Badge from '@mui/material/Badge'
 
 const AccountBox = () => {
   const ref = useRef(null)
@@ -67,7 +69,12 @@ const AccountBox = () => {
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
             <Box sx={{ p: 2, pb: 0, gap: 2, display: 'flex', flexDirection: 'column' }}>
               <Box sx={{ gap: 1, display: 'flex', alignItems: 'center' }}>
-                <Avatar variant={'rounded'} sx={{ width: 48, height: 48 }} src={account.avatar ?? undefined} />
+                <Badge
+                  invisible={!account.verified}
+                  badgeContent={<VerifiedIcon color={'info'} fontSize={'small'} />}
+                  color={'black'}>
+                  <Avatar variant={'rounded'} sx={{ width: 48, height: 48 }} src={account.avatar ?? undefined} />
+                </Badge>
                 <Box sx={{ gap: 0, display: 'flex', flexDirection: 'column' }}>
                   <Typography>{formatPhone(account.phone)}</Typography>
                   <Typography color={'gray'}>{account.email}</Typography>
@@ -75,6 +82,14 @@ const AccountBox = () => {
               </Box>
               <Divider sx={{ mx: -2 }} />
             </Box>
+            {!account.verified && (
+              <MenuItem onClick={() => navigate(`/gosuslugi/?referer=${location.pathname}`)}>
+                <ListItemIcon>
+                  <VerifiedIcon color={'info'} />
+                </ListItemIcon>
+                <ListItemText>Подтвердить через ЕСИА</ListItemText>
+              </MenuItem>
+            )}
             {account.roles.length > 0 && (
               <MenuItem onClick={() => navigate(app == '/' ? '/admin' : '/')}>
                 <ListItemIcon>

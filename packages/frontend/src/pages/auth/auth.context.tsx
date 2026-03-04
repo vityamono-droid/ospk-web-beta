@@ -22,12 +22,7 @@ const AuthProvider = ({ on401, children }: AppProviderProps) => {
 
   const [authorize] = useAuthorizeMutation()
 
-  const getResponse = useGetAccountQuery(
-    {},
-    {
-      skip: !!account,
-    },
-  )
+  const getResponse = useGetAccountQuery({})
 
   useEffect(() => {
     if (!getResponse.isSuccess) {

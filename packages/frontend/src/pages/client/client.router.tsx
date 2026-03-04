@@ -3,6 +3,7 @@ import { Outlet, Route, Routes } from 'react-router'
 import AuthProvider from '@pages/auth/auth.context'
 import ClientLayout from './_layout/client.layout'
 
+const GosuslugiRouter = lazy(() => import('./gosuslugi/gosuslugi.router'))
 const NewsRouter = lazy(() => import('./news/news.router'))
 const IndexPage = lazy(() => import('./indexPage'))
 const ServicesRouter = lazy(() => import('./services/services.router'))
@@ -18,6 +19,7 @@ const ClientRouter = () => {
       <Routes>
         <Route element={<ClientLayout />}>
           <Route index element={<IndexPage />} />
+          <Route path={'gosuslugi/*'} element={<GosuslugiRouter />} />
           <Route path={'news/*'} element={<NewsRouter />} />
           <Route path={'services/*'} element={<ServicesRouter />} />
           <Route path={'donors/*'} element={<DonorsRouter />} />

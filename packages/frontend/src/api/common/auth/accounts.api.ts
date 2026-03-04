@@ -12,9 +12,16 @@ const accountsApi = createApi({
       query: () => '/',
       transformResponse: transformResponse({}),
     }),
+    verifyAccount: builder.mutation({
+      invalidatesTags: ['account'],
+      query: () => ({
+        url: '/verify',
+        method: 'POST',
+      }),
+    }),
   }),
 })
 
-export const { useGetAccountQuery } = accountsApi
+export const { useGetAccountQuery, useVerifyAccountMutation } = accountsApi
 
 export default accountsApi

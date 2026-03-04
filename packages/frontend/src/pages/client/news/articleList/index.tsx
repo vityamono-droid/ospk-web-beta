@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 
 import type { ArticleItem, CatalogData } from '@ospk/web-models/articles'
 import Empty from '@components/Empty'
+import ClientCarousel from '@components/ClientCarousel'
 
 const ArticleListPage = () => {
   const context = useClientContext()
@@ -59,47 +60,50 @@ const ArticleListPage = () => {
   }, [context.articles.selected])
 
   return (
-    <Stack direction={{ xs: 'column', md: 'row-reverse' }} spacing={2} flex={1}>
-      <Stack width={{ xs: '100%', md: '30%' }}>
-        <ArticleSidebar />
-      </Stack>
-      <Stack width={{ xs: '100%', md: '70%' }}>
-        <Stack flex={1}>
-          <Paper sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <Stack p={2} height={'100%'} spacing={2} justifyContent={'space-between'}>
-              <Stack spacing={2}>
-                <Stack direction={'row'}>
-                  <Typography variant={'h4'} fontWeight={'bold'}>
-                    Новости
-                  </Typography>
+    <Stack spacing={2} flex={1}>
+      <ClientCarousel placement={'NEWS'} />
+      <Stack direction={{ xs: 'column', md: 'row-reverse' }} spacing={2} flex={1}>
+        <Stack width={{ xs: '100%', md: '30%' }}>
+          <ArticleSidebar />
+        </Stack>
+        <Stack width={{ xs: '100%', md: '70%' }}>
+          <Stack flex={1}>
+            <Paper sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <Stack p={2} height={'100%'} spacing={2} justifyContent={'space-between'}>
+                <Stack spacing={2}>
+                  <Stack direction={'row'}>
+                    <Typography variant={'h4'} fontWeight={'bold'}>
+                      Новости
+                    </Typography>
+                    <Paginator count={articles.length} limit={6} offset={offset} onChange={(value) => setOffset(value)} />
+                  </Stack>
+                  {!getResponse.isLoading && catalog && (
+                    <>
+                      <Divider />
+                      <Stack direction={'row'} spacing={2}>
+                        {catalog.banner && (
+                          <Stack>
+                            <img width={150} height={100} src={catalog.banner} />
+                          </Stack>
+                        )}
+                        <Stack>
+                          <Typography variant={'h5'}>{catalog.label}</Typography>
+                          {catalog.description && <Typography>{catalog.description}</Typography>}
+                        </Stack>
+                      </Stack>
+                    </>
+                  )}
+                  {listResponse.isLoading || (articles.length == 0 && listResponse.data?.length != 0)
+                    ? [0, 1, 2, 3, 4, 5].map((_, index) => <NewsListItem key={`${index}`} showCategories />)
+                    : articles.map((item) => <NewsListItem data={item} showCategories />)}
+                  {listResponse.isSuccess && listResponse.data.length == 0 && <Empty />}
+                </Stack>
+                <Stack>
                   <Paginator count={articles.length} limit={6} offset={offset} onChange={(value) => setOffset(value)} />
                 </Stack>
-                {!getResponse.isLoading && catalog && (
-                  <>
-                    <Divider />
-                    <Stack direction={'row'} spacing={2}>
-                      {catalog.banner && (
-                        <Stack>
-                          <img width={150} height={100} src={catalog.banner} />
-                        </Stack>
-                      )}
-                      <Stack>
-                        <Typography variant={'h5'}>{catalog.label}</Typography>
-                        {catalog.description && <Typography>{catalog.description}</Typography>}
-                      </Stack>
-                    </Stack>
-                  </>
-                )}
-                {listResponse.isLoading || (articles.length == 0 && listResponse.data?.length != 0)
-                  ? [0, 1, 2, 3, 4, 5].map((_, index) => <NewsListItem key={`${index}`} showCategories />)
-                  : articles.map((item) => <NewsListItem data={item} showCategories />)}
-                {listResponse.isSuccess && listResponse.data.length == 0 && <Empty />}
               </Stack>
-              <Stack>
-                <Paginator count={articles.length} limit={6} offset={offset} onChange={(value) => setOffset(value)} />
-              </Stack>
-            </Stack>
-          </Paper>
+            </Paper>
+          </Stack>
         </Stack>
       </Stack>
     </Stack>

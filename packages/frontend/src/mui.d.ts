@@ -35,4 +35,11 @@ declare module '@mui/material/Chip' {
   }
 }
 
+declare module '@mui/material/Badge' {
+  interface BadgePropsColorOverrides {
+    black: true
+    white: true
+  }
+}
+
 export {}
