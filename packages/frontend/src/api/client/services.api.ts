@@ -7,6 +7,7 @@ import { transformErrorResponse, transformResponse } from '@api/transformers'
 const servicesApi = createApi({
   reducerPath: 'services',
   baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/services' }),
+  tagTypes: ['service'],
   endpoints: (builder) => ({
     listCatalogs: builder.query<CatalogData[], any, ApiResponse<CatalogData[]>>({
       query: () => `/catalogs/`,
@@ -19,6 +20,7 @@ const servicesApi = createApi({
       transformResponse: transformResponse({}),
     }),
     getService: builder.query<ServiceDataDetails, string, ApiResponse<ServiceDataDetails>>({
+      providesTags: ['service'],
       query: (id) => `/${id}`,
       transformErrorResponse: transformErrorResponse(),
       transformResponse: transformResponse({}),

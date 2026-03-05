@@ -29,7 +29,7 @@ const NewsListItem = ({ data, showBanner, showCategories }: NewsListItemProps) =
       ) : (
         <Paper
           variant={'outlined'}
-          sx={{ cursor: 'pointer', '& :hover': { bgcolor: '#f5f5ff' } }}
+          sx={{ height: '100%', cursor: 'pointer', '& :hover': { bgcolor: '#f5f5ff' } }}
           onClick={() => navigate(`/news/${data.id}`)}>
           <Stack p={2} direction={'row'} spacing={2}>
             {/* Banner */}

@@ -8,7 +8,7 @@ import type { OrderData, UpsertOrderData } from '@ospk/web-models/orders'
 const ordersApi = createApi({
   reducerPath: 'orders',
   baseQuery: authenticatedQuery({ baseUrl: '/api/v1/orders', on401: 'follow' }),
-  tagTypes: ['orderList'],
+  tagTypes: ['orderList', 'service'],
   endpoints: (builder) => ({
     listOrders: builder.query<OrderData[], any, ApiResponse<OrderData[]>>({
       providesTags: ['orderList'],
@@ -16,7 +16,7 @@ const ordersApi = createApi({
       transformResponse: transformResponse({ defaultValue: [] }),
     }),
     addOrder: builder.mutation<undefined, UpsertOrderData, ApiResponse>({
-      invalidatesTags: ['orderList'],
+      invalidatesTags: ['orderList', 'service'],
       query: (data) => ({
         url: `/`,
         body: data,

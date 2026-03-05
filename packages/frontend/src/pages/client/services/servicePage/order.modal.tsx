@@ -42,6 +42,7 @@ const OrderModal = ({ service, serviceId, open, onClose }: OrderModalProps) => {
       autoHideDuration: 2000,
     })
 
+    location.reload()
     !!onClose && onClose()
   }, [addResponse])
 

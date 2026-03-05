@@ -10,8 +10,8 @@ const ServicesRouter = lazy(() => import('./services/services.router'))
 const DonorsRouter = lazy(() => import('./donors/donors.router'))
 const FaqRouter = lazy(() => import('./faq/faq.router'))
 const ContactsPage = lazy(() => import('./contacts/contacts.page'))
+const AboutRouter = lazy(() => import('./about/about.router'))
 const Page404 = lazy(() => import('@pages/errors/error404.page'))
-const Page501 = lazy(() => import('../errors/error501.page'))
 
 const ClientRouter = () => {
   return (
@@ -23,7 +23,7 @@ const ClientRouter = () => {
           <Route path={'news/*'} element={<NewsRouter />} />
           <Route path={'services/*'} element={<ServicesRouter />} />
           <Route path={'donors/*'} element={<DonorsRouter />} />
-          <Route path={'about/*'} element={<Page501 />} />
+          <Route path={'about/*'} element={<AboutRouter />} />
           <Route path={'contacts/*'} element={<ContactsPage />} />
           <Route path={'faq/*'} element={<FaqRouter />} />
         </Route>

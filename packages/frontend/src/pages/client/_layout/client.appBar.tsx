@@ -38,9 +38,7 @@ const ClientAppBar = () => {
           <Stack direction={'row'} sx={{ display: { xs: 'none', md: 'flex' } }}>
             <ServicesNavItem />
             <NewsNavItem />
-            <Button variant={'nav-link'} sx={{ whiteSpace: 'noWrap' }} onClick={() => navigate('/donors')}>
-              Донорам
-            </Button>
+            <DonorsNavItem />
             <AboutNavItem />
             <ContactsNavItem />
           </Stack>
@@ -82,6 +80,37 @@ const ServicesNavItem = () => {
   )
 }
 
+const DonorsNavItem = () => {
+  const navigate = useNavigate()
+  const ref = useRef(null)
+
+  const [open, setOpen] = useState(false)
+
+  const handleClick = (to: string) => {
+    navigate(to)
+    setOpen(false)
+  }
+
+  return (
+    <>
+      <Button ref={ref} variant={'nav-link'} onClick={() => setOpen(true)}>
+        Донорам
+      </Button>
+      <Menu anchorEl={ref.current} open={open} onClose={() => setOpen(false)}>
+        <MenuItem onClick={() => handleClick('/donors')}>
+          <ListItemText>Прием доноров</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => handleClick('/donors/howto')}>
+          <ListItemText>Как стать донором</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={() => handleClick('/donors/recommendations')}>
+          <ListItemText>Рекомендации донорам</ListItemText>
+        </MenuItem>
+      </Menu>
+    </>
+  )
+}
+
 const AboutNavItem = () => {
   const navigate = useNavigate()
   const ref = useRef(null)
@@ -99,10 +128,10 @@ const AboutNavItem = () => {
         О станции
       </Button>
       <Menu anchorEl={ref.current} open={open} onClose={() => setOpen(false)}>
-        <MenuItem onClick={() => handleClick('/employees')}>
-          <ListItemText>Сотрудники</ListItemText>
+        <MenuItem onClick={() => handleClick('/about/planning')}>
+          <ListItemText>План мероприятий</ListItemText>
         </MenuItem>
-        <MenuItem onClick={() => handleClick('/legal')}>
+        <MenuItem onClick={() => handleClick('/about')}>
           <ListItemText>Правовые документы</ListItemText>
         </MenuItem>
       </Menu>
@@ -128,7 +157,7 @@ const ContactsNavItem = () => {
       </Button>
       <Menu anchorEl={ref.current} open={open} onClose={() => setOpen(false)}>
         <MenuItem onClick={() => handleClick('/faq')}>
-          <ListItemText>FAQ</ListItemText>
+          <ListItemText>Вопросы и ответы</ListItemText>
         </MenuItem>
         <MenuItem onClick={() => handleClick('/contacts')}>
           <ListItemText>Контакты</ListItemText>

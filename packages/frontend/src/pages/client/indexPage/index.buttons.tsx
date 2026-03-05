@@ -18,7 +18,7 @@ const navButtons = [
   {
     label: 'План мероприятий',
     icon: LocalShippingIcon,
-    link: '/about/1',
+    link: '/about/planning',
   },
   {
     label: 'Донорский светофор',
@@ -28,7 +28,7 @@ const navButtons = [
   {
     label: 'Рекомендации',
     icon: InfoIcon,
-    link: '/donors/3',
+    link: '/donors/recommendations',
   },
 ]
 

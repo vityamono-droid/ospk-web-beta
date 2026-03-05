@@ -1,13 +1,20 @@
-import { lazy } from 'react'
 import { Outlet, Route, Routes } from 'react-router'
 
-const IndexPage = lazy(() => import('./indexPage'))
+import StaticContent from '@components/StaticContent'
 
 const DonorsRouter = () => {
   return (
     <>
       <Routes>
-        <Route index element={<IndexPage />} />
+        <Route index element={<StaticContent title={'Прием доноров'} file={'donors.html'} />} />
+        <Route
+          path={'recommendations'}
+          element={<StaticContent title={'Рекомендации донорам'} file={'recommendations.html'} />}
+        />
+        <Route
+          path={'howto'}
+          element={<StaticContent title={'Как стать донором'} file={'донорам - Как стать донорам.html'} />}
+        />
       </Routes>
       <Outlet />
     </>

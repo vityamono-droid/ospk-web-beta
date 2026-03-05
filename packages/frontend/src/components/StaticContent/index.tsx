@@ -1,9 +1,16 @@
-import { useGetStaticPageQuery } from '@api/client/static.api'
-import { useEffect, useState } from 'react'
+import Divider from '@mui/material/Divider'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 
-const StaticContent = ({ file }: { file: string }) => {
+import { useEffect, useState } from 'react'
+import { useGetStaticPageQuery } from '@api/client/static.api'
+
+const StaticContent = ({ title, file }: { title: string; file: string }) => {
   const [content, setContent] = useState('')
-  const getResponse = useGetStaticPageQuery(file)
+  const getResponse = useGetStaticPageQuery(file, {
+    refetchOnMountOrArgChange: true,
+  })
 
   useEffect(() => {
     console.log(getResponse)
@@ -14,7 +21,17 @@ const StaticContent = ({ file }: { file: string }) => {
     setContent(getResponse.data)
   }, [getResponse.status])
 
-  return <div dangerouslySetInnerHTML={{ __html: content }} />
+  return (
+    <Paper>
+      <Stack p={2} spacing={2}>
+        <Typography variant={'h4'} fontWeight={'bold'}>
+          {title}
+        </Typography>
+        <Divider sx={{ mx: -2 }} />
+        <div dangerouslySetInnerHTML={{ __html: content }} />
+      </Stack>
+    </Paper>
+  )
 }
 
 export default StaticContent
