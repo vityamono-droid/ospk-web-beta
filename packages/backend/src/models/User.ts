@@ -17,6 +17,8 @@ class User implements UserModel, OAuthUser {
   updatedAt: Date | null
   removedAt: Date | null
 
+  verified: boolean
+
   profileId: string | null
 
   constructor(entity: UserModel) {

@@ -23,7 +23,7 @@ articlesRouter.put(
   withParseForm({ dest: 'static/articles/banners' }),
   upsertCatalog,
 )
-articlesRouter.delete('/catalogs:id', deleteCatalog)
+articlesRouter.delete('/catalogs/:id', deleteCatalog)
 // Categories
 articlesRouter.get('/categories', listCategories)
 articlesRouter.get('/categories/:id', getCategory)

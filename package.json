@@ -2,7 +2,7 @@
   "name": "@ospk/web",
   "version": "1.0.0",
   "scripts": {
-    "backend:build": "npm run build:no-types -w @ospk/web-backend",
+    "backend:build": "npm run build -w @ospk/web-backend",
     "frontend:build": "npm run build:no-types -w @ospk/web-frontend",
     "build": "npm-run-all --parallel backend:build frontend:build"
   },
