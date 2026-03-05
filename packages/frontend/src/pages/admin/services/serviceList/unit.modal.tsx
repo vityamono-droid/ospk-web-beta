@@ -108,7 +108,7 @@ const UnitsModal = ({ open, onClose }: UnitsModalProps) => {
   }
 
   return (
-    <Modal title={'Роли'} open={open} onClose={onClose}>
+    <Modal title={'Единицы измерения'} open={open} onClose={onClose}>
       <Stack spacing={2} justifyContent={'space-between'} minWidth={500} minHeight={500}>
         <Stack spacing={2}>
           <Stack direction={'row'}>
